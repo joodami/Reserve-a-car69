@@ -1,9 +1,8 @@
 body {
   padding: 2rem;
   background: linear-gradient(135deg, #e9f2ff, #ffffff);
-  font-family: 'IBM Plex Sans Thai Looped', sans-serif;
+  font-family: 'K2D', sans-serif;
 }
-
 #banner {
   width: 100%;
   height: 250px;
@@ -13,9 +12,7 @@ body {
   margin-bottom: 2rem;
   box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
-
 @media (max-width: 768px) { #banner { height: 150px; } }
-
 h2.form-header {
   background: linear-gradient(90deg, #0d6efd, #0dcaf0);
   color: #fff;
@@ -27,7 +24,6 @@ h2.form-header {
   font-size: 28px;
   box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
-
 .card-form, .calendar-card {
   max-width: 1000px;
   margin: 0 auto 3rem;
@@ -37,9 +33,7 @@ h2.form-header {
   box-shadow: 0 10px 30px rgba(0,0,0,0.12);
   transition: 0.25s;
 }
-
 .card-form:hover, .calendar-card:hover { transform: translateY(-4px); }
-
 .form-section-card {
   border-left: 6px solid #0d6efd;
   padding: 1.8rem;
@@ -47,28 +41,25 @@ h2.form-header {
   background: #f8fbff;
   margin-bottom: 2rem;
 }
-
 .sub-title { font-size: 22px; font-weight: 700; color: #0d6efd; margin-bottom: 1.5rem; text-align: center; }
-
 .form-label { font-weight: 600; }
-
 .form-control, .form-select {
   padding: 0.65rem 0.8rem;
   border-radius: 10px;
   border: 1px solid #cbd5e1;
 }
-
 .form-control:focus, .form-select:focus {
   border-color: #0d6efd;
   box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25);
 }
-
-.passenger-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
+.passenger-group { 
+  display: grid; 
+  grid-template-columns: 1fr; 
+  gap: 1rem; 
 }
-
+@media (min-width: 768px) { 
+  .passenger-group { grid-template-columns: 1fr 1fr; } 
+}
 #carForm button[type="submit"] {
   background: linear-gradient(90deg, #0d6efd, #0dcaf0);
   border: none;
@@ -79,11 +70,6 @@ h2.form-header {
   border-radius: 12px;
   width: 100%;
 }
-
 #carForm button[type="submit"]:hover { transform: translateY(-2px); }
-
 .calendar-container iframe { width: 100%; height: 600px; border-radius: 12px; }
-
-@media (max-width: 768px) {
-  .calendar-container iframe { height: 420px; }
-}
+@media (max-width: 768px) { .calendar-container iframe { height: 420px; } }
