@@ -1,3 +1,4 @@
+/* Body & Banner */
 body {
   padding: 2rem;
   background: linear-gradient(135deg, #e9f2ff, #ffffff);
@@ -13,6 +14,7 @@ body {
   margin-bottom: 2rem;
 }
 
+/* Header */
 .form-header {
   background: linear-gradient(90deg, #0d6efd, #0dcaf0);
   color: #fff;
@@ -22,6 +24,7 @@ body {
   margin-bottom: 2rem;
 }
 
+/* Card */
 .card-form, .calendar-card {
   max-width: 1000px;
   margin: 0 auto 3rem;
@@ -31,8 +34,68 @@ body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 }
 
+/* Calendar */
 .calendar-container iframe {
   width: 100%;
   height: 600px;
   border-radius: 12px;
+}
+
+/* Form sections */
+.form-section-card {
+  border-left: 6px solid #0d6efd;
+  padding: 1.8rem;
+  border-radius: 12px;
+  background: #f8fbff;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.sub-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0d6efd;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Passenger Inputs */
+.passenger-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.passenger-group input {
+  display: none; /* JS จะเปิดเฉพาะช่องที่ต้องใช้ */
+}
+
+/* PDF Upload */
+#fileUploadSection {
+  display: none;
+}
+
+/* Buttons */
+button[type="submit"], #showFormBtn, #cancelBookingBtn {
+  border-radius: 8px;
+  font-size: 1.1rem;
+  transition: 0.3s;
+}
+
+button[type="submit"]:hover, #showFormBtn:hover, #cancelBookingBtn:hover {
+  transform: scale(1.03);
+}
+
+/* Modal */
+.modal-body {
+  padding: 2rem;
+}
+
+#modalText {
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+#modalFooter button {
+  margin-top: 1rem;
 }
