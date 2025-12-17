@@ -25,11 +25,15 @@ const fileUploadSection = document.getElementById("fileUploadSection");
 function updatePassengerFields() {
   let count = Number(passengerCount.value);
   passengerInputs.forEach((input, index) => {
-    if(count === 0) input.style.display = "none";
-    else if(count <=6) {
+    if (count === 0) {
+      input.style.display = "none";
+      input.value = "";
+    } else if (count <= 6) {
       input.style.display = (index < count) ? "block" : "none";
       input.value = "";
-    } else input.style.display = "none";
+    } else {
+      input.style.display = "none";
+    }
   });
   fileUploadSection.style.display = count > 6 ? "block" : "none";
 }
@@ -53,28 +57,6 @@ form.addEventListener('submit', (e) => {
   }
 
   const count = Number(form.querySelector('input[name="passengerCount"]').value);
-  const fileInput = form.querySelector('[name="passengerFile"]');
-  let passengerFile = null;
-
-  if(count > 6){
-    if(fileInput.files.length === 0){
-      alert("กรุณาแนบไฟล์ PDF รายชื่อผู้ร่วมเดินทาง");
-      fileInput.focus();
-      return;
-    }
-    const file = fileInput.files[0];
-    if(file.type !== "application/pdf"){
-      alert("กรุณาอัปโหลดไฟล์ PDF เท่านั้น");
-      fileInput.focus();
-      return;
-    }
-    if(file.size > 5*1024*1024){
-      alert("ไฟล์ต้องเล็กกว่า 5 MB");
-      fileInput.focus();
-      return;
-    }
-    passengerFile = file;
-  }
 
   document.getElementById('modalText').innerHTML = "กำลังส่งข้อมูล กรุณารอสักครู่...";
   document.getElementById('loadingIcon').style.display = "block";
@@ -84,26 +66,14 @@ form.addEventListener('submit', (e) => {
   const formData = Object.fromEntries(new FormData(form).entries());
   formData.passengerCount = count;
 
-  if(passengerFile){
-    const reader = new FileReader();
-    reader.onload = () => {
-      formData.passengerFile = reader.result.split(',')[1];
-      formData.passengerFileName = passengerFile.name;
-      sendToGAS(formData);
-    };
-    reader.readAsDataURL(passengerFile);
-  } else {
-    formData.passengerFile = null;
-    formData.passengerFileName = "-";
-    sendToGAS(formData);
-  }
-});
+  // ไม่สร้าง PDF
+  formData.passengerFile = null;
+  formData.passengerFileName = "-";
 
-function sendToGAS(data){
-  fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", { // <-- เปลี่ยนเป็น URL ของ Web App
+  fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
+    body: JSON.stringify(formData)
   })
   .then(res => res.json())
   .then(result => {
@@ -117,5 +87,6 @@ function sendToGAS(data){
   })
   .catch(err => {
     alert("เกิดข้อผิดพลาด: " + err.message);
+    document.getElementById('loadingIcon').style.display = "none";
   });
-}
+});
