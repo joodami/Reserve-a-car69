@@ -40,7 +40,7 @@ updatePassengerFields();
 const form = document.getElementById('carForm');
 const submitModal = new bootstrap.Modal(document.getElementById('submitModal'));
 
-form.addEventListener('submit', (e) => {
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const requiredFields = form.querySelectorAll('[required]');
@@ -85,19 +85,24 @@ form.addEventListener('submit', (e) => {
   formData.passengerCount = count;
 
   if(passengerFile){
-    const reader = new FileReader();
-    reader.onload = () => {
-      formData.passengerFile = reader.result.split(',')[1];
-      formData.passengerFileName = passengerFile.name;
-      sendToGAS(formData);
-    };
-    reader.readAsDataURL(passengerFile);
+    formData.passengerFile = await fileToBase64(passengerFile);
+    formData.passengerFileName = passengerFile.name;
   } else {
     formData.passengerFile = null;
     formData.passengerFileName = "-";
-    sendToGAS(formData);
   }
+
+  sendToGAS(formData);
 });
+
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = error => reject(error);
+    reader.readAsDataURL(file);
+  });
+}
 
 function sendToGAS(data){
   fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
@@ -117,6 +122,5 @@ function sendToGAS(data){
   })
   .catch(err => {
     alert("เกิดข้อผิดพลาด: " + err.message);
-    document.getElementById('loadingIcon').style.display = "none";
   });
 }
