@@ -1,4 +1,4 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec"; // ใส่ /exec ของ GAS
+const GAS_URL = "YOUR_GAS_WEB_APP_URL_HERE"; // ใส่ /exec ของ GAS
 
 document.getElementById("showFormBtn").addEventListener("click", () => {
   document.getElementById("formSection").style.display = "block";
@@ -8,27 +8,31 @@ document.getElementById("showFormBtn").addEventListener("click", () => {
 document.getElementById("cancelBookingBtn").addEventListener("click", () => {
   document.getElementById("carForm").reset();
   document.getElementById("formSection").style.display = "none";
-  document.getElementById("passengerInputs").style.display = "block";
-  document.getElementById("fileUploadSection").style.display = "none";
+  updatePassengerInputs(0);
 });
 
 const passengerCountInput = document.querySelector("input[name='passengerCount']");
 passengerCountInput.addEventListener("input", () => {
   const count = Number(passengerCountInput.value);
+  updatePassengerInputs(count);
+});
+
+function updatePassengerInputs(count) {
   const passengerGroup = document.getElementById("passengerInputs");
   const fileSection = document.getElementById("fileUploadSection");
+  const inputs = passengerGroup.querySelectorAll("input");
+
   if (count > 6) {
     passengerGroup.style.display = "none";
     fileSection.style.display = "block";
   } else {
     passengerGroup.style.display = "block";
     fileSection.style.display = "none";
-    const inputs = passengerGroup.querySelectorAll("input");
     inputs.forEach((input, index) => {
       input.style.display = index < count ? "block" : "none";
     });
   }
-});
+}
 
 document.getElementById("carForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -43,30 +47,39 @@ document.getElementById("carForm").addEventListener("submit", async (e) => {
   let formData = {};
   new FormData(form).forEach((value, key) => formData[key] = value);
 
-  // Encode PDF file ถ้ามี
-  if (formData.passengerFile && formData.passengerFile.size) {
-    const file = form.querySelector("input[name='passengerFile']").files[0];
+  // ตรวจสอบไฟล์ผู้ร่วมเดินทาง
+  const fileInput = form.querySelector("input[name='passengerFile']");
+  if (fileInput && fileInput.files.length > 0) {
+    const file = fileInput.files[0];
     formData.passengerFileName = file.name;
-    formData.passengerFile = await toBase64(file);
+    try {
+      formData.passengerFile = await toBase64(file);
+    } catch(err){
+      modalText.textContent = "เกิดข้อผิดพลาดอ่านไฟล์ ❌";
+      modalFooter.style.display = "block";
+      console.error(err);
+      return;
+    }
   }
 
-  fetch(GAS_URL, {
-    method: "POST",
-    body: JSON.stringify(formData),
-    headers: { "Content-Type": "application/json" }
-  })
-  .then(res => res.json())
-  .then(data => {
+  // ส่งข้อมูลไป GAS
+  try {
+    const res = await fetch(GAS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData)
+    });
+    const data = await res.json();
     modalText.textContent = "ส่งข้อมูลสำเร็จ ✅";
     modalFooter.style.display = "block";
     form.reset();
+    updatePassengerInputs(0);
     document.getElementById("formSection").style.display = "none";
-  })
-  .catch(err => {
+  } catch (err) {
     modalText.textContent = "เกิดข้อผิดพลาด ❌";
-    console.error(err);
     modalFooter.style.display = "block";
-  });
+    console.error(err);
+  }
 });
 
 function toBase64(file) {
@@ -74,6 +87,6 @@ function toBase64(file) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = error => reject(error);
+    reader.onerror = err => reject(err);
   });
 }
