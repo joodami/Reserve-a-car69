@@ -1,104 +1,121 @@
-// script.js
+// แบนเนอร์
+const bannerUrl = "https://firebasestorage.googleapis.com/v0/b/banner-web-app.appspot.com/o/banner%20%E0%B8%88%E0%B8%AD%E0%B8%87%E0%B8%A3%E0%B8%9669.jpg?alt=media&token=3e5f36c6-c27f-4028-9ca4-c03525aded65";
+document.getElementById('banner').style.backgroundImage = `url('${bannerUrl}')`;
 
-document.addEventListener("DOMContentLoaded", () => {
-  const showFormBtn = document.getElementById("showFormBtn");
-  const formSection = document.getElementById("formSection");
-  const cancelBookingBtn = document.getElementById("cancelBookingBtn");
-  const carForm = document.getElementById("carForm");
-  const passengerCountInput = carForm.querySelector("input[name='passengerCount']");
-  const passengerInputs = document.getElementById("passengerInputs");
-  const fileUploadSection = document.getElementById("fileUploadSection");
+// แสดง/ซ่อนฟอร์ม
+const showFormBtn = document.getElementById("showFormBtn");
+const formSection = document.getElementById("formSection");
+const cancelBtn = document.getElementById("cancelBookingBtn");
+showFormBtn.addEventListener("click", () => {
+  formSection.style.display = "block";
+  showFormBtn.style.display = "none";
+  formSection.scrollIntoView({ behavior: "smooth" });
+});
+cancelBtn.addEventListener("click", () => {
+  document.getElementById("carForm").reset();
+  formSection.style.display = "none";
+  showFormBtn.style.display = "inline-block";
+});
 
-  const submitModal = new bootstrap.Modal(document.getElementById("submitModal"));
-  const modalText = document.getElementById("modalText");
-  const modalFooter = document.getElementById("modalFooter");
+// ผู้ร่วมเดินทาง
+const passengerCount = document.querySelector('input[name="passengerCount"]');
+const passengerInputs = document.querySelectorAll('#passengerInputs input');
+const fileUploadSection = document.getElementById("fileUploadSection");
 
-  // แสดงฟอร์ม
-  showFormBtn.addEventListener("click", () => {
-    formSection.style.display = "block";
-    window.scrollTo({ top: formSection.offsetTop, behavior: "smooth" });
+function updatePassengerFields() {
+  let count = Number(passengerCount.value);
+  passengerInputs.forEach((input, index) => {
+    if(count === 0) input.style.display = "none";
+    else if(count <=6) {
+      input.style.display = (index < count) ? "block" : "none";
+      input.value = "";
+    } else input.style.display = "none";
   });
+  fileUploadSection.style.display = count > 6 ? "block" : "none";
+}
+passengerCount.addEventListener("input", updatePassengerFields);
+updatePassengerFields();
 
-  // ยกเลิกฟอร์ม
-  cancelBookingBtn.addEventListener("click", () => {
-    formSection.style.display = "none";
-    carForm.reset();
-    passengerInputs.style.display = "flex";
-    fileUploadSection.style.display = "none";
-  });
+// ส่งฟอร์ม
+const form = document.getElementById('carForm');
+const submitModal = new bootstrap.Modal(document.getElementById('submitModal'));
 
-  // อัปเดตผู้ร่วมเดินทาง
-  passengerCountInput.addEventListener("input", () => {
-    const count = parseInt(passengerCountInput.value) || 0;
-    if (count >= 7) {
-      passengerInputs.style.display = "none";
-      fileUploadSection.style.display = "block";
-    } else {
-      passengerInputs.style.display = "flex";
-      fileUploadSection.style.display = "none";
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const requiredFields = form.querySelectorAll('[required]');
+  for (const field of requiredFields) {
+    if (!field.value.trim()) {
+      alert(`กรุณากรอกช่อง: ${field.previousElementSibling.textContent}`);
+      field.focus();
+      return;
     }
-  });
+  }
 
-  // ส่งฟอร์ม
-  carForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    modalText.textContent = "กำลังส่งข้อมูล...";
-    modalFooter.style.display = "none";
-    submitModal.show();
+  const count = Number(form.querySelector('input[name="passengerCount"]').value);
+  const fileInput = form.querySelector('[name="passengerFile"]');
+  let passengerFile = null;
 
-    const formData = new FormData(carForm);
-    const data = {};
-
-    formData.forEach((value, key) => {
-      data[key] = value;
-    });
-
-    // อ่านไฟล์ PDF เป็น Base64 ถ้ามี
-    const fileInput = carForm.querySelector("input[name='passengerFile']");
-    if (fileInput.files.length > 0) {
-      const file = fileInput.files[0];
-      if (file.size > 5 * 1024 * 1024) {
-        modalText.textContent = "❌ ไฟล์เกิน 5MB";
-        modalFooter.style.display = "block";
-        return;
-      }
-      data.passengerFileName = file.name;
-      data.passengerFile = await readFileAsBase64(file);
+  if(count > 6){
+    if(fileInput.files.length === 0){
+      alert("กรุณาแนบไฟล์ PDF รายชื่อผู้ร่วมเดินทาง");
+      fileInput.focus();
+      return;
     }
-
-    try {
-      const res = await fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
-        method: "POST",
-        contentType: "application/json",
-        body: JSON.stringify(data)
-      });
-
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const result = await res.json();
-
-      modalText.innerHTML = `✅ ส่งข้อมูลสำเร็จ!<br>
-        <a href="${result.pdfUrl}" target="_blank">📄 ดู PDF</a>`;
-      modalFooter.style.display = "block";
-      carForm.reset();
-      passengerInputs.style.display = "flex";
-      fileUploadSection.style.display = "none";
-    } catch (err) {
-      console.error(err);
-      modalText.textContent = "❌ เกิดข้อผิดพลาดในการส่งข้อมูล!\n" + err.message;
-      modalFooter.style.display = "block";
+    const file = fileInput.files[0];
+    if(file.type !== "application/pdf"){
+      alert("กรุณาอัปโหลดไฟล์ PDF เท่านั้น");
+      fileInput.focus();
+      return;
     }
-  });
+    if(file.size > 5*1024*1024){
+      alert("ไฟล์ต้องเล็กกว่า 5 MB");
+      fileInput.focus();
+      return;
+    }
+    passengerFile = file;
+  }
 
-  // ฟังก์ชันช่วยอ่านไฟล์เป็น Base64
-  function readFileAsBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64 = reader.result.split(",")[1];
-        resolve(base64);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
+  document.getElementById('modalText').innerHTML = "กำลังส่งข้อมูล กรุณารอสักครู่...";
+  document.getElementById('loadingIcon').style.display = "block";
+  document.getElementById('modalFooter').style.display = "none";
+  submitModal.show();
+
+  const formData = Object.fromEntries(new FormData(form).entries());
+  formData.passengerCount = count;
+
+  if(passengerFile){
+    const reader = new FileReader();
+    reader.onload = () => {
+      formData.passengerFile = reader.result.split(',')[1];
+      formData.passengerFileName = passengerFile.name;
+      sendToGAS(formData);
+    };
+    reader.readAsDataURL(passengerFile);
+  } else {
+    formData.passengerFile = null;
+    formData.passengerFileName = "-";
+    sendToGAS(formData);
   }
 });
+
+function sendToGAS(data){
+  fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", { // <-- เปลี่ยนเป็น URL ของ Web App
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(result => {
+    document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว!";
+    document.getElementById('loadingIcon').style.display = "none";
+    document.getElementById('modalFooter').style.display = "block";
+    form.reset();
+    updatePassengerFields();
+    formSection.style.display = "none";
+    showFormBtn.style.display = "inline-block";
+  })
+  .catch(err => {
+    alert("เกิดข้อผิดพลาด: " + err.message);
+  });
+}
