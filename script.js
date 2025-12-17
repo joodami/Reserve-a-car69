@@ -1,104 +1,104 @@
+// script.js
+
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("carForm");
-  const passengerCountInput = form.querySelector('input[name="passengerCount"]');
+  const showFormBtn = document.getElementById("showFormBtn");
+  const formSection = document.getElementById("formSection");
+  const cancelBookingBtn = document.getElementById("cancelBookingBtn");
+  const carForm = document.getElementById("carForm");
+  const passengerCountInput = carForm.querySelector("input[name='passengerCount']");
+  const passengerInputs = document.getElementById("passengerInputs");
   const fileUploadSection = document.getElementById("fileUploadSection");
-  const passengerFileInput = fileUploadSection.querySelector('input[name="passengerFile"]');
 
-  // ฟังก์ชันแสดง/ซ่อนไฟล์อัปโหลด
-  function toggleFileUpload(count) {
-    if (count >= 7) {
-      fileUploadSection.style.display = "block";
-    } else {
-      fileUploadSection.style.display = "none";
-      passengerFileInput.value = "";
-    }
-  }
+  const submitModal = new bootstrap.Modal(document.getElementById("submitModal"));
+  const modalText = document.getElementById("modalText");
+  const modalFooter = document.getElementById("modalFooter");
 
-  passengerCountInput.addEventListener("input", (e) => {
-    const count = parseInt(e.target.value, 10) || 0;
-    toggleFileUpload(count);
+  // แสดงฟอร์ม
+  showFormBtn.addEventListener("click", () => {
+    formSection.style.display = "block";
+    window.scrollTo({ top: formSection.offsetTop, behavior: "smooth" });
   });
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  // ยกเลิกฟอร์ม
+  cancelBookingBtn.addEventListener("click", () => {
+    formSection.style.display = "none";
+    carForm.reset();
+    passengerInputs.style.display = "flex";
+    fileUploadSection.style.display = "none";
+  });
 
-    const modalText = document.getElementById("modalText");
-    const modalFooter = document.getElementById("modalFooter");
-    const submitModal = new bootstrap.Modal(document.getElementById("submitModal"));
+  // อัปเดตผู้ร่วมเดินทาง
+  passengerCountInput.addEventListener("input", () => {
+    const count = parseInt(passengerCountInput.value) || 0;
+    if (count >= 7) {
+      passengerInputs.style.display = "none";
+      fileUploadSection.style.display = "block";
+    } else {
+      passengerInputs.style.display = "flex";
+      fileUploadSection.style.display = "none";
+    }
+  });
+
+  // ส่งฟอร์ม
+  carForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
     modalText.textContent = "กำลังส่งข้อมูล...";
     modalFooter.style.display = "none";
     submitModal.show();
 
-    const formData = {
-      bookDate: form.bookDate.value,
-      name: form.name.value,
-      tel: form.tel.value,
-      position: form.position.value,
-      car: form.car.value,
-      location: form.location.value,
-      purpose: form.purpose.value,
-      startDate: form.startDate.value,
-      startTime: form.startTime.value,
-      endDate: form.endDate.value,
-      endTime: form.endTime.value,
-      passengerCount: Number(passengerCountInput.value) || 0
-    };
+    const formData = new FormData(carForm);
+    const data = {};
 
-    for (let i = 1; i <= 6; i++) {
-      const el = form.querySelector(`input[name="passenger${i}"]`);
-      formData[`passenger${i}`] = el ? el.value : "";
-    }
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
 
-    if (formData.passengerCount >= 7 && passengerFileInput.files.length > 0) {
-      const file = passengerFileInput.files[0];
-      formData.passengerFileName = file.name;
-      formData.passengerFile = await toBase64(file);
+    // อ่านไฟล์ PDF เป็น Base64 ถ้ามี
+    const fileInput = carForm.querySelector("input[name='passengerFile']");
+    if (fileInput.files.length > 0) {
+      const file = fileInput.files[0];
+      if (file.size > 5 * 1024 * 1024) {
+        modalText.textContent = "❌ ไฟล์เกิน 5MB";
+        modalFooter.style.display = "block";
+        return;
+      }
+      data.passengerFileName = file.name;
+      data.passengerFile = await readFileAsBase64(file);
     }
 
     try {
       const res = await fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
         method: "POST",
-        body: JSON.stringify(formData),
-        headers: { "Content-Type": "application/json" }
+        contentType: "application/json",
+        body: JSON.stringify(data)
       });
-      const data = await res.json();
 
-      modalText.innerHTML = `ส่งข้อมูลสำเร็จ!<br>PDF: <a href="${data.pdfUrl}" target="_blank">เปิด PDF</a>` +
-        (data.passengerFileUrl ? `<br>ไฟล์ผู้ร่วมเดินทาง: <a href="${data.passengerFileUrl}" target="_blank">เปิดไฟล์</a>` : "");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const result = await res.json();
+
+      modalText.innerHTML = `✅ ส่งข้อมูลสำเร็จ!<br>
+        <a href="${result.pdfUrl}" target="_blank">📄 ดู PDF</a>`;
       modalFooter.style.display = "block";
-
-      form.reset();
-      toggleFileUpload(0);
+      carForm.reset();
+      passengerInputs.style.display = "flex";
+      fileUploadSection.style.display = "none";
     } catch (err) {
       console.error(err);
-      modalText.textContent = "เกิดข้อผิดพลาดในการส่งข้อมูล!";
+      modalText.textContent = "❌ เกิดข้อผิดพลาดในการส่งข้อมูล!\n" + err.message;
       modalFooter.style.display = "block";
     }
   });
 
-  // ฟังก์ชันแปลงไฟล์เป็น Base64
-  function toBase64(file) {
+  // ฟังก์ชันช่วยอ่านไฟล์เป็น Base64
+  function readFileAsBase64(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(",")[1]);
-      reader.onerror = error => reject(error);
+      reader.onload = () => {
+        const base64 = reader.result.split(",")[1];
+        resolve(base64);
+      };
+      reader.onerror = reject;
       reader.readAsDataURL(file);
     });
   }
-
-  // ปุ่มแสดง/ซ่อนฟอร์ม
-  const showFormBtn = document.getElementById("showFormBtn");
-  const formSection = document.getElementById("formSection");
-  const cancelBookingBtn = document.getElementById("cancelBookingBtn");
-
-  showFormBtn.addEventListener("click", () => {
-    formSection.style.display = "block";
-    showFormBtn.scrollIntoView({ behavior: "smooth" });
-  });
-
-  cancelBookingBtn.addEventListener("click", () => {
-    form.reset();
-    formSection.style.display = "none";
-    toggleFileUpload(0);
-  });
 });
