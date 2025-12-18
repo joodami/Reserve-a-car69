@@ -1,19 +1,21 @@
-/* =================== ฟอนต์ K2D ทั้งเว็บ =================== */
+/* ฟอนต์ K2D */
 body, h1, h2, h3, h4, h5, h6,
 p, span, label, input, select, textarea, button,
 div, a, li, ul, ol, td, th {
   font-family: 'K2D', sans-serif !important;
 }
 
-/* =================== พื้นหลัง และการจัด layout =================== */
+/* พื้นหลัง */
 body {
   padding: 2rem;
   background: linear-gradient(135deg, #e9f2ff, #ffffff);
 }
 
+/* แบนเนอร์ */
 #banner {
   width: 100%;
   height: 250px;
+  background-image: url('banner.jpg'); /* ใส่ URL แบนเนอร์ของคุณ */
   background-size: cover;
   background-position: center;
   border-radius: 12px;
@@ -32,17 +34,20 @@ body {
 }
 .card-form:hover, .calendar-card:hover { transform: translateY(-4px); }
 
+/* ปฏิทิน */
 .calendar-container {
   width: 100%;
-  height: 600px; /* ใช้ค่าคงที่ก่อนปรับ responsive */
   border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
-
 .calendar-container iframe {
   width: 100%;
-  height: 100%;
+  height: 600px;
   border: 0;
+}
+@media (max-width: 768px) {
+  .calendar-container iframe { height: 420px; }
 }
 
 /* Header งานยานพาหนะ */
@@ -108,16 +113,6 @@ h2.form-header {
   transition: 0.2s;
 }
 #carForm button[type="submit"]:hover { transform: translateY(-2px); }
-
-/* ปฏิทิน */
-.calendar-container iframe { 
-  width: 100%; 
-  height: 600px; 
-  border-radius: 12px; 
-}
-@media (max-width: 768px) {
-  .calendar-container iframe { height: 420px; }
-}
 
 /* Modal */
 .modal-content { font-family: 'K2D', sans-serif; }
