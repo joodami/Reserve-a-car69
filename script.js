@@ -1,26 +1,19 @@
-// แบนเนอร์
-// แบนเนอร์
-const bannerUrl = "https://firebasestorage.googleapis.com/v0/b/banner-web-app.appspot.com/o/banner%20%E0%B8%88%E0%B8%AD%E0%B8%87%E0%B8%A3%E0%B8%9669.jpg?alt=media&token=3e5f36c6-c27f-4028-9ca4-c03525aded65";
-
-const bannerImg = document.getElementById('banner-img');
-if (bannerImg) {
-  bannerImg.src = bannerUrl;
-}
-
-
 // แสดง/ซ่อนฟอร์ม
 const showFormBtn = document.getElementById("showFormBtn");
 const formSection = document.getElementById("formSection");
 const cancelBtn = document.getElementById("cancelBookingBtn");
+
 showFormBtn.addEventListener("click", () => {
   formSection.style.display = "block";
   showFormBtn.style.display = "none";
   formSection.scrollIntoView({ behavior: "smooth" });
 });
+
 cancelBtn.addEventListener("click", () => {
   document.getElementById("carForm").reset();
   formSection.style.display = "none";
   showFormBtn.style.display = "inline-block";
+  updatePassengerFields();
 });
 
 // ผู้ร่วมเดินทาง
@@ -39,6 +32,7 @@ function updatePassengerFields() {
   });
   fileUploadSection.style.display = count > 6 ? "block" : "none";
 }
+
 passengerCount.addEventListener("input", updatePassengerFields);
 updatePassengerFields();
 
@@ -49,6 +43,7 @@ const submitModal = new bootstrap.Modal(document.getElementById('submitModal'));
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
+  // ตรวจฟิลด์ required
   const requiredFields = form.querySelectorAll('[required]');
   for (const field of requiredFields) {
     if (!field.value.trim()) {
@@ -111,14 +106,12 @@ function fileToBase64(file){
 }
 
 function sendToGAS(data){
-
   fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
     method: "POST",
     mode: "no-cors",
     body: JSON.stringify(data)
   });
 
-  // ✅ แสดงว่าส่งสำเร็จทันที (ไม่รอ fetch)
   setTimeout(() => {
     document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว ✅";
     document.getElementById('loadingIcon').style.display = "none";
@@ -128,6 +121,5 @@ function sendToGAS(data){
     updatePassengerFields();
     formSection.style.display = "none";
     showFormBtn.style.display = "inline-block";
-  }, 800); // หน่วงเล็กน้อยให้ UX ดูดี
+  }, 800);
 }
-
