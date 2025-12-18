@@ -23,7 +23,8 @@ body {
 }
 
 /* การ์ดฟอร์มและปฏิทิน */
-.card-form, .calendar-card {
+/* ปฏิทิน */
+.calendar-card {
   max-width: 1000px;
   margin: 0 auto 3rem;
   padding: 2rem;
@@ -32,23 +33,42 @@ body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.12);
   transition: 0.25s;
 }
-.card-form:hover, .calendar-card:hover { transform: translateY(-4px); }
+.calendar-card:hover { transform: translateY(-4px); }
 
-/* ปฏิทิน */
+.calendar-header {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0d6efd;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
 .calendar-container {
   width: 100%;
+  padding-top: 56.25%; /* อัตราส่วน 16:9 */
+  position: relative;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
+
 .calendar-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 600px;
+  height: 100%;
   border: 0;
 }
+
+/* Responsive */
 @media (max-width: 768px) {
-  .calendar-container iframe { height: 420px; }
+  .calendar-container {
+    padding-top: 75%; /* สูงขึ้นสำหรับมือถือ */
+  }
+  .calendar-header { font-size: 20px; }
 }
+
 
 /* Header งานยานพาหนะ */
 h2.form-header {
