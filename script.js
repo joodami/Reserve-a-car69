@@ -1,5 +1,4 @@
 // แบนเนอร์
-const bannerUrl = "https://firebasestorage.googleapis.com/v0/b/banner-web-app.appspot.com/o/banner%20%E0%B8%88%E0%B8%AD%E0%B8%87%E0%B8%A3%E0%B8%9669.jpg?alt=media&token=3e5f36c6-c27f-4028-9ca4-c03525aded65";
 const bannerImg = document.getElementById('banner-img');
 if (bannerImg) {
   bannerImg.src = bannerUrl;
