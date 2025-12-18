@@ -11,15 +11,18 @@ body {
   background: linear-gradient(135deg, #e9f2ff, #ffffff);
 }
 
-/* แบนเนอร์ */
-#banner {
+/* ครอบแบนเนอร์ */
+.banner-wrapper {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+/* รูปแบนเนอร์ */
+#banner-img {
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 9;   /* หรืออัตราส่วนของรูปจริง */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #e9f2ff; /* สีพื้นกันขอบขาว */
+  display: block;
+  border-radius: 12px;
 }
 
 .main-container {
