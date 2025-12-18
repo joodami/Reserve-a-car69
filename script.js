@@ -105,22 +105,24 @@ function fileToBase64(file){
 }
 
 function sendToGAS(data){
-fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
-  method: "POST",
-  body: JSON.stringify(data)
-})
-
-  .then(res => res.json())
-  .then(result => {
+  fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
+    method: "POST",
+    mode: "no-cors",   // ⭐ จุดสำคัญ
+    body: JSON.stringify(data)
+  })
+  .then(() => {
+    // ✅ no-cors = ถือว่าส่งสำเร็จ
     document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว!";
     document.getElementById('loadingIcon').style.display = "none";
     document.getElementById('modalFooter').style.display = "block";
+
     form.reset();
     updatePassengerFields();
     formSection.style.display = "none";
     showFormBtn.style.display = "inline-block";
   })
-  .catch(err => {
-    alert("เกิดข้อผิดพลาด: " + err.message);
+  .catch(() => {
+    alert("ไม่สามารถเชื่อมต่อระบบได้");
   });
 }
+
