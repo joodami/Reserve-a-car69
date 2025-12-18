@@ -12,15 +12,20 @@ body {
 }
 
 /* แบนเนอร์ */
+/* แบนเนอร์ */
+.banner-wrapper {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
 #banner {
   width: 100%;
   height: 250px;
-  background-image: url('banner.jpg'); /* ใส่ URL แบนเนอร์ของคุณ */
   background-size: cover;
   background-position: center;
   border-radius: 12px;
-  margin-bottom: 2rem;
 }
+
 
 .main-container {
   max-width: 1200px;
