@@ -105,11 +105,11 @@ function fileToBase64(file){
 }
 
 function sendToGAS(data){
-  fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  })
+fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
+  method: "POST",
+  body: JSON.stringify(data)
+})
+
   .then(res => res.json())
   .then(result => {
     document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว!";
