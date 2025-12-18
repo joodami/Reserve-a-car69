@@ -12,112 +12,112 @@
 <body>
    
 <header class="banner-wrapper">
-  <img id="banner-img" alt="แบนเนอร์งานยานพาหนะ">
+  <img id="banner-img" src="https://firebasestorage.googleapis.com/v0/b/banner-web-app.appspot.com/o/banner%20%E0%B8%88%E0%B8%AD%E0%B8%87%E0%B8%A3%E0%B8%9669.jpg?alt=media&token=3e5f36c6-c27f-4028-9ca4-c03525aded65" alt="แบนเนอร์งานยานพาหนะ">
 </header>
-
 
 <h2 class="form-header">🚗 งานยานพาหนะ สำนักงานอำนวยการ</h2>
 <div class="main-container">
-<!-- ปฏิทิน -->
-<div class="calendar-card">
-  <h3 class="calendar-header text-center mb-3">
-    📅 ปฏิทินการใช้รถยนต์ส่วนราชการ
-  </h3>
-  <div class="calendar-container">
-    <iframe src="https://calendar.google.com/calendar/embed?src=c_ea546f07317ff6dcdbf73cee14ab645a8e154664a02554eef13e6e08423e39c1%40group.calendar.google.com&ctz=Asia/Bangkok" frameborder="0" scrolling="no"></iframe>
+
+  <!-- ปฏิทิน -->
+  <div class="calendar-card">
+    <h3 class="calendar-header text-center mb-3">
+      📅 ปฏิทินการใช้รถยนต์ส่วนราชการ
+    </h3>
+    <div class="calendar-container">
+      <iframe src="https://calendar.google.com/calendar/embed?src=c_ea546f07317ff6dcdbf73cee14ab645a8e154664a02554eef13e6e08423e39c1%40group.calendar.google.com&ctz=Asia/Bangkok" frameborder="0" scrolling="no"></iframe>
+    </div>
+  </div>
+
+  <!-- ปุ่มจองรถ -->
+  <div class="text-center mb-5">
+    <button id="showFormBtn" class="btn btn-lg btn-primary px-5 py-3 shadow">
+      🚗 กดเพื่อจองคิวรถ
+    </button>
+  </div>
+
+  <!-- ฟอร์มจองรถ -->
+  <div class="card-form" id="formSection" style="display:none;">
+    <form id="carForm">
+      <div class="text-end mb-3">
+        <button type="button" id="cancelBookingBtn" class="btn btn-outline-danger">❌ ยกเลิกการจอง</button>
+      </div>
+
+      <!-- ข้อมูลผู้จอง -->
+      <div class="form-section-card">
+        <div class="sub-title">ข้อมูลผู้จอง</div>
+        <label class="form-label">วันที่จอง</label>
+        <input type="date" class="form-control" name="bookDate" required>
+        <label class="form-label mt-3">ชื่อ-นามสกุล</label>
+        <input type="text" class="form-control" name="name" required>
+        <label class="form-label mt-3">โทรศัพท์</label>
+        <input type="tel" class="form-control" name="tel" required>
+        <label class="form-label mt-3">ตำแหน่ง</label>
+        <select class="form-select" name="position" required>
+          <option value="">-- เลือกตำแหน่ง --</option>
+          <option value="ผู้บริหาร">ผู้บริหาร</option>
+          <option value="ครู">ครู</option>
+          <option value="บุคลากรทางการศึกษา">บุคลากรทางการศึกษา</option>
+        </select>
+      </div>
+
+      <!-- รายละเอียดการเดินทาง -->
+      <div class="form-section-card">
+        <div class="sub-title">รายละเอียดการเดินทาง</div>
+        <label class="form-label">รถที่ต้องการใช้</label>
+        <select class="form-select" name="car" required>
+          <option value="">-- เลือกรถที่ต้องการใช้ --</option>
+          <option value="รถ 4 ประตู">รถ 4 ประตู</option>
+          <option value="รถตู้">รถตู้</option>
+          <option value="รถ 6 ล้อ">รถ 6 ล้อ</option>
+        </select>
+        <label class="form-label mt-3">สถานที่เดินทาง</label>
+        <input type="text" class="form-control" name="location" required>
+        <label class="form-label mt-3">วัตถุประสงค์</label>
+        <textarea class="form-control" name="purpose" rows="2" required></textarea>
+        <div class="row mt-3">
+          <div class="col">
+            <label class="form-label">วันเริ่ม</label>
+            <input type="date" class="form-control" name="startDate" required>
+          </div>
+          <div class="col">
+            <label class="form-label">เวลาเริ่ม</label>
+            <input type="time" class="form-control" name="startTime" required>
+          </div>
+          <div class="col">
+            <label class="form-label">วันสิ้นสุด</label>
+            <input type="date" class="form-control" name="endDate" required>
+          </div>
+          <div class="col">
+            <label class="form-label">เวลาสิ้นสุด</label>
+            <input type="time" class="form-control" name="endTime" required>
+          </div>
+        </div>
+      </div>
+
+      <!-- ผู้ร่วมเดินทาง -->
+      <div class="form-section-card">
+        <div class="sub-title">ผู้ร่วมเดินทาง</div>
+        <label class="form-label">จำนวนผู้ร่วมเดินทาง</label>
+        <input type="number" class="form-control" name="passengerCount" min="0" value="0" required>
+        <div class="passenger-group mt-3" id="passengerInputs">
+          <input type="text" class="form-control" name="passenger1" placeholder="ผู้ร่วมเดินทาง 1">
+          <input type="text" class="form-control" name="passenger2" placeholder="ผู้ร่วมเดินทาง 2">
+          <input type="text" class="form-control" name="passenger3" placeholder="ผู้ร่วมเดินทาง 3">
+          <input type="text" class="form-control" name="passenger4" placeholder="ผู้ร่วมเดินทาง 4">
+          <input type="text" class="form-control" name="passenger5" placeholder="ผู้ร่วมเดินทาง 5">
+          <input type="text" class="form-control" name="passenger6" placeholder="ผู้ร่วมเดินทาง 6">
+        </div>
+        <div class="mt-3" id="fileUploadSection" style="display:none;">
+          <label class="form-label">ไฟล์รายชื่อ (PDF ไม่เกิน 5MB)</label>
+          <input type="file" class="form-control" name="passengerFile" accept="application/pdf">
+        </div>
+      </div>
+
+      <button type="submit">ส่งคำขอ 🚗</button>
+    </form>
   </div>
 </div>
 
-
-<!-- ปุ่มจองรถ -->
-<div class="text-center mb-5">
-  <button id="showFormBtn" class="btn btn-lg btn-primary px-5 py-3 shadow">
-    🚗 กดเพื่อจองคิวรถ
-  </button>
-</div>
-
-<!-- ฟอร์มจองรถ -->
-<div class="card-form" id="formSection" style="display:none;">
-  <form id="carForm">
-    <div class="text-end mb-3">
-      <button type="button" id="cancelBookingBtn" class="btn btn-outline-danger">❌ ยกเลิกการจอง</button>
-    </div>
-
-    <!-- ข้อมูลผู้จอง -->
-    <div class="form-section-card">
-      <div class="sub-title">ข้อมูลผู้จอง</div>
-      <label class="form-label">วันที่จอง</label>
-      <input type="date" class="form-control" name="bookDate" required>
-      <label class="form-label mt-3">ชื่อ-นามสกุล</label>
-      <input type="text" class="form-control" name="name" required>
-      <label class="form-label mt-3">โทรศัพท์</label>
-      <input type="tel" class="form-control" name="tel" required>
-      <label class="form-label mt-3">ตำแหน่ง</label>
-      <select class="form-select" name="position" required>
-        <option value="">-- เลือกตำแหน่ง --</option>
-        <option value="ผู้บริหาร">ผู้บริหาร</option>
-        <option value="ครู">ครู</option>
-        <option value="บุคลากรทางการศึกษา">บุคลากรทางการศึกษา</option>
-      </select>
-    </div>
-
-    <!-- รายละเอียดการเดินทาง -->
-    <div class="form-section-card">
-      <div class="sub-title">รายละเอียดการเดินทาง</div>
-      <label class="form-label">รถที่ต้องการใช้</label>
-      <select class="form-select" name="car" required>
-        <option value="">-- เลือกรถที่ต้องการใช้ --</option>
-        <option value="รถ 4 ประตู">รถ 4 ประตู</option>
-        <option value="รถตู้">รถตู้</option>
-        <option value="รถ 6 ล้อ">รถ 6 ล้อ</option>
-      </select>
-      <label class="form-label mt-3">สถานที่เดินทาง</label>
-      <input type="text" class="form-control" name="location" required>
-      <label class="form-label mt-3">วัตถุประสงค์</label>
-      <textarea class="form-control" name="purpose" rows="2" required></textarea>
-      <div class="row mt-3">
-        <div class="col">
-          <label class="form-label">วันเริ่ม</label>
-          <input type="date" class="form-control" name="startDate" required>
-        </div>
-        <div class="col">
-          <label class="form-label">เวลาเริ่ม</label>
-          <input type="time" class="form-control" name="startTime" required>
-        </div>
-        <div class="col">
-          <label class="form-label">วันสิ้นสุด</label>
-          <input type="date" class="form-control" name="endDate" required>
-        </div>
-        <div class="col">
-          <label class="form-label">เวลาสิ้นสุด</label>
-          <input type="time" class="form-control" name="endTime" required>
-        </div>
-      </div>
-    </div>
-
-    <!-- ผู้ร่วมเดินทาง -->
-    <div class="form-section-card">
-      <div class="sub-title">ผู้ร่วมเดินทาง</div>
-      <label class="form-label">จำนวนผู้ร่วมเดินทาง</label>
-      <input type="number" class="form-control" name="passengerCount" min="0" value="0" required>
-      <div class="passenger-group mt-3" id="passengerInputs">
-        <input type="text" class="form-control" name="passenger1" placeholder="ผู้ร่วมเดินทาง 1">
-        <input type="text" class="form-control" name="passenger2" placeholder="ผู้ร่วมเดินทาง 2">
-        <input type="text" class="form-control" name="passenger3" placeholder="ผู้ร่วมเดินทาง 3">
-        <input type="text" class="form-control" name="passenger4" placeholder="ผู้ร่วมเดินทาง 4">
-        <input type="text" class="form-control" name="passenger5" placeholder="ผู้ร่วมเดินทาง 5">
-        <input type="text" class="form-control" name="passenger6" placeholder="ผู้ร่วมเดินทาง 6">
-      </div>
-      <div class="mt-3" id="fileUploadSection" style="display:none;">
-        <label class="form-label">ไฟล์รายชื่อ (PDF ไม่เกิน 5MB)</label>
-        <input type="file" class="form-control" name="passengerFile" accept="application/pdf">
-      </div>
-    </div>
-
-    <button type="submit">ส่งคำขอ 🚗</button>
-  </form>
-</div>
-</div>
 <!-- Modal -->
 <div class="modal fade" id="submitModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-dialog-centered">
