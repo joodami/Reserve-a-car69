@@ -22,6 +22,11 @@ body {
   margin-bottom: 2rem;
 }
 
+.main-container {
+  max-width: 1200px;
+  margin: auto;
+}
+
 /* การ์ดฟอร์มและปฏิทิน */
 /* ปฏิทิน */
 .calendar-card {
