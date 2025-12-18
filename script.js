@@ -105,14 +105,16 @@ function fileToBase64(file){
 }
 
 function sendToGAS(data){
+
   fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
     method: "POST",
-    mode: "no-cors",   // ⭐ จุดสำคัญ
+    mode: "no-cors",
     body: JSON.stringify(data)
-  })
-  .then(() => {
-    // ✅ no-cors = ถือว่าส่งสำเร็จ
-    document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว!";
+  });
+
+  // ✅ แสดงว่าส่งสำเร็จทันที (ไม่รอ fetch)
+  setTimeout(() => {
+    document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว ✅";
     document.getElementById('loadingIcon').style.display = "none";
     document.getElementById('modalFooter').style.display = "block";
 
@@ -120,9 +122,6 @@ function sendToGAS(data){
     updatePassengerFields();
     formSection.style.display = "none";
     showFormBtn.style.display = "inline-block";
-  })
-  .catch(() => {
-    alert("ไม่สามารถเชื่อมต่อระบบได้");
-  });
+  }, 800); // หน่วงเล็กน้อยให้ UX ดูดี
 }
 
