@@ -5,19 +5,16 @@ div, a, li, ul, ol, td, th {
   font-family: 'K2D', sans-serif !important;
 }
 
-/* พื้นหลัง */
 body {
   padding: 2rem;
   background: linear-gradient(135deg, #e9f2ff, #ffffff);
 }
 
-/* ครอบแบนเนอร์ */
+/* แบนเนอร์ responsive */
 .banner-wrapper {
   width: 100%;
   margin-bottom: 2rem;
 }
-
-/* รูปแบนเนอร์ */
 #banner-img {
   width: 100%;
   height: auto;
@@ -25,13 +22,7 @@ body {
   border-radius: 12px;
 }
 
-.main-container {
-  max-width: 1200px;
-  margin: auto;
-}
-
-/* การ์ดฟอร์มและปฏิทิน */
-/* ปฏิทิน */
+/* การ์ดปฏิทิน */
 .calendar-card {
   width: 100%;
   margin: 0 auto 3rem;
@@ -52,7 +43,7 @@ body {
 
 .calendar-container {
   width: 100%;
-  padding-top: 56.25%; /* อัตราส่วน 16:9 */
+  padding-top: 56.25%;
   position: relative;
   border-radius: 12px;
   overflow: hidden;
@@ -70,14 +61,11 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .calendar-container {
-    padding-top: 75%; /* สูงขึ้นสำหรับมือถือ */
-  }
+  .calendar-container { padding-top: 75%; }
   .calendar-header { font-size: 20px; }
 }
 
-
-/* Header งานยานพาหนะ */
+/* Form header */
 h2.form-header {
   background: linear-gradient(90deg, #0d6efd, #0dcaf0);
   color: #fff;
@@ -98,34 +86,14 @@ h2.form-header {
   background: #f8fbff;
   margin-bottom: 2rem;
 }
+.sub-title { font-size: 22px; font-weight: 700; color: #0d6efd; margin-bottom: 1.5rem; text-align: center; }
 
-/* ชื่อ section */
-.sub-title { 
-  font-size: 22px; 
-  font-weight: 700; 
-  color: #0d6efd; 
-  margin-bottom: 1.5rem; 
-  text-align: center; 
-}
-
-/* Label & Input */
 .form-label { font-weight: 600; }
-.form-control, .form-select {
-  padding: 0.65rem 0.8rem;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
-}
-.form-control:focus, .form-select:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25);
-}
+.form-control, .form-select { padding: 0.65rem 0.8rem; border-radius: 10px; border: 1px solid #cbd5e1; }
+.form-control:focus, .form-select:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25); }
 
 /* ผู้ร่วมเดินทาง */
-.passenger-group { 
-  display: grid; 
-  grid-template-columns: 1fr; 
-  gap: 1rem; 
-}
+.passenger-group { display: grid; grid-template-columns: 1fr; gap: 1rem; }
 
 /* ปุ่มส่งฟอร์ม */
 #carForm button[type="submit"] {
