@@ -45,8 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
   calendar = new FullCalendar.Calendar(calendarEl, {
     locale: 'th',
     initialView: 'dayGridMonth',
-    height: 'auto',   // <-- ใช้ 'auto' หรือ 'parent' แทน '100%'
-    contentHeight: 600,
+    height: 'auto',
+    contentHeight: 'auto',
     headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,timeGridDay' },
     buttonText: { today: "วันนี้", month: "เดือน", week: "สัปดาห์", day: "วัน" },
     events: async (info, success, failure) => {
@@ -97,57 +97,37 @@ form.addEventListener('submit', async (e) => {
       return;
     }
     const file = fileInput.files[0];
-    if(file.type !== "application/pdf"){ alert("กรุณาอัปโหลดไฟล์ PDF เท่านั้น"); fileInput.focus(); return; }
-    if(file.size > 5*1024*1024){ alert("ไฟล์ต้องเล็กกว่า 5 MB"); fileInput.focus(); return; }
+    if(file.type !== "application/pdf"){ alert("กรุณาอัปโหลดไฟล์ PDF เท่านั้น"); return; }
+    if(file.size > 5*1024*1024){ alert("ไฟล์ต้องไม่เกิน 5MB"); return; }
     passengerFile = file;
   }
 
-  document.getElementById('modalText').innerHTML = "กำลังส่งข้อมูล กรุณารอสักครู่...";
-  document.getElementById('loadingIcon').style.display = "block";
-  document.getElementById('modalFooter').style.display = "none";
+  const formData = new FormData(form);
+  if(passengerFile) formData.append('passengerFile', passengerFile);
+
   submitModal.show();
+  document.getElementById('loadingIcon').style.display = "block";
+  document.getElementById('modalText').textContent = "กำลังส่งข้อมูล กรุณารอสักครู่...";
+  document.getElementById('modalFooter').style.display = "none";
 
-  const formData = Object.fromEntries(new FormData(form).entries());
-  formData.passengerCount = count;
-
-  if(passengerFile){
-    formData.passengerFile = await fileToBase64(passengerFile);
-    formData.passengerFileName = passengerFile.name;
-  } else {
-    formData.passengerFile = null;
-    formData.passengerFileName = "-";
-  }
-
-  sendToGAS(formData);
-});
-
-function fileToBase64(file){
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = error => reject(error);
-    reader.readAsDataURL(file);
-  });
-}
-
-function sendToGAS(data){
-  fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
-    method: "POST",
-    mode: "no-cors",
-    body: JSON.stringify(data)
-  });
-
-  setTimeout(() => {
-    document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว ✅";
+  try {
+    const res = await fetch('https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec', {
+      method: 'POST',
+      body: formData
+    });
+    if(res.ok){
+      document.getElementById('loadingIcon').style.display = "none";
+      document.getElementById('modalText').textContent = "ส่งข้อมูลเรียบร้อย ✅";
+      document.getElementById('modalFooter').style.display = "block";
+      form.reset();
+      updatePassengerFields();
+      formSection.style.display = "none";
+      showFormBtn.style.display = "inline-block";
+      calendar.refetchEvents();
+    } else { throw new Error("เกิดข้อผิดพลาด"); }
+  } catch(e){
     document.getElementById('loadingIcon').style.display = "none";
+    document.getElementById('modalText').textContent = `เกิดข้อผิดพลาด ❌: ${e.message}`;
     document.getElementById('modalFooter').style.display = "block";
-
-    form.reset();
-    updatePassengerFields();
-    formSection.style.display = "none";
-    showFormBtn.style.display = "inline-block";
-
-    // Refresh ปฏิทินอัตโนมัติ
-    if(calendar) calendar.refetchEvents();
-  }, 800);
-}
+  }
+});
