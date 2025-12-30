@@ -43,30 +43,36 @@ document.addEventListener('DOMContentLoaded', () => {
   const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
 
   calendar = new FullCalendar.Calendar(calendarEl, {
-    locale: 'th',
-    initialView: 'dayGridMonth',
-    height: 'auto',
-    contentHeight: 'auto',
-    headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,timeGridDay' },
-    buttonText: { today: "วันนี้", month: "เดือน", week: "สัปดาห์", day: "วัน" },
-    events: async (info, success, failure) => {
-      try {
-        const res = await fetch('https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec?mode=events');
-        success(await res.json());
-      } catch (e) { failure(e); }
-    },
-    eventClick: function(info) {
-      const e = info.event.extendedProps;
-      document.getElementById('eventModalTitle').textContent = `🚗 ${e.car} | ${e.name}`;
-      document.getElementById('eventModalBody').innerHTML =
-        `<p><strong>ผู้ขอใช้รถ:</strong> ${e.name}</p>` +
-        `<p><strong>รถ:</strong> ${e.car}</p>` +
-        `<p><strong>สถานที่:</strong> ${e.location}</p>` +
-        `<p><strong>วัตถุประสงค์:</strong> ${e.purpose}</p>` +
-        `<p><strong>เวลา:</strong> ${info.event.start.toLocaleString('th-TH')} - ${info.event.end.toLocaleString('th-TH')}</p>`;
-      eventModal.show();
-    }
-  });
+  locale: 'th',
+  initialView: 'dayGridMonth',
+  height: '100%',       // เต็มความสูงของ container
+  contentHeight: 'auto',
+  expandRows: true,     // ให้เดือนเต็ม card
+  headerToolbar: {
+    left: 'prev,next today',
+    center: 'title',
+    right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+  },
+  buttonText: { today: "วันนี้", month: "เดือน", week: "สัปดาห์", day: "วัน", list: "รายการ" },
+  events: async (info, success, failure) => {
+    try {
+      const res = await fetch('https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec?mode=events');
+      success(await res.json());
+    } catch (e) { failure(e); }
+  },
+  eventClick: function(info) {
+    const e = info.event.extendedProps;
+    const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+    document.getElementById('eventModalTitle').textContent = `🚗 ${e.car} | ${e.name}`;
+    document.getElementById('eventModalBody').innerHTML =
+      `<p><strong>ผู้ขอใช้รถ:</strong> ${e.name}</p>` +
+      `<p><strong>รถ:</strong> ${e.car}</p>` +
+      `<p><strong>สถานที่:</strong> ${e.location}</p>` +
+      `<p><strong>วัตถุประสงค์:</strong> ${e.purpose}</p>` +
+      `<p><strong>เวลา:</strong> ${info.event.start.toLocaleString('th-TH')} - ${info.event.end.toLocaleString('th-TH')}</p>`;
+    eventModal.show();
+  }
+});
   calendar.render();
 });
 
