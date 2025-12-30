@@ -111,3 +111,18 @@ h2.form-header {
 
 /* Modal */
 .modal-content { font-family: 'K2D', sans-serif; }
+
+/* ===== FullCalendar ===== */
+#calendar {
+  width: 100%;
+  height: calc(100vh - 320px);
+  background: #fff;
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.fc-event {
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
