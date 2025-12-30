@@ -1,4 +1,4 @@
-// แสดง/ซ่อนฟอร์ม
+// ===== แสดง/ซ่อนฟอร์ม =====
 const showFormBtn = document.getElementById("showFormBtn");
 const formSection = document.getElementById("formSection");
 const cancelBtn = document.getElementById("cancelBookingBtn");
@@ -16,7 +16,7 @@ cancelBtn.addEventListener("click", () => {
   updatePassengerFields();
 });
 
-// ผู้ร่วมเดินทาง
+// ===== ผู้ร่วมเดินทาง =====
 const passengerCount = document.querySelector('input[name="passengerCount"]');
 const passengerInputs = document.querySelectorAll('#passengerInputs input');
 const fileUploadSection = document.getElementById("fileUploadSection");
@@ -36,14 +36,46 @@ function updatePassengerFields() {
 passengerCount.addEventListener("input", updatePassengerFields);
 updatePassengerFields();
 
-// ส่งฟอร์ม
+// ===== FullCalendar =====
+let calendar;
+document.addEventListener('DOMContentLoaded', () => {
+  const calendarEl = document.getElementById('calendar');
+  const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+
+  calendar = new FullCalendar.Calendar(calendarEl, {
+    locale: 'th',
+    initialView: 'dayGridMonth',
+    height: '100%',
+    headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,timeGridDay' },
+    buttonText: { today: "วันนี้", month: "เดือน", week: "สัปดาห์", day: "วัน" },
+    events: async (info, success, failure) => {
+      try {
+        const res = await fetch('https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec?mode=events');
+        success(await res.json());
+      } catch (e) { failure(e); }
+    },
+    eventClick: function(info) {
+      const e = info.event.extendedProps;
+      document.getElementById('eventModalTitle').textContent = `🚗 ${e.car} | ${e.name}`;
+      document.getElementById('eventModalBody').innerHTML =
+        `<p><strong>ผู้ขอใช้รถ:</strong> ${e.name}</p>` +
+        `<p><strong>รถ:</strong> ${e.car}</p>` +
+        `<p><strong>สถานที่:</strong> ${e.location}</p>` +
+        `<p><strong>วัตถุประสงค์:</strong> ${e.purpose}</p>` +
+        `<p><strong>เวลา:</strong> ${info.event.start.toLocaleString('th-TH')} - ${info.event.end.toLocaleString('th-TH')}</p>`;
+      eventModal.show();
+    }
+  });
+  calendar.render();
+});
+
+// ===== ส่งฟอร์ม =====
 const form = document.getElementById('carForm');
 const submitModal = new bootstrap.Modal(document.getElementById('submitModal'));
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  // ตรวจฟิลด์ required
   const requiredFields = form.querySelectorAll('[required]');
   for (const field of requiredFields) {
     if (!field.value.trim()) {
@@ -64,16 +96,8 @@ form.addEventListener('submit', async (e) => {
       return;
     }
     const file = fileInput.files[0];
-    if(file.type !== "application/pdf"){
-      alert("กรุณาอัปโหลดไฟล์ PDF เท่านั้น");
-      fileInput.focus();
-      return;
-    }
-    if(file.size > 5*1024*1024){
-      alert("ไฟล์ต้องเล็กกว่า 5 MB");
-      fileInput.focus();
-      return;
-    }
+    if(file.type !== "application/pdf"){ alert("กรุณาอัปโหลดไฟล์ PDF เท่านั้น"); fileInput.focus(); return; }
+    if(file.size > 5*1024*1024){ alert("ไฟล์ต้องเล็กกว่า 5 MB"); fileInput.focus(); return; }
     passengerFile = file;
   }
 
@@ -104,19 +128,6 @@ function fileToBase64(file){
     reader.readAsDataURL(file);
   });
 }
-// ===== ตรวจวัน/เวลา =====
-const startDT = new Date(
-  `${formData.startDate}T${formData.startTime}`
-);
-const endDT = new Date(
-  `${formData.endDate}T${formData.endTime}`
-);
-
-if (endDT <= startDT) {
-  alert("วันและเวลาสิ้นสุด ต้องมากกว่าวันและเวลาเริ่ม");
-  submitModal.hide();
-  return;
-}
 
 function sendToGAS(data){
   fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
@@ -134,50 +145,8 @@ function sendToGAS(data){
     updatePassengerFields();
     formSection.style.display = "none";
     showFormBtn.style.display = "inline-block";
+
+    // Refresh ปฏิทินอัตโนมัติ
+    if(calendar) calendar.refetchEvents();
   }, 800);
 }
-
-// =====================================================
-// FullCalendar
-// =====================================================
-document.addEventListener('DOMContentLoaded', () => {
-
-  const calendarEl = document.getElementById('calendar');
-
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    locale: 'th',
-    initialView: 'dayGridMonth',
-    height: 'auto',
-
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
-    },
-
-    events: async (info, success, failure) => {
-      try {
-        const res = await fetch(
-          'https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec?mode=events'
-        );
-        success(await res.json());
-      } catch (e) {
-        failure(e);
-      }
-    },
-
-    eventClick: function(info) {
-      const e = info.event.extendedProps;
-
-      alert(
-        `🚗 รถ: ${e.car}\n` +
-        `👤 ผู้ขอ: ${e.name}\n` +
-        `📍 สถานที่: ${e.location}\n` +
-        `📝 วัตถุประสงค์: ${e.purpose}\n` +
-        `⏰ เวลา: ${info.event.start.toLocaleString('th-TH')} - ${info.event.end.toLocaleString('th-TH')}`
-      );
-    }
-  });
-
-  calendar.render();
-});
