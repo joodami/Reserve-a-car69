@@ -1,62 +1,69 @@
-/* ===== ฟอนต์ K2D ===== */
+/* ฟอนต์ K2D */
 body, h1, h2, h3, h4, h5, h6,
 p, span, label, input, select, textarea, button,
 div, a, li, ul, ol, td, th {
   font-family: 'K2D', sans-serif !important;
 }
 
-/* ===== พื้นหลัง ===== */
 body {
   padding: 2rem;
   background: linear-gradient(135deg, #e9f2ff, #ffffff);
 }
 
 /* แบนเนอร์ responsive */
-.banner-wrapper { width: 100%; margin-bottom: 2rem; }
-#banner-img { width: 100%; height: auto; display: block; border-radius: 12px; }
-
-/* ปฏิทิน FullCalendar */
-/* ===== FullCalendar แบบเต็มหน้าจอ ===== */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.main-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  padding: 2rem;
-  box-sizing: border-box;
-}
-
-.calendar-card {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+.banner-wrapper {
+  width: 100%;
   margin-bottom: 2rem;
-  padding: 1rem;
+}
+#banner-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+/* การ์ดปฏิทิน */
+.calendar-card {
+  width: 100%;
+  margin: 0 auto 3rem;
+  padding: 2rem;
   border-radius: 18px;
   background: #fff;
   box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 }
+.calendar-card:hover { transform: translateY(-4px); }
 
-#calendar {
-  flex: 1 1 auto;
-  min-height: 0;
+.calendar-header {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0d6efd;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
-/* Responsive มือถือ */
+.calendar-container {
+  width: 100%;
+  padding-top: 56.25%;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+.calendar-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .calendar-card { padding: 0.5rem; }
-  #calendar { min-height: 400px; }
-  .fc-toolbar-chunk { flex-wrap: wrap; justify-content: center; }
-  .fc-button { padding: 0.25rem 0.5rem; font-size: 0.75rem; }
-  .fc-toolbar-title { font-size: 1rem; }
+  .calendar-container { padding-top: 75%; }
+  .calendar-header { font-size: 20px; }
 }
-
 
 /* Form header */
 h2.form-header {
@@ -104,4 +111,3 @@ h2.form-header {
 
 /* Modal */
 .modal-content { font-family: 'K2D', sans-serif; }
-#eventModal .modal-body p { margin-bottom: 0.5rem; }
