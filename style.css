@@ -22,7 +22,7 @@ body {
 .calendar-header { font-size: 22px; font-weight: 700; color: #0d6efd; margin-bottom: 1.5rem; text-align: center; }
 
 /* ปฏิทิน FullCalendar */
-#calendar { width: 100%; height: 600px; background: #fff; border-radius: 16px; padding: 1rem; }
+#calendar { width: 100%; height: auto; min-height: 500px; background: #fff; border-radius: 16px; padding: 1rem; }
 .fc-event { cursor: pointer; font-size: 0.9rem; }
 
 /* Responsive FullCalendar */
