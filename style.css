@@ -15,6 +15,7 @@ body {
   width: 100%;
   margin-bottom: 2rem;
 }
+
 #banner-img {
   width: 100%;
   height: auto;
@@ -31,7 +32,10 @@ body {
   background: #fff;
   box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 }
-.calendar-card:hover { transform: translateY(-4px); }
+
+.calendar-card:hover {
+  transform: translateY(-4px);
+}
 
 .calendar-header {
   font-size: 22px;
@@ -41,6 +45,7 @@ body {
   text-align: center;
 }
 
+/* (คงไว้ แม้ไม่ได้ใช้แล้ว เพื่อไม่กระทบโค้ดเดิม) */
 .calendar-container {
   width: 100%;
   padding-top: 56.25%;
@@ -61,8 +66,13 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .calendar-container { padding-top: 75%; }
-  .calendar-header { font-size: 20px; }
+  .calendar-container {
+    padding-top: 75%;
+  }
+
+  .calendar-header {
+    font-size: 20px;
+  }
 }
 
 /* Form header */
@@ -86,14 +96,38 @@ h2.form-header {
   background: #f8fbff;
   margin-bottom: 2rem;
 }
-.sub-title { font-size: 22px; font-weight: 700; color: #0d6efd; margin-bottom: 1.5rem; text-align: center; }
 
-.form-label { font-weight: 600; }
-.form-control, .form-select { padding: 0.65rem 0.8rem; border-radius: 10px; border: 1px solid #cbd5e1; }
-.form-control:focus, .form-select:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25); }
+.sub-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0d6efd;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.form-label {
+  font-weight: 600;
+}
+
+.form-control,
+.form-select {
+  padding: 0.65rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25);
+}
 
 /* ผู้ร่วมเดินทาง */
-.passenger-group { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.passenger-group {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
 
 /* ปุ่มส่งฟอร์ม */
 #carForm button[type="submit"] {
@@ -107,15 +141,20 @@ h2.form-header {
   width: 100%;
   transition: 0.2s;
 }
-#carForm button[type="submit"]:hover { transform: translateY(-2px); }
+
+#carForm button[type="submit"]:hover {
+  transform: translateY(-2px);
+}
 
 /* Modal */
-.modal-content { font-family: 'K2D', sans-serif; }
+.modal-content {
+  font-family: 'K2D', sans-serif;
+}
 
 /* ===== FullCalendar ===== */
 #calendar {
   width: 100%;
-  height: calc(100vh - 320px);
+  min-height: 650px;   /* ⭐ แก้เฉพาะบรรทัดนี้ */
   background: #fff;
   border-radius: 16px;
   padding: 1rem;
@@ -125,4 +164,3 @@ h2.form-header {
   cursor: pointer;
   font-size: 0.9rem;
 }
-
