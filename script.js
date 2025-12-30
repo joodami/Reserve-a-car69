@@ -123,3 +123,48 @@ function sendToGAS(data){
     showFormBtn.style.display = "inline-block";
   }, 800);
 }
+
+// =====================================================
+// FullCalendar
+// =====================================================
+document.addEventListener('DOMContentLoaded', () => {
+
+  const calendarEl = document.getElementById('calendar');
+
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    locale: 'th',
+    initialView: 'dayGridMonth',
+    height: '100%',
+
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+
+    events: async (info, success, failure) => {
+      try {
+        const res = await fetch(
+          'https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec?mode=events'
+        );
+        success(await res.json());
+      } catch (e) {
+        failure(e);
+      }
+    },
+
+    eventClick: function(info) {
+      const e = info.event.extendedProps;
+
+      alert(
+        `🚗 รถ: ${e.car}\n` +
+        `👤 ผู้ขอ: ${e.name}\n` +
+        `📍 สถานที่: ${e.location}\n` +
+        `📝 วัตถุประสงค์: ${e.purpose}\n` +
+        `⏰ เวลา: ${info.event.start.toLocaleString('th-TH')} - ${info.event.end.toLocaleString('th-TH')}`
+      );
+    }
+  });
+
+  calendar.render();
+});
