@@ -104,6 +104,19 @@ function fileToBase64(file){
     reader.readAsDataURL(file);
   });
 }
+// ===== ตรวจวัน/เวลา =====
+const startDT = new Date(
+  `${formData.startDate}T${formData.startTime}`
+);
+const endDT = new Date(
+  `${formData.endDate}T${formData.endTime}`
+);
+
+if (endDT <= startDT) {
+  alert("วันและเวลาสิ้นสุด ต้องมากกว่าวันและเวลาเริ่ม");
+  submitModal.hide();
+  return;
+}
 
 function sendToGAS(data){
   fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
