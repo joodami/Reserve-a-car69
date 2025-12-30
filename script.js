@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
   calendar = new FullCalendar.Calendar(calendarEl, {
   locale: 'th',
   initialView: 'dayGridMonth',
-  height: '100%',       // เต็มความสูงของ container
+  height: '100%',
   contentHeight: 'auto',
-  expandRows: true,     // ให้เดือนเต็ม card
+  expandRows: true,
   headerToolbar: {
     left: 'prev,next today',
     center: 'title',
@@ -108,6 +108,7 @@ form.addEventListener('submit', async (e) => {
     passengerFile = file;
   }
 
+  // ===== ใช้ FormData ส่งตรงเหมือนเดิม =====
   const formData = new FormData(form);
   if(passengerFile) formData.append('passengerFile', passengerFile);
 
@@ -121,6 +122,7 @@ form.addEventListener('submit', async (e) => {
       method: 'POST',
       body: formData
     });
+
     if(res.ok){
       document.getElementById('loadingIcon').style.display = "none";
       document.getElementById('modalText').textContent = "ส่งข้อมูลเรียบร้อย ✅";
@@ -129,8 +131,9 @@ form.addEventListener('submit', async (e) => {
       updatePassengerFields();
       formSection.style.display = "none";
       showFormBtn.style.display = "inline-block";
-      calendar.refetchEvents();
+      if(calendar) calendar.refetchEvents();
     } else { throw new Error("เกิดข้อผิดพลาด"); }
+
   } catch(e){
     document.getElementById('loadingIcon').style.display = "none";
     document.getElementById('modalText').textContent = `เกิดข้อผิดพลาด ❌: ${e.message}`;
