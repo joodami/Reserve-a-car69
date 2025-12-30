@@ -16,9 +16,8 @@ body {
 #banner-img { width: 100%; height: auto; display: block; border-radius: 12px; }
 
 /* การ์ดปฏิทิน */
-.calendar-card { width: 100%; margin: 0 auto 3rem; padding: 2rem; border-radius: 18px; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
+.calendar-card { width: 100%; margin: 0 auto 3rem; padding: 1rem; border-radius: 18px; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
 .calendar-card:hover { transform: translateY(-4px); }
-
 .calendar-header { font-size: 22px; font-weight: 700; color: #0d6efd; margin-bottom: 1.5rem; text-align: center; }
 
 /* ปฏิทิน FullCalendar */
@@ -27,7 +26,7 @@ body {
 
 /* Responsive FullCalendar */
 @media (max-width: 768px) {
-  #calendar { height: 420px; padding: 0.5rem; }
+  #calendar { min-height: 400px; padding: 0.5rem; }
   .fc-header-toolbar { flex-direction: column; gap: 0.4rem; }
   .fc-toolbar-chunk { justify-content: center; flex-wrap: wrap; gap: 0.25rem; }
   .fc-button { padding: 0.25rem 0.5rem; font-size: 0.75rem; }
