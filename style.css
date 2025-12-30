@@ -43,7 +43,7 @@ body {
 
 .calendar-container {
   width: 100%;
-  height: 650px;
+  padding-top: 56.25%;
   position: relative;
   border-radius: 12px;
   overflow: hidden;
@@ -51,18 +51,19 @@ body {
 }
 
 .calendar-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   border: 0;
 }
 
-/* มือถือ */
+/* Responsive */
 @media (max-width: 768px) {
-  .calendar-container {
-    height: 850px; /* สูงพอให้เห็นทุกวัน */
-  }
+  .calendar-container { padding-top: 75%; }
+  .calendar-header { font-size: 20px; }
 }
-
 
 /* Form header */
 h2.form-header {
@@ -85,14 +86,31 @@ h2.form-header {
   background: #f8fbff;
   margin-bottom: 2rem;
 }
-.sub-title { font-size: 22px; font-weight: 700; color: #0d6efd; margin-bottom: 1.5rem; text-align: center; }
+.sub-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0d6efd;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
 
 .form-label { font-weight: 600; }
-.form-control, .form-select { padding: 0.65rem 0.8rem; border-radius: 10px; border: 1px solid #cbd5e1; }
-.form-control:focus, .form-select:focus { border-color: #0d6efd; box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25); }
+.form-control, .form-select {
+  padding: 0.65rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+}
+.form-control:focus, .form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25);
+}
 
 /* ผู้ร่วมเดินทาง */
-.passenger-group { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.passenger-group {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
 
 /* ปุ่มส่งฟอร์ม */
 #carForm button[type="submit"] {
