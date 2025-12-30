@@ -43,7 +43,7 @@ body {
 
 .calendar-container {
   width: 100%;
-  padding-top: 56.25%;
+  height: 650px;
   position: relative;
   border-radius: 12px;
   overflow: hidden;
@@ -51,19 +51,18 @@ body {
 }
 
 .calendar-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
   border: 0;
 }
 
-/* Responsive */
+/* มือถือ */
 @media (max-width: 768px) {
-  .calendar-container { padding-top: 75%; }
-  .calendar-header { font-size: 20px; }
+  .calendar-container {
+    height: 850px; /* สูงพอให้เห็นทุกวัน */
+  }
 }
+
 
 /* Form header */
 h2.form-header {
