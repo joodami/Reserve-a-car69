@@ -4,26 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>งานยานพาหนะ โรงเรียนพิมานพิทยาสรรค์</title>
-
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <link href="https://fonts.googleapis.com/css2?family=K2D:wght@400;500;700&display=swap" rel="stylesheet">
-
-<!-- FullCalendar -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
-
-<!-- ไฟล์ CSS ของเรา -->
 <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
+   
 <header class="banner-wrapper">
   <img id="banner-img" src="https://github.com/joodami/school-assets/blob/main/banner%20car.jpg?raw=true" alt="แบนเนอร์งานยานพาหนะ">
 </header>
 
 <h2 class="form-header">🚗 งานยานพาหนะ สำนักงานอำนวยการ</h2>
-
 <div class="main-container">
 
   <!-- ปฏิทิน -->
@@ -31,7 +23,9 @@
     <h3 class="calendar-header text-center mb-3">
       📅 ปฏิทินการใช้รถยนต์ส่วนราชการ
     </h3>
-    <div id="calendar"></div>
+    <div class="calendar-container">
+      <iframe src="https://calendar.google.com/calendar/embed?src=c_ea546f07317ff6dcdbf73cee14ab645a8e154664a02554eef13e6e08423e39c1%40group.calendar.google.com&ctz=Asia/Bangkok" frameborder="0" scrolling="no"></iframe>
+    </div>
   </div>
 
   <!-- ปุ่มจองรถ -->
@@ -45,9 +39,7 @@
   <div class="card-form" id="formSection" style="display:none;">
     <form id="carForm">
       <div class="text-end mb-3">
-        <button type="button" id="cancelBookingBtn" class="btn btn-outline-danger">
-          ❌ ยกเลิกการจอง
-        </button>
+        <button type="button" id="cancelBookingBtn" class="btn btn-outline-danger">❌ ยกเลิกการจอง</button>
       </div>
 
       <!-- ข้อมูลผู้จอง -->
@@ -82,7 +74,6 @@
         <input type="text" class="form-control" name="location" required>
         <label class="form-label mt-3">วัตถุประสงค์</label>
         <textarea class="form-control" name="purpose" rows="2" required></textarea>
-
         <div class="row mt-3">
           <div class="col">
             <label class="form-label">วันเริ่ม</label>
@@ -123,12 +114,11 @@
       </div>
 
       <button type="submit">ส่งคำขอ 🚗</button>
-
     </form>
   </div>
 </div>
 
-<!-- Submit Modal -->
+<!-- Modal -->
 <div class="modal fade" id="submitModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content text-center">
@@ -150,27 +140,7 @@
   </div>
 </div>
 
-<!-- Event Modal -->
-<div class="modal fade" id="eventModal" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content text-start">
-      <div class="modal-header">
-        <h5 class="modal-title" id="eventModalTitle">รายละเอียดการจองรถ</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body" id="eventModalBody"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-
-<!-- ไฟล์ JS ของเรา -->
 <script src="script.js"></script>
-
 </body>
 </html>
