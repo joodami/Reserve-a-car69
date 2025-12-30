@@ -164,3 +164,34 @@ h2.form-header {
   cursor: pointer;
   font-size: 0.9rem;
 }
+
+/* ===== ปรับ FullCalendar สำหรับมือถือ ===== */
+@media (max-width: 768px) {
+
+  #calendar {
+    min-height: 420px;     /* จาก 650 → พอดีจอ */
+    padding: 0.5rem;
+  }
+
+  .fc-header-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .fc-toolbar-chunk {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .fc-button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .fc-toolbar-title {
+    font-size: 1rem;
+  }
+}
