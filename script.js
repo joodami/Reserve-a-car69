@@ -45,7 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
   calendar = new FullCalendar.Calendar(calendarEl, {
     locale: 'th',
     initialView: 'dayGridMonth',
-    height: '100%',
+    height: 'auto',   // <-- ใช้ 'auto' หรือ 'parent' แทน '100%'
+    contentHeight: 600,
     headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,timeGridDay' },
     buttonText: { today: "วันนี้", month: "เดือน", week: "สัปดาห์", day: "วัน" },
     events: async (info, success, failure) => {
