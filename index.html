@@ -9,20 +9,17 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <link href="https://fonts.googleapis.com/css2?family=K2D:wght@400;500;700&display=swap" rel="stylesheet">
 
-<!-- 🔽 เพิ่มเฉพาะส่วนนี้ (FullCalendar) -->
+<!-- FullCalendar -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
-<!-- 🔼 จบส่วนที่เพิ่ม -->
 
+<!-- ไฟล์ CSS ของเรา -->
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header class="banner-wrapper">
-  <img id="banner-img"
-       src="https://github.com/joodami/school-assets/blob/main/banner%20car.jpg?raw=true"
-       alt="แบนเนอร์งานยานพาหนะ">
+  <img id="banner-img" src="https://github.com/joodami/school-assets/blob/main/banner%20car.jpg?raw=true" alt="แบนเนอร์งานยานพาหนะ">
 </header>
 
 <h2 class="form-header">🚗 งานยานพาหนะ สำนักงานอำนวยการ</h2>
@@ -34,11 +31,7 @@
     <h3 class="calendar-header text-center mb-3">
       📅 ปฏิทินการใช้รถยนต์ส่วนราชการ
     </h3>
-
-    <!-- 🔽 แก้เฉพาะตรงนี้ -->
-    <!-- เดิมเป็น iframe Google Calendar -->
     <div id="calendar"></div>
-    <!-- 🔼 จบจุดที่แก้ -->
   </div>
 
   <!-- ปุ่มจองรถ -->
@@ -61,16 +54,12 @@
       <!-- ข้อมูลผู้จอง -->
       <div class="form-section-card">
         <div class="sub-title">ข้อมูลผู้จอง</div>
-
         <label class="form-label">วันที่จอง</label>
         <input type="date" class="form-control" name="bookDate" required>
-
         <label class="form-label mt-3">ชื่อ-นามสกุล</label>
         <input type="text" class="form-control" name="name" required>
-
         <label class="form-label mt-3">โทรศัพท์</label>
         <input type="tel" class="form-control" name="tel" required>
-
         <label class="form-label mt-3">ตำแหน่ง</label>
         <select class="form-select" name="position" required>
           <option value="">-- เลือกตำแหน่ง --</option>
@@ -83,7 +72,6 @@
       <!-- รายละเอียดการเดินทาง -->
       <div class="form-section-card">
         <div class="sub-title">รายละเอียดการเดินทาง</div>
-
         <label class="form-label">รถที่ต้องการใช้</label>
         <select class="form-select" name="car" required>
           <option value="">-- เลือกรถที่ต้องการใช้ --</option>
@@ -91,10 +79,8 @@
           <option value="รถตู้">รถตู้</option>
           <option value="รถ 6 ล้อ">รถ 6 ล้อ</option>
         </select>
-
         <label class="form-label mt-3">สถานที่เดินทาง</label>
         <input type="text" class="form-control" name="location" required>
-
         <label class="form-label mt-3">วัตถุประสงค์</label>
         <textarea class="form-control" name="purpose" rows="2" required></textarea>
 
@@ -121,10 +107,8 @@
       <!-- ผู้ร่วมเดินทาง -->
       <div class="form-section-card">
         <div class="sub-title">ผู้ร่วมเดินทาง</div>
-
         <label class="form-label">จำนวนผู้ร่วมเดินทาง</label>
         <input type="number" class="form-control" name="passengerCount" min="0" value="0" required>
-
         <div class="passenger-group mt-3" id="passengerInputs">
           <input type="text" class="form-control" name="passenger1" placeholder="ผู้ร่วมเดินทาง 1">
           <input type="text" class="form-control" name="passenger2" placeholder="ผู้ร่วมเดินทาง 2">
@@ -133,7 +117,6 @@
           <input type="text" class="form-control" name="passenger5" placeholder="ผู้ร่วมเดินทาง 5">
           <input type="text" class="form-control" name="passenger6" placeholder="ผู้ร่วมเดินทาง 6">
         </div>
-
         <div class="mt-3" id="fileUploadSection" style="display:none;">
           <label class="form-label">ไฟล์รายชื่อ (PDF ไม่เกิน 5MB)</label>
           <input type="file" class="form-control" name="passengerFile" accept="application/pdf">
@@ -146,7 +129,7 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Submit Modal -->
 <div class="modal fade" id="submitModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content text-center">
@@ -168,7 +151,27 @@
   </div>
 </div>
 
+<!-- Event Modal -->
+<div class="modal fade" id="eventModal" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-start">
+      <div class="modal-header">
+        <h5 class="modal-title" id="eventModalTitle">รายละเอียดการจองรถ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="eventModalBody"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+<!-- ไฟล์ JS ของเรา -->
 <script src="script.js"></script>
+
 </body>
 </html>
