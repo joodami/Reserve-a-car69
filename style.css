@@ -15,23 +15,48 @@ body {
 .banner-wrapper { width: 100%; margin-bottom: 2rem; }
 #banner-img { width: 100%; height: auto; display: block; border-radius: 12px; }
 
-/* การ์ดปฏิทิน */
-.calendar-card { width: 100%; margin: 0 auto 3rem; padding: 1rem; border-radius: 18px; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
-.calendar-card:hover { transform: translateY(-4px); }
-.calendar-header { font-size: 22px; font-weight: 700; color: #0d6efd; margin-bottom: 1.5rem; text-align: center; }
-
 /* ปฏิทิน FullCalendar */
-#calendar { width: 100%; height: auto; min-height: 500px; background: #fff; border-radius: 16px; padding: 1rem; }
-.fc-event { cursor: pointer; font-size: 0.9rem; }
+/* ===== FullCalendar แบบเต็มหน้าจอ ===== */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
-/* Responsive FullCalendar */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.calendar-card {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+#calendar {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Responsive มือถือ */
 @media (max-width: 768px) {
-  #calendar { min-height: 400px; padding: 0.5rem; }
-  .fc-header-toolbar { flex-direction: column; gap: 0.4rem; }
-  .fc-toolbar-chunk { justify-content: center; flex-wrap: wrap; gap: 0.25rem; }
+  .calendar-card { padding: 0.5rem; }
+  #calendar { min-height: 400px; }
+  .fc-toolbar-chunk { flex-wrap: wrap; justify-content: center; }
   .fc-button { padding: 0.25rem 0.5rem; font-size: 0.75rem; }
   .fc-toolbar-title { font-size: 1rem; }
 }
+
 
 /* Form header */
 h2.form-header {
