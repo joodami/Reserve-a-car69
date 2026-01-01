@@ -129,3 +129,10 @@ h2.form-header {
   }
 }
 
+/* ระยะห่างระหว่างปฏิทินกับปุ่มบนคอม */
+@media (min-width: 769px) {
+  .main-container > .text-center.mb-5 {
+    margin-top: 2rem; /* เพิ่มช่องว่างระหว่างปฏิทินกับปุ่ม */
+  }
+}
+
