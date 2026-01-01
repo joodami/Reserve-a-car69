@@ -23,27 +23,9 @@ body {
 }
 
 /* การ์ดปฏิทิน */
-.calendar-card {
-  width: 100%;
-  margin: 0 auto 3rem;
-  padding: 2rem;
-  border-radius: 18px;
-  background: #fff;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-}
-.calendar-card:hover { transform: translateY(-4px); }
-
-.calendar-header {
-  font-size: 22px;
-  font-weight: 700;
-  color: #0d6efd;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
 .calendar-container {
   width: 100%;
-  padding-top: 56.25%;
+  padding-top: 56.25%; /* คงเดิม สำหรับคอม */
   position: relative;
   border-radius: 12px;
   overflow: hidden;
@@ -59,11 +41,14 @@ body {
   border: 0;
 }
 
-/* Responsive */
+/* Responsive สำหรับมือถือ */
 @media (max-width: 768px) {
-  .calendar-container { padding-top: 75%; }
+  .calendar-container {
+    padding-top: 140%; /* สูงขึ้นเพื่อให้เห็นทั้งเดือน */
+  }
   .calendar-header { font-size: 20px; }
 }
+
 
 /* Form header */
 h2.form-header {
