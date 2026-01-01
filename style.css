@@ -113,3 +113,19 @@ h2.form-header {
 
 /* Modal */
 .modal-content { font-family: 'K2D', sans-serif; }
+
+/* Responsive สำหรับมือถือ */
+@media (max-width: 768px) {
+  /* หัวข้อฟอร์มใหญ่ */
+  h2.form-header {
+    font-size: 22px;   /* จาก 28px ลดลงให้เหมาะกับมือถือ */
+    padding: 0.8rem 1rem; /* ปรับ padding ให้พอดีหน้าจอ */
+  }
+
+  /* หัวข้อปฏิทิน */
+  .calendar-header {
+    font-size: 18px; /* จาก 22px ลดลงเล็กน้อย */
+    margin-bottom: 1rem; /* ลดช่องว่างด้านล่าง */
+  }
+}
+
