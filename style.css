@@ -123,9 +123,12 @@ h2.form-header {
   }
 
   /* หัวข้อปฏิทิน */
+@media (max-width: 768px) {
   .calendar-header {
-    font-size: 18px; /* จาก 22px ลดลงเล็กน้อย */
-    margin-bottom: 1rem; /* ลดช่องว่างด้านล่าง */
+    font-size: 16px; /* ลดจาก 18px เป็น 16px */
+    white-space: nowrap; /* ป้องกันขึ้นบรรทัดใหม่ */
+    overflow: hidden; 
+    text-overflow: ellipsis; /* ถ้ายาวเกินก็แสดง ... */
   }
 }
 
