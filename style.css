@@ -139,3 +139,16 @@ h2.form-header {
   }
 }
 
+/* ระยะห่างปุ่มจองรถกับปฏิทิน */
+.booking-btn-wrapper {
+  margin-top: 3rem;   /* เว้นจากปฏิทิน */
+  margin-bottom: 3rem;
+}
+
+/* ปรับมือถือ */
+@media (max-width: 768px) {
+  .booking-btn-wrapper {
+    margin-top: 2rem;
+    margin-bottom: 2.5rem;
+  }
+}
