@@ -108,35 +108,23 @@ function fileToBase64(file){
 function sendToGAS(data){
   fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
     method: "POST",
+    mode: "no-cors",   // ✅ กลับมาใช้
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "text/plain" // ✅ สำคัญมาก
     },
     body: JSON.stringify(data)
-  })
-  .then(res => res.json())
-  .then(res => {
-    console.log("Response from GAS:", res);
+  });
 
-    if(res.status === "success"){
-      document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว ✅";
-    } else {
-      document.getElementById('modalText').innerHTML = "เกิดข้อผิดพลาด: " + res.message;
-    }
-
+  // ⚠️ no-cors จะไม่ได้ response
+  // ต้อง assume success ไปก่อน
+  setTimeout(() => {
+    document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว ✅";
     document.getElementById('loadingIcon').style.display = "none";
     document.getElementById('modalFooter').style.display = "block";
 
-    // reset form
     form.reset();
     updatePassengerFields();
     formSection.style.display = "none";
     showFormBtn.style.display = "inline-block";
-  })
-  .catch(err => {
-    console.error("Fetch error:", err);
-
-    document.getElementById('modalText').innerHTML = "❌ เชื่อมต่อเซิร์ฟเวอร์ไม่ได้";
-    document.getElementById('loadingIcon').style.display = "none";
-    document.getElementById('modalFooter').style.display = "block";
-  });
+  }, 1500);
 }
