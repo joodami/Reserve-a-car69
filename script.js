@@ -115,7 +115,7 @@ form.addEventListener('submit', async (e) => {
     updatePassengerFields();
     formSection.style.display = "none";
     showFormBtn.style.display = "inline-block";
-  }, 1500); // ปรับเวลา 1000-3000 ms ตามต้องการ
+  }, 3000); // ปรับเวลา 1000-3000 ms ตามต้องการ
 });
 
 // =====================================================
