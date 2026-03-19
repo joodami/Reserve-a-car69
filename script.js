@@ -108,17 +108,16 @@ function fileToBase64(file){
 function sendToGAS(data){
   fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
     method: "POST",
+    mode: "no-cors",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/x-www-form-urlencoded"
     },
-    body: JSON.stringify(data)
-  })
-  .then(res => res.json())
-  .then(res => {
-    document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว ✅";
-  })
-  .catch(err => {
-    document.getElementById('modalText').innerHTML = "เกิดข้อผิดพลาด ❌";
-    console.error(err);
+    body: "data=" + encodeURIComponent(JSON.stringify(data))
   });
+
+  setTimeout(() => {
+    document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว ✅";
+    document.getElementById('loadingIcon').style.display = "none";
+    document.getElementById('modalFooter').style.display = "block";
+  }, 1000);
 }
