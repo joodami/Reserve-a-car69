@@ -101,27 +101,21 @@ form.addEventListener('submit', async (e) => {
     formData.passengerFileName = "-";
   }
 
-  // ✅ ส่งข้อมูลไป GAS และรอให้เรียบร้อย
-  try {
-    await sendToGAS(formData);
+  // ✅ ส่งข้อมูลไป GAS เบื้องหลัง
+  sendToGAS(formData);
 
-    // ✅ แจ้งผู้ใช้ส่งข้อมูลสำเร็จ
+  // ✅ แสดง modal สำเร็จหลัง 1.5 วินาที พร้อมล้างฟอร์ม
+  setTimeout(() => {
     document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว ✅";
     document.getElementById('loadingIcon').style.display = "none";
     document.getElementById('modalFooter').style.display = "block";
 
-    // ✅ ล้างฟอร์มหลังส่งสำเร็จ
+    // ล้างฟอร์มและซ่อนฟอร์ม
     form.reset();
     updatePassengerFields();
     formSection.style.display = "none";
     showFormBtn.style.display = "inline-block";
-
-  } catch (err) {
-    console.error("ส่งข้อมูลไม่สำเร็จ:", err);
-    document.getElementById('modalText').innerHTML = "เกิดข้อผิดพลาด ❌";
-    document.getElementById('loadingIcon').style.display = "none";
-    document.getElementById('modalFooter').style.display = "block";
-  }
+  }, 1500); // ปรับเวลา 1000-3000 ms ตามต้องการ
 });
 
 // =====================================================
@@ -154,6 +148,6 @@ async function sendToGAS(data){
 
   } catch(err) {
     console.error("ส่งข้อมูลไม่สำเร็จ:", err);
-    throw err; // เพื่อให้ฟอร์มแจ้ง error modal
+    // ไม่กระทบผู้ใช้ เพราะ modal แจ้งสำเร็จไปแล้ว
   }
 }
