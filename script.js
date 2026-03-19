@@ -57,19 +57,19 @@ form.addEventListener('submit', async (e) => {
   const fileInput = form.querySelector('[name="passengerFile"]');
   let passengerFile = null;
 
-  if(count > 6){
-    if(fileInput.files.length === 0){
+  if (count > 6) {
+    if (fileInput.files.length === 0) {
       alert("กรุณาแนบไฟล์ PDF รายชื่อผู้ร่วมเดินทาง");
       fileInput.focus();
       return;
     }
     const file = fileInput.files[0];
-    if(file.type !== "application/pdf"){
+    if (file.type !== "application/pdf") {
       alert("กรุณาอัปโหลดไฟล์ PDF เท่านั้น");
       fileInput.focus();
       return;
     }
-    if(file.size > 5*1024*1024){
+    if (file.size > 5 * 1024 * 1024) {
       alert("ไฟล์ต้องเล็กกว่า 5 MB");
       fileInput.focus();
       return;
@@ -77,15 +77,23 @@ form.addEventListener('submit', async (e) => {
     passengerFile = file;
   }
 
-  document.getElementById('modalText').innerHTML = "กำลังส่งข้อมูล กรุณารอสักครู่...";
-  document.getElementById('loadingIcon').style.display = "block";
-  document.getElementById('modalFooter').style.display = "none";
+  // ✅ แสดง modal แจ้งผู้ใช้ทันที
+  document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว ✅";
+  document.getElementById('loadingIcon').style.display = "none";
+  document.getElementById('modalFooter').style.display = "block";
   submitModal.show();
 
+  // ✅ ล้างฟอร์มทันที (เก็บไฟล์ PDF/ไฟล์แนบไว้)
+  form.reset();
+  updatePassengerFields();
+  formSection.style.display = "none";
+  showFormBtn.style.display = "inline-block";
+
+  // เตรียมข้อมูลส่ง GAS
   const formData = Object.fromEntries(new FormData(form).entries());
   formData.passengerCount = count;
 
-  if(passengerFile){
+  if (passengerFile) {
     formData.passengerFile = await fileToBase64(passengerFile);
     formData.passengerFileName = passengerFile.name;
   } else {
@@ -93,6 +101,7 @@ form.addEventListener('submit', async (e) => {
     formData.passengerFileName = "-";
   }
 
+  // ✅ ส่งข้อมูลไป GAS เบื้องหลัง ไม่ต้องรอ
   sendToGAS(formData);
 });
 
@@ -116,21 +125,11 @@ async function sendToGAS(data){
       body: "data=" + encodeURIComponent(JSON.stringify(data))
     });
 
-    // ✅ ถ้า fetch เสร็จแล้ว ให้ล้างฟอร์ม
-    document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว ✅";
-    document.getElementById('loadingIcon').style.display = "none";
-    document.getElementById('modalFooter').style.display = "block";
-
-    form.reset();
-    updatePassengerFields();
-
-    formSection.style.display = "none";
-    showFormBtn.style.display = "inline-block";
+    // ✅ ข้อมูลถูกส่งแล้ว ทำงานเบื้องหลังต่อ (PDF, Sheet, LINE, Calendar)
+    console.log("ส่งข้อมูลไป GAS เรียบร้อยแล้ว");
 
   } catch(err) {
     console.error("ส่งข้อมูลไม่สำเร็จ:", err);
-    document.getElementById('modalText').innerHTML = "เกิดข้อผิดพลาด ❌";
-    document.getElementById('loadingIcon').style.display = "none";
-    document.getElementById('modalFooter').style.display = "block";
+    // สามารถ log ข้อผิดพลาดได้ แต่ไม่กระทบผู้ใช้
   }
 }
