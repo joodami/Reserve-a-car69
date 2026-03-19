@@ -1,4 +1,6 @@
+// =====================================================
 // แสดง/ซ่อนฟอร์ม
+// =====================================================
 const showFormBtn = document.getElementById("showFormBtn");
 const formSection = document.getElementById("formSection");
 const cancelBtn = document.getElementById("cancelBookingBtn");
@@ -16,7 +18,9 @@ cancelBtn.addEventListener("click", () => {
   updatePassengerFields();
 });
 
+// =====================================================
 // ผู้ร่วมเดินทาง
+// =====================================================
 const passengerCount = document.querySelector('input[name="passengerCount"]');
 const passengerInputs = document.querySelectorAll('#passengerInputs input');
 const fileUploadSection = document.getElementById("fileUploadSection");
@@ -24,8 +28,8 @@ const fileUploadSection = document.getElementById("fileUploadSection");
 function updatePassengerFields() {
   let count = Number(passengerCount.value);
   passengerInputs.forEach((input, index) => {
-    if(count === 0) input.style.display = "none";
-    else if(count <=6) {
+    if (count === 0) input.style.display = "none";
+    else if (count <= 6) {
       input.style.display = (index < count) ? "block" : "none";
       input.value = "";
     } else input.style.display = "none";
@@ -36,7 +40,9 @@ function updatePassengerFields() {
 passengerCount.addEventListener("input", updatePassengerFields);
 updatePassengerFields();
 
+// =====================================================
 // ส่งฟอร์ม
+// =====================================================
 const form = document.getElementById('carForm');
 const submitModal = new bootstrap.Modal(document.getElementById('submitModal'));
 
@@ -77,17 +83,11 @@ form.addEventListener('submit', async (e) => {
     passengerFile = file;
   }
 
-  // ✅ แสดง modal แจ้งผู้ใช้ทันที
-  document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว ✅";
-  document.getElementById('loadingIcon').style.display = "none";
-  document.getElementById('modalFooter').style.display = "block";
+  // ✅ แสดง modal กำลังส่ง
+  document.getElementById('modalText').innerHTML = "กำลังส่งข้อมูล กรุณารอสักครู่...";
+  document.getElementById('loadingIcon').style.display = "block";
+  document.getElementById('modalFooter').style.display = "none";
   submitModal.show();
-
-  // ✅ ล้างฟอร์มทันที (เก็บไฟล์ PDF/ไฟล์แนบไว้)
-  form.reset();
-  updatePassengerFields();
-  formSection.style.display = "none";
-  showFormBtn.style.display = "inline-block";
 
   // เตรียมข้อมูลส่ง GAS
   const formData = Object.fromEntries(new FormData(form).entries());
@@ -101,10 +101,32 @@ form.addEventListener('submit', async (e) => {
     formData.passengerFileName = "-";
   }
 
-  // ✅ ส่งข้อมูลไป GAS เบื้องหลัง ไม่ต้องรอ
-  sendToGAS(formData);
+  // ✅ ส่งข้อมูลไป GAS และรอให้เรียบร้อย
+  try {
+    await sendToGAS(formData);
+
+    // ✅ แจ้งผู้ใช้ส่งข้อมูลสำเร็จ
+    document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว ✅";
+    document.getElementById('loadingIcon').style.display = "none";
+    document.getElementById('modalFooter').style.display = "block";
+
+    // ✅ ล้างฟอร์มหลังส่งสำเร็จ
+    form.reset();
+    updatePassengerFields();
+    formSection.style.display = "none";
+    showFormBtn.style.display = "inline-block";
+
+  } catch (err) {
+    console.error("ส่งข้อมูลไม่สำเร็จ:", err);
+    document.getElementById('modalText').innerHTML = "เกิดข้อผิดพลาด ❌";
+    document.getElementById('loadingIcon').style.display = "none";
+    document.getElementById('modalFooter').style.display = "block";
+  }
 });
 
+// =====================================================
+// ฟังก์ชันช่วยแปลงไฟล์ PDF เป็น Base64
+// =====================================================
 function fileToBase64(file){
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -114,22 +136,24 @@ function fileToBase64(file){
   });
 }
 
+// =====================================================
+// ส่งข้อมูลไป GAS
+// =====================================================
 async function sendToGAS(data){
   try {
     await fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
       method: "POST",
-      mode: "no-cors", // จำเป็นสำหรับ GitHub Pages
+      mode: "no-cors",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       },
       body: "data=" + encodeURIComponent(JSON.stringify(data))
     });
 
-    // ✅ ข้อมูลถูกส่งแล้ว ทำงานเบื้องหลังต่อ (PDF, Sheet, LINE, Calendar)
     console.log("ส่งข้อมูลไป GAS เรียบร้อยแล้ว");
 
   } catch(err) {
     console.error("ส่งข้อมูลไม่สำเร็จ:", err);
-    // สามารถ log ข้อผิดพลาดได้ แต่ไม่กระทบผู้ใช้
+    throw err; // เพื่อให้ฟอร์มแจ้ง error modal
   }
 }
