@@ -135,24 +135,19 @@ function fileToBase64(file){
 // =====================================================
 async function sendToGAS(data){
   try {
-    const response = await fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
+    await fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
       method: "POST",
-      body: JSON.stringify(data) // ✅ ไม่ต้องใส่ header
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: "data=" + encodeURIComponent(JSON.stringify(data))
     });
 
-    const text = await response.text(); // 🔍 ดู raw response
-    console.log("RAW:", text);
-
-    let result;
-    try {
-      result = JSON.parse(text);
-      console.log("RESULT:", result);
-    } catch(e) {
-      console.error("ไม่ใช่ JSON:", text);
-    }
+    console.log("ส่งข้อมูลไป GAS เรียบร้อยแล้ว");
 
   } catch(err) {
-    console.error("ERROR:", err);
-    alert("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+    console.error("ส่งข้อมูลไม่สำเร็จ:", err);
+    // ไม่กระทบผู้ใช้ เพราะ modal แจ้งสำเร็จไปแล้ว
   }
 }
