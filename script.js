@@ -137,14 +137,19 @@ async function sendToGAS(data){
   try {
     const response = await fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
       method: "POST",
-      headers: {
-        "Content-Type": "text/plain" // ✅ สำคัญมาก
-      },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data) // ✅ ไม่ต้องใส่ header
     });
 
-    const result = await response.json();
-    console.log("RESULT:", result);
+    const text = await response.text(); // 🔍 ดู raw response
+    console.log("RAW:", text);
+
+    let result;
+    try {
+      result = JSON.parse(text);
+      console.log("RESULT:", result);
+    } catch(e) {
+      console.error("ไม่ใช่ JSON:", text);
+    }
 
   } catch(err) {
     console.error("ERROR:", err);
