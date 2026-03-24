@@ -189,51 +189,11 @@ async function sendToGAS(data, signal){
 
   if (!res.ok) throw new Error("HTTP " + res.status);
 
+  // ✅ รอผลจาก GAS, LINE ส่งจาก GAS แล้ว
   const json = await res.json();
-
-  // ===== ส่ง LINE retry 3 ครั้ง =====
-  if (json.result && json.result.pdfUrl) {
-    let attempts = 0;
-    const maxAttempts = 3;
-    while (attempts < maxAttempts) {
-      try {
-        await fetchLine(json.result.pdfUrl, json.result.passengerFileUrl);
-        break; // สำเร็จแล้วออก loop
-      } catch (err) {
-        attempts++;
-        if (attempts === maxAttempts) {
-          json.result.errors.push("LINE: ไม่สามารถส่งข้อความได้ หลังลอง 3 ครั้ง");
-        }
-      }
-    }
-  }
-
   return json;
 }
 
 // =====================================================
-// ส่ง LINE
+// ไม่มี fetchLine() อีกแล้ว
 // =====================================================
-async function fetchLine(pdfUrl, passengerFileUrl){
-  const TOKEN = "hCdt9CY1aSAWa1myUw3jYDaIzrZcTTlaxDmandJBcrxW2sOEAX1ljxPrvieCA0EHShzQs/k+GoEu2gbO/qInM8ZuDCIUvB0vMKs9C8itAnQ2I5+JDQfFjTLoxTt1iH/w2gTbEUXzAbijFp3c/C/pXgdB04t89/1O/w1cDnyilFU=";
-  const TO = "Cae0183323348f400e2d8dd86ac57a13c";
-
-  const passengerText = passengerFileUrl ? encodeURI(passengerFileUrl) : "-";
-
-  const message =
-    `📌 ขอใช้รถ\n📎 PDF: ${encodeURI(pdfUrl)}\n📝 รายชื่อผู้ร่วมเดินทาง: ${passengerText}`;
-
-  const res = await fetch("https://api.line.me/v2/bot/message/push", {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer " + TOKEN,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      to: TO,
-      messages: [{ type: "text", text: message }]
-    })
-  });
-
-  if (!res.ok) throw new Error("LINE API Error: " + res.status);
-}
