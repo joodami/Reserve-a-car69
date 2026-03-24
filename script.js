@@ -45,9 +45,13 @@ updatePassengerFields();
 // =====================================================
 const form = document.getElementById('carForm');
 const submitModal = new bootstrap.Modal(document.getElementById('submitModal'));
+let isSubmitting = false; // ✅ กันกดซ้ำ
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
+
+  if (isSubmitting) return;
+  isSubmitting = true;
 
   // ตรวจฟิลด์ required
   const requiredFields = form.querySelectorAll('[required]');
@@ -55,6 +59,7 @@ form.addEventListener('submit', async (e) => {
     if (!field.value.trim()) {
       alert(`กรุณากรอกช่อง: ${field.previousElementSibling.textContent}`);
       field.focus();
+      isSubmitting = false;
       return;
     }
   }
@@ -67,17 +72,20 @@ form.addEventListener('submit', async (e) => {
     if (fileInput.files.length === 0) {
       alert("กรุณาแนบไฟล์ PDF รายชื่อผู้ร่วมเดินทาง");
       fileInput.focus();
+      isSubmitting = false;
       return;
     }
     const file = fileInput.files[0];
     if (file.type !== "application/pdf") {
       alert("กรุณาอัปโหลดไฟล์ PDF เท่านั้น");
       fileInput.focus();
+      isSubmitting = false;
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
       alert("ไฟล์ต้องเล็กกว่า 5 MB");
       fileInput.focus();
+      isSubmitting = false;
       return;
     }
     passengerFile = file;
@@ -89,33 +97,61 @@ form.addEventListener('submit', async (e) => {
   document.getElementById('modalFooter').style.display = "none";
   submitModal.show();
 
-  // เตรียมข้อมูลส่ง GAS
-  const formData = Object.fromEntries(new FormData(form).entries());
-  formData.passengerCount = count;
+  try {
 
-  if (passengerFile) {
-    formData.passengerFile = await fileToBase64(passengerFile);
-    formData.passengerFileName = passengerFile.name;
-  } else {
-    formData.passengerFile = null;
-    formData.passengerFileName = "-";
-  }
+    // เตรียมข้อมูลส่ง GAS
+    const formData = Object.fromEntries(new FormData(form).entries());
+    formData.passengerCount = count;
 
-  // ✅ ส่งข้อมูลไป GAS เบื้องหลัง
-  sendToGAS(formData);
+    if (passengerFile) {
+      formData.passengerFile = await fileToBase64(passengerFile);
+      formData.passengerFileName = passengerFile.name;
+    } else {
+      formData.passengerFile = null;
+      formData.passengerFileName = "-";
+    }
 
-  // ✅ แสดง modal สำเร็จหลัง 1.5 วินาที พร้อมล้างฟอร์ม
-  setTimeout(() => {
-    document.getElementById('modalText').innerHTML = "ส่งข้อมูลเรียบร้อยแล้ว ✅";
+    // ✅ รอผลจาก GAS จริง
+    const result = await sendToGAS(formData);
+
     document.getElementById('loadingIcon').style.display = "none";
     document.getElementById('modalFooter').style.display = "block";
 
-    // ล้างฟอร์มและซ่อนฟอร์ม
-    form.reset();
-    updatePassengerFields();
-    formSection.style.display = "none";
-    showFormBtn.style.display = "inline-block";
-  }, 3000); // ปรับเวลา 1000-3000 ms ตามต้องการ
+    // ===== แสดงผล =====
+    if (result.status === "success") {
+
+      document.getElementById('modalText').innerHTML =
+        "✅ ระบบทำงานครบทุกขั้นตอนแล้ว";
+
+      form.reset();
+      updatePassengerFields();
+      formSection.style.display = "none";
+      showFormBtn.style.display = "inline-block";
+
+    } else if (result.status === "partial") {
+
+      const errors = result.result.errors.join("<br>");
+
+      document.getElementById('modalText').innerHTML =
+        "⚠️ ทำงานไม่ครบ:<br>" + errors;
+
+    } else {
+
+      document.getElementById('modalText').innerHTML =
+        "❌ เกิดข้อผิดพลาด: " + result.message;
+    }
+
+  } catch (err) {
+
+    document.getElementById('loadingIcon').style.display = "none";
+    document.getElementById('modalFooter').style.display = "block";
+
+    document.getElementById('modalText').innerHTML =
+      "❌ ระบบเชื่อมต่อไม่สำเร็จ: " + err;
+
+  } finally {
+    isSubmitting = false;
+  }
 });
 
 // =====================================================
@@ -135,19 +171,21 @@ function fileToBase64(file){
 // =====================================================
 async function sendToGAS(data){
   try {
-    await fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
+    const res = await fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
       method: "POST",
-      mode: "no-cors",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       },
       body: "data=" + encodeURIComponent(JSON.stringify(data))
     });
 
-    console.log("ส่งข้อมูลไป GAS เรียบร้อยแล้ว");
+    const json = await res.json();
+    return json;
 
   } catch(err) {
-    console.error("ส่งข้อมูลไม่สำเร็จ:", err);
-    // ไม่กระทบผู้ใช้ เพราะ modal แจ้งสำเร็จไปแล้ว
+    return {
+      status: "error",
+      message: err.toString()
+    };
   }
 }
