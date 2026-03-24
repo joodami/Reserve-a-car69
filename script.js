@@ -178,7 +178,7 @@ function fileToBase64(file){
 // ส่งข้อมูลไป GAS
 // =====================================================
 async function sendToGAS(data, signal){
-  const res = await fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
+  const res = await fetch("https://script.google.com/macros/s/AKfycbxlnfpjhnQe3nn5InWxTUvaK-Sm6ayyOPIujleGvnjVEGZibNGtVbCZOVKNZU_Vx8sb/exec", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
