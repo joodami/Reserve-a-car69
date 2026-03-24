@@ -111,7 +111,7 @@ form.addEventListener('submit', async (e) => {
 
     // ✅ เพิ่ม timeout กันค้าง
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000);
+    const timeout = setTimeout(() => controller.abort(), 60000);
 
     const result = await sendToGAS(formData, controller.signal);
 
