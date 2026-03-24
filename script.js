@@ -45,7 +45,7 @@ updatePassengerFields();
 // =====================================================
 const form = document.getElementById('carForm');
 const submitModal = new bootstrap.Modal(document.getElementById('submitModal'));
-let isSubmitting = false; // ✅ กันกดซ้ำ
+let isSubmitting = false;
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -91,7 +91,7 @@ form.addEventListener('submit', async (e) => {
     passengerFile = file;
   }
 
-  // ✅ แสดง modal กำลังส่ง
+  // แสดง modal
   document.getElementById('modalText').innerHTML = "กำลังส่งข้อมูล กรุณารอสักครู่...";
   document.getElementById('loadingIcon').style.display = "block";
   document.getElementById('modalFooter').style.display = "none";
@@ -99,7 +99,6 @@ form.addEventListener('submit', async (e) => {
 
   try {
 
-    // เตรียมข้อมูลส่ง GAS
     const formData = Object.fromEntries(new FormData(form).entries());
     formData.passengerCount = count;
 
@@ -111,8 +110,13 @@ form.addEventListener('submit', async (e) => {
       formData.passengerFileName = "-";
     }
 
-    // ✅ รอผลจาก GAS จริง
-    const result = await sendToGAS(formData);
+    // ✅ เพิ่ม timeout กันค้าง
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+
+    const result = await sendToGAS(formData, controller.signal);
+
+    clearTimeout(timeout);
 
     document.getElementById('loadingIcon').style.display = "none";
     document.getElementById('modalFooter').style.display = "block";
@@ -123,14 +127,11 @@ form.addEventListener('submit', async (e) => {
       document.getElementById('modalText').innerHTML =
         "✅ ระบบทำงานครบทุกขั้นตอนแล้ว";
 
-      form.reset();
-      updatePassengerFields();
-      formSection.style.display = "none";
-      showFormBtn.style.display = "inline-block";
-
     } else if (result.status === "partial") {
 
-      const errors = result.result.errors.join("<br>");
+      const errors = (result.result && result.result.errors)
+        ? result.result.errors.join("<br>")
+        : "ไม่ทราบสาเหตุ";
 
       document.getElementById('modalText').innerHTML =
         "⚠️ ทำงานไม่ครบ:<br>" + errors;
@@ -138,7 +139,15 @@ form.addEventListener('submit', async (e) => {
     } else {
 
       document.getElementById('modalText').innerHTML =
-        "❌ เกิดข้อผิดพลาด: " + result.message;
+        "❌ เกิดข้อผิดพลาด: " + (result.message || "ไม่ทราบสาเหตุ");
+    }
+
+    // ✅ reset ทั้ง success และ partial
+    if (result.status === "success" || result.status === "partial") {
+      form.reset();
+      updatePassengerFields();
+      formSection.style.display = "none";
+      showFormBtn.style.display = "inline-block";
     }
 
   } catch (err) {
@@ -146,8 +155,14 @@ form.addEventListener('submit', async (e) => {
     document.getElementById('loadingIcon').style.display = "none";
     document.getElementById('modalFooter').style.display = "block";
 
-    document.getElementById('modalText').innerHTML =
-      "❌ ระบบเชื่อมต่อไม่สำเร็จ: " + err;
+    // ✅ แก้ Failed to fetch ให้ user เข้าใจง่าย
+    if (err.name === "AbortError") {
+      document.getElementById('modalText').innerHTML =
+        "❌ ใช้เวลานานเกินไป (timeout)";
+    } else {
+      document.getElementById('modalText').innerHTML =
+        "❌ ระบบเชื่อมต่อไม่สำเร็จ";
+    }
 
   } finally {
     isSubmitting = false;
@@ -155,13 +170,13 @@ form.addEventListener('submit', async (e) => {
 });
 
 // =====================================================
-// ฟังก์ชันช่วยแปลงไฟล์ PDF เป็น Base64
+// Base64
 // =====================================================
 function fileToBase64(file){
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = error => reject(error);
+    reader.onerror = reject;
     reader.readAsDataURL(file);
   });
 }
@@ -169,23 +184,20 @@ function fileToBase64(file){
 // =====================================================
 // ส่งข้อมูลไป GAS
 // =====================================================
-async function sendToGAS(data){
-  try {
-    const res = await fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      body: "data=" + encodeURIComponent(JSON.stringify(data))
-    });
+async function sendToGAS(data, signal){
+  const res = await fetch("https://script.google.com/macros/s/AKfycbzSqzDA2RdY2AnUo1SgGH8WoVMdUpTXFCwIfRPhkJMNoHCIljTsl1_94bYgVpEh-hk8/exec", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: "data=" + encodeURIComponent(JSON.stringify(data)),
+    signal: signal
+  });
 
-    const json = await res.json();
-    return json;
-
-  } catch(err) {
-    return {
-      status: "error",
-      message: err.toString()
-    };
+  // ✅ กัน response พัง
+  if (!res.ok) {
+    throw new Error("HTTP " + res.status);
   }
+
+  return await res.json();
 }
