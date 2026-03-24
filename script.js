@@ -98,7 +98,6 @@ form.addEventListener('submit', async (e) => {
   submitModal.show();
 
   try {
-
     const formData = Object.fromEntries(new FormData(form).entries());
     formData.passengerCount = count;
 
@@ -123,26 +122,22 @@ form.addEventListener('submit', async (e) => {
 
     // ===== แสดงผล =====
     if (result.status === "success") {
-
       document.getElementById('modalText').innerHTML =
         "✅ ระบบทำงานครบทุกขั้นตอนแล้ว";
 
     } else if (result.status === "partial") {
-
       const errors = (result.result && result.result.errors)
         ? result.result.errors.join("<br>")
         : "ไม่ทราบสาเหตุ";
-
       document.getElementById('modalText').innerHTML =
         "⚠️ ทำงานไม่ครบ:<br>" + errors;
 
     } else {
-
       document.getElementById('modalText').innerHTML =
         "❌ เกิดข้อผิดพลาด: " + (result.message || "ไม่ทราบสาเหตุ");
     }
 
-    // ✅ reset ทั้ง success และ partial
+    // ===== เคลียร์ฟอร์ม หลัง success หรือ partial =====
     if (result.status === "success" || result.status === "partial") {
       form.reset();
       updatePassengerFields();
@@ -151,11 +146,9 @@ form.addEventListener('submit', async (e) => {
     }
 
   } catch (err) {
-
     document.getElementById('loadingIcon').style.display = "none";
     document.getElementById('modalFooter').style.display = "block";
 
-    // ✅ แก้ Failed to fetch ให้ user เข้าใจง่าย
     if (err.name === "AbortError") {
       document.getElementById('modalText').innerHTML =
         "❌ ใช้เวลานานเกินไป (timeout)";
@@ -194,10 +187,53 @@ async function sendToGAS(data, signal){
     signal: signal
   });
 
-  // ✅ กัน response พัง
-  if (!res.ok) {
-    throw new Error("HTTP " + res.status);
+  if (!res.ok) throw new Error("HTTP " + res.status);
+
+  const json = await res.json();
+
+  // ===== ส่ง LINE retry 3 ครั้ง =====
+  if (json.result && json.result.pdfUrl) {
+    let attempts = 0;
+    const maxAttempts = 3;
+    while (attempts < maxAttempts) {
+      try {
+        await fetchLine(json.result.pdfUrl, json.result.passengerFileUrl);
+        break; // สำเร็จแล้วออก loop
+      } catch (err) {
+        attempts++;
+        if (attempts === maxAttempts) {
+          json.result.errors.push("LINE: ไม่สามารถส่งข้อความได้ หลังลอง 3 ครั้ง");
+        }
+      }
+    }
   }
 
-  return await res.json();
+  return json;
+}
+
+// =====================================================
+// ส่ง LINE
+// =====================================================
+async function fetchLine(pdfUrl, passengerFileUrl){
+  const TOKEN = "hCdt9CY1aSAWa1myUw3jYDaIzrZcTTlaxDmandJBcrxW2sOEAX1ljxPrvieCA0EHShzQs/k+GoEu2gbO/qInM8ZuDCIUvB0vMKs9C8itAnQ2I5+JDQfFjTLoxTt1iH/w2gTbEUXzAbijFp3c/C/pXgdB04t89/1O/w1cDnyilFU=";
+  const TO = "Cae0183323348f400e2d8dd86ac57a13c";
+
+  const passengerText = passengerFileUrl ? encodeURI(passengerFileUrl) : "-";
+
+  const message =
+    `📌 ขอใช้รถ\n📎 PDF: ${encodeURI(pdfUrl)}\n📝 รายชื่อผู้ร่วมเดินทาง: ${passengerText}`;
+
+  const res = await fetch("https://api.line.me/v2/bot/message/push", {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + TOKEN,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      to: TO,
+      messages: [{ type: "text", text: message }]
+    })
+  });
+
+  if (!res.ok) throw new Error("LINE API Error: " + res.status);
 }
