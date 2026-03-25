@@ -1,54 +1,48 @@
 /* การตั้งค่าพื้นฐาน */
 body {
     font-family: 'K2D', sans-serif !important;
-    background: #f0f4f8;
+    background: linear-gradient(135deg, #f8faff 0%, #eef2ff 100%);
     color: #334155;
     padding-bottom: 5rem;
+    min-height: 100vh;
 }
 
 /* แบนเนอร์ */
 .banner-wrapper {
     width: 100%;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
 }
 #banner-img {
     width: 100%;
     height: auto;
-    border-radius: 0 0 20px 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-/* หัวข้อหน้าเว็บ */
-h2.form-header {
-    background: linear-gradient(90deg, #1e40af, #3b82f6);
-    color: #fff;
-    text-align: center;
-    padding: 1.5rem;
-    border-radius: 15px;
-    margin: 0 auto 3rem auto;
-    max-width: 900px;
-    font-weight: 700;
-    box-shadow: 0 10px 25px rgba(30, 64, 175, 0.2);
+    border-radius: 0 0 30px 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
 .main-container {
     max-width: 900px;
     margin: 0 auto;
-    padding: 0 15px;
+    padding: 0 20px;
 }
 
 /* ปฏิทิน */
 .calendar-card-wrapper {
     background: #fff;
     padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border-radius: 25px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+}
+.calendar-header {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e40af;
+    text-align: center;
+    margin-bottom: 25px;
 }
 .calendar-container {
     width: 100%;
-    padding-top: 56.25%;
+    padding-top: 60%; /* ขนาดคอมพิวเตอร์ */
     position: relative;
-    border-radius: 15px;
     overflow: hidden;
 }
 .calendar-container iframe {
@@ -57,60 +51,68 @@ h2.form-header {
 
 /* พื้นที่ปุ่มจองรถ */
 .booking-action-area {
-    margin: 5rem 0;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 30px;
+    margin: 4rem 0;
+    padding: 2.5rem;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 35px;
+    backdrop-filter: blur(10px);
 }
 
-/* ปุ่มหลักสไตล์ Modern */
+/* ปุ่มหลัก */
 .btn-booking-main {
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    background: linear-gradient(135deg, #2563eb, #1e40af);
     color: #fff;
-    padding: 1.2rem 3.5rem;
+    padding: 1.3rem 4rem;
     font-size: 1.4rem;
     font-weight: 700;
-    border-radius: 50px;
-    box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
-    transition: all 0.3s ease;
+    border-radius: 100px;
+    box-shadow: 0 15px 35px rgba(37, 99, 235, 0.35);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
     border: none;
 }
 .btn-booking-main:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(37, 99, 235, 0.4);
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 45px rgba(37, 99, 235, 0.45);
 }
 
 /* การ์ดฟอร์ม */
 .card-form {
     background: #fff;
-    padding: 30px;
-    border-radius: 25px;
+    padding: 35px;
+    border-radius: 30px;
     margin-top: 2rem;
 }
 .form-section-card {
-    border: 1px solid #e2e8f0;
-    padding: 20px;
-    border-radius: 15px;
+    border: 1px solid #f1f5f9;
+    padding: 25px;
+    border-radius: 20px;
     margin-bottom: 2rem;
-    background: #fff;
+    background: #ffffff;
 }
 .sub-title {
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: #1e40af;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid #eff6ff;
-    padding-bottom: 0.5rem;
+    margin-bottom: 1.8rem;
+    border-left: 5px solid #3b82f6;
+    padding-left: 15px;
 }
 
-/* Responsive */
+/* Responsive ปรับปฏิทินสำหรับมือถือให้เห็นทุกวัน */
 @media (max-width: 768px) {
-    body { padding: 0.5rem; }
-    h2.form-header { font-size: 1.3rem; padding: 1rem; }
-    .calendar-container { padding-top: 130%; } /* มือถือปฏิทินสูงขึ้น */
-    .btn-booking-main { width: 100%; font-size: 1.2rem; padding: 1.2rem 1rem; }
-    .booking-action-area { margin: 3rem 0; padding: 1rem; }
-    .card-form { padding: 15px; }
+    body { padding: 0.2rem; }
+    .main-container { padding: 0 12px; }
+    
+    /* หัวใจสำคัญ: ปรับความสูงปฏิทินในมือถือ */
+    .calendar-container { 
+        padding-top: 160%; /* เพิ่มความสูงเพื่อให้เห็นครบทั้งเดือน */
+    } 
+    
+    .calendar-card-wrapper { padding: 15px; border-radius: 20px; }
+    .calendar-header { font-size: 1.1rem; margin-bottom: 15px; }
+    
+    .btn-booking-main { width: 100%; font-size: 1.25rem; padding: 1.2rem 1rem; }
+    .booking-action-area { margin: 2.5rem 0; padding: 1.5rem; }
+    .card-form { padding: 20px; border-radius: 20px; }
 }
