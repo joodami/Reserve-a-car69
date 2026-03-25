@@ -116,6 +116,12 @@ body {
         align-items: center;
         justify-content: center;
     }
+
+    /* --- เพิ่มโค้ดส่วนนี้เพื่อลดขนาดไอคอนเฉพาะในมือถือ --- */
+    .calendar-header i {
+        font-size: 1.1rem !important; /* ขนาดไอคอนที่เล็กลงเพื่อให้พอดีกับบรรทัด */
+        margin-right: 6px !important; /* เว้นระยะห่างจากตัวอักษรนิดหน่อย */
+    }
     
     .calendar-container { padding-top: 150%; } /* Mobile Ratio */
     .calendar-card-wrapper, .card-form { padding: 20px; border-radius: 15px; }
