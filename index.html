@@ -112,10 +112,11 @@
                     <div id="passengerInputs"></div>
 
                     <div id="fileUploadSection" style="display:none;" class="mt-3 p-3 border border-danger rounded-3 bg-light">
-                        <label class="form-label text-danger fw-bold"><i class="bi bi-file-earmark-pdf"></i> แนบไฟล์รายชื่อ (PDF ขนาดไม่เกิน 5MB)</label>
-                        <input type="file" class="form-control" name="passengerFile" accept=".pdf">
-                        <small class="text-muted">เนื่องจากมีผู้ร่วมเดินทางมากกว่า 6 ท่าน กรุณาแนบไฟล์รายชื่อแยกค่ะ</small>
-                    </div>
+    <label class="form-label text-danger fw-bold"><i class="bi bi-file-earmark-pdf"></i> แนบไฟล์รายชื่อ (PDF เท่านั้น)</label>
+    <input type="file" class="form-control" name="passengerFile" accept=".pdf" id="passengerFileInput">
+    <div id="fileError" class="text-danger small mt-1 fw-bold" style="display:none;"></div>
+    <small class="text-muted">เนื่องจากมีผู้ร่วมเดินทางมากกว่า 6 ท่าน กรุณาแนบไฟล์รายชื่อแยกค่ะ (ไม่เกิน 5MB)</small>
+</div>
                 </div>
 
                 <button type="submit" class="btn-booking-main w-100 py-3 mt-2">
