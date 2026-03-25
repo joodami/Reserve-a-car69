@@ -12,31 +12,18 @@
 <body>
 
     <header class="main-header text-center">
-        <div class="header-container d-flex flex-column align-items-center justify-content-center p-4 p-md-5">
-            <img id="school-logo" 
-                 src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" 
-                 alt="โลโก้โรงเรียนพิมานพิทยาสรรค์" 
-                 class="mb-3">
-            
+        <div class="header-container d-flex flex-column align-items-center justify-content-center">
+            <img id="school-logo" src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" alt="โลโก้โรงเรียน">
             <div class="header-text text-white">
-                <h1 class="school-name fw-bold mb-1">โรงเรียนพิมานพิทยาสรรค์</h1>
-                <p class="section-name fw-bold opacity-75">งานยานพาหนะ สำนักงานอำนวยการ</p>
+                <h1 class="school-name fw-bold">โรงเรียนพิมานพิทยาสรรค์</h1>
+                <p class="section-name">งานยานพาหนะ สำนักงานอำนวยการ</p>
             </div>
         </div>
     </header>
 
     <div class="main-container">
-        <div class="calendar-card-wrapper mb-5 shadow-sm">
-            <h3 class="calendar-header">
-                <i class="bi bi-calendar-check-fill me-2 text-primary"></i> ปฏิทินการใช้รถยนต์ส่วนราชการ
-            </h3>
-            <div class="calendar-container border rounded-3">
-                <iframe src="https://calendar.google.com/calendar/embed?src=c_ea546f07317ff6dcdbf73cee14ab645a8e154664a02554eef13e6e08423e39c1%40group.calendar.google.com&ctz=Asia/Bangkok&mode=MONTH" frameborder="0" scrolling="no"></iframe>
-            </div>
-        </div>
-
-        <div class="booking-action-area text-center">
-            <p class="text-muted small mb-3 fw-bold">📅 ตรวจสอบวันว่างแล้วกดปุ่มเพื่อจองรถ</p>
+        <div class="booking-action-area shadow-sm">
+            <p class="text-muted small mb-3 fw-bold">✨ ตรวจสอบวันว่างด้านล่าง แล้วกดปุ่มเพื่อเริ่มจอง</p>
             <button id="showFormBtn" class="btn-booking-main">
                 <i class="bi bi-plus-circle-fill me-2"></i> กดเพื่อจองคิวรถยนต์
             </button>
@@ -45,10 +32,10 @@
         <div class="card-form shadow-lg border" id="formSection" style="display:none;">
             <form id="carForm">
                 <div class="text-end mb-3">
-                    <button type="button" id="cancelBookingBtn" class="btn btn-outline-danger btn-sm rounded-pill">❌ ยกเลิกการจอง</button>
+                    <button type="button" id="cancelBookingBtn" class="btn btn-outline-danger btn-sm rounded-pill">❌ ปิดฟอร์ม / ยกเลิก</button>
                 </div>
 
-                <div class="form-section-card shadow-sm border-0">
+                <div class="form-section-card">
                     <div class="sub-title"><i class="bi bi-person-badge me-2"></i>ข้อมูลผู้จอง</div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -75,23 +62,29 @@
                     </div>
                 </div>
 
-                <div class="form-section-card shadow-sm border-0">
+                <div class="form-section-card">
                     <div class="sub-title"><i class="bi bi-truck me-2"></i>รายละเอียดการเดินทาง</div>
-                    <label class="form-label text-primary fw-bold">รถที่ต้องการใช้</label>
-                    <select class="form-select mb-3 border-primary" name="car" required>
-                        <option value="">-- เลือกรถที่ต้องการใช้ --</option>
-                        <option value="รถ 4 ประตู">รถ 4 ประตู</option>
-                        <option value="รถตู้">รถตู้</option>
-                        <option value="รถ 6 ล้อ">รถ 6 ล้อ</option>
-                    </select>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label text-primary fw-bold">รถที่ต้องการใช้</label>
+                            <select class="form-select border-primary" name="car" required>
+                                <option value="">-- เลือกรถที่ต้องการใช้ --</option>
+                                <option value="รถ 4 ประตู">รถ 4 ประตู</option>
+                                <option value="รถตู้">รถตู้</option>
+                                <option value="รถ 6 ล้อ">รถ 6 ล้อ</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-bold">สถานที่เดินทาง</label>
+                            <input type="text" class="form-control" name="location" placeholder="ระบุจุดหมายปลายทาง" required>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label fw-bold">วัตถุประสงค์</label>
+                            <textarea class="form-control" name="purpose" rows="2" placeholder="ไปเพื่อราชการเรื่องใด..." required></textarea>
+                        </div>
+                    </div>
                     
-                    <label class="form-label fw-bold">สถานที่เดินทาง</label>
-                    <input type="text" class="form-control mb-3" name="location" placeholder="ระบุจุดหมายปลายทาง" required>
-                    
-                    <label class="form-label fw-bold">วัตถุประสงค์</label>
-                    <textarea class="form-control mb-4" name="purpose" rows="2" placeholder="ไปเพื่อราชการเรื่องใด..." required></textarea>
-                    
-                    <div class="row g-2 p-3 bg-light rounded-3 border">
+                    <div class="row g-2 p-3 bg-light rounded-3 border mt-2">
                         <div class="col-6 col-md-3">
                             <label class="form-label text-primary small fw-bold">วันเริ่ม</label>
                             <input type="date" class="form-control form-control-sm border-primary" name="startDate" required>
@@ -111,18 +104,33 @@
                     </div>
                 </div>
 
-                <div class="form-section-card shadow-sm border-0">
+                <div class="form-section-card">
                     <div class="sub-title"><i class="bi bi-people me-2"></i>ผู้ร่วมเดินทาง</div>
                     <label class="form-label fw-bold">จำนวนผู้ร่วมเดินทาง (ไม่รวมคนขับ)</label>
-                    <input type="number" class="form-control w-50 mb-3" name="passengerCount" min="0" value="0" required>
-                    <div class="passenger-group mt-3" id="passengerInputs">
-                        </div>
+                    <input type="number" class="form-control w-25 mb-3" name="passengerCount" min="0" value="0" required>
+                    
+                    <div id="passengerInputs"></div>
+
+                    <div id="fileUploadSection" style="display:none;" class="mt-3 p-3 border border-danger rounded-3 bg-light">
+                        <label class="form-label text-danger fw-bold"><i class="bi bi-file-earmark-pdf"></i> แนบไฟล์รายชื่อ (PDF เท่านั้น)</label>
+                        <input type="file" class="form-control" name="passengerFile" accept=".pdf">
+                        <small class="text-muted">เนื่องจากมีผู้ร่วมเดินทางมากกว่า 6 ท่าน กรุณาแนบไฟล์รายชื่อแยกค่ะ</small>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn-booking-main w-100 py-3 mt-4 border-0 shadow-lg">
+                <button type="submit" class="btn-booking-main w-100 py-3 mt-2">
                     ยืนยันการส่งคำขอจองรถ 🚗
                 </button>
             </form>
+        </div>
+
+        <div class="calendar-card-wrapper shadow-sm">
+            <h3 class="calendar-header">
+                <i class="bi bi-calendar-check-fill me-2 text-primary"></i> ปฏิทินการใช้รถยนต์ส่วนราชการ
+            </h3>
+            <div class="calendar-container border">
+                <iframe src="https://calendar.google.com/calendar/embed?src=c_ea546f07317ff6dcdbf73cee14ab645a8e154664a02554eef13e6e08423e39c1%40group.calendar.google.com&ctz=Asia/Bangkok&mode=MONTH" frameborder="0" scrolling="no"></iframe>
+            </div>
         </div>
     </div>
 
@@ -133,9 +141,9 @@
                     <div id="loadingIcon" class="mb-3">
                         <div class="spinner-border text-primary" role="status"></div>
                     </div>
-                    <span id="modalText" class="fs-5 fw-medium">กำลังส่งข้อมูล...</span>
+                    <div id="modalText" class="fs-5 fw-medium">กำลังส่งข้อมูล...</div>
                     <div class="mt-4" id="modalFooter" style="display:none;">
-                        <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-dismiss="modal">ตกลง</button>
+                        <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-dismiss="modal">ปิดหน้าต่าง</button>
                     </div>
                 </div>
             </div>
