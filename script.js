@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const passengerInputsContainer = document.getElementById("passengerInputs");
     const fileUploadSection = document.getElementById("fileUploadSection");
     const fileInput = carForm.querySelector('[name="passengerFile"]');
+    const fileError = document.getElementById("fileError"); // ตัวแปรใหม่สำหรับแสดง Error
     const submitModal = new bootstrap.Modal(document.getElementById('submitModal'));
 
     // --- 1. จัดการ Dynamic Fields & File Section ---
@@ -23,15 +24,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 passengerInputsContainer.appendChild(input);
             }
             fileUploadSection.style.display = "none";
-            fileInput.required = false; // ไม่ต้องแนบไฟล์
+            fileInput.required = false; 
+            fileError.style.display = "none"; // ปิด Error เมื่อซ่อน Section
         } 
         // ถ้า 7 คนขึ้นไป ให้แนบไฟล์
         else if (count >= 7) {
             fileUploadSection.style.display = "block";
-            fileInput.required = true; // บังคับแนบไฟล์
+            fileInput.required = true; 
         } else {
             fileUploadSection.style.display = "none";
             fileInput.required = false;
+            fileError.style.display = "none";
+        }
+    });
+
+    // --- ตรวจสอบขนาดไฟล์ทันทีที่เลือก (Inline Validation) ---
+    fileInput.addEventListener("change", function() {
+        const file = this.files[0];
+        if (file) {
+            const fileSize = file.size / 1024 / 1024; // แปลงเป็น MB
+            if (fileSize > 5) {
+                fileError.innerHTML = `❌ ขนาดไฟล์ใหญ่เกินไป! (ปัจจุบัน ${fileSize.toFixed(2)}MB) กรุณาใช้ไฟล์ไม่เกิน 5MB ค่ะ`;
+                fileError.style.display = "block";
+                this.value = ""; // ล้างค่าไฟล์ที่เลือกออก
+            } else {
+                fileError.style.display = "none";
+            }
         }
     });
 
@@ -39,18 +57,19 @@ document.addEventListener('DOMContentLoaded', function() {
     carForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const modalText = document.getElementById('modalText');
-        const modalFooter = document.getElementById('modalFooter');
-        const loadingIcon = document.getElementById('loadingIcon');
-
-        // ตรวจสอบขนาดไฟล์ (ไม่เกิน 5MB)
-        if (fileInput.files.length > 0) {
-            const fileSize = fileInput.files[0].size / 1024 / 1024; // MB
+        // เช็คอีกครั้งเผื่อกรณีเลี่ยงการเปลี่ยนไฟล์ (Double Check)
+        if (fileInput.required && fileInput.files.length > 0) {
+            const fileSize = fileInput.files[0].size / 1024 / 1024;
             if (fileSize > 5) {
-                alert("❌ ขนาดไฟล์ใหญ่เกินไป! กรุณาแนบไฟล์ PDF ที่มีขนาดไม่เกิน 5MB ค่ะ");
+                fileError.style.display = "block";
+                fileError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
         }
+
+        const modalText = document.getElementById('modalText');
+        const modalFooter = document.getElementById('modalFooter');
+        const loadingIcon = document.getElementById('loadingIcon');
 
         modalText.innerHTML = "⏳ <b>กำลังดำเนินการ...</b><br>ระบบกำลังบันทึกข้อมูลและสร้างไฟล์ PDF<br><small class='text-muted'>กรุณารอประมาณ 10-15 วินาทีนะคะ</small>";
         loadingIcon.style.display = "block";
@@ -66,16 +85,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 formDataObj.passengerFile = await fileToBase64(fileInput.files[0]);
                 formDataObj.passengerFileName = fileInput.files[0].name;
             } else {
-                delete formDataObj.passengerFile; // ลบออกเพื่อให้ JSON ไม่หนัก
+                delete formDataObj.passengerFile; 
             }
 
-            // *** อัปเดต URL ของคุณตรงนี้ ***
             const GAS_URL = "https://script.google.com/macros/s/AKfycbwlDYshdlJdNS_xwtKGs90EZ51N8wZsPRzoeOzi_YgdLAgRm-QIxlJX3wUnw-Danxr1/exec";
             
             const response = await fetch(GAS_URL, {
                 method: "POST",
-                mode: "cors", 
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                contentType: "text/plain;charset=utf-8",
                 body: JSON.stringify(formDataObj)
             });
 
@@ -96,6 +113,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>`;
                 carForm.reset();
                 passengerInputsContainer.innerHTML = "";
+                fileUploadSection.style.display = "none";
+                fileError.style.display = "none";
             } else {
                 throw new Error(resData.message || "ประมวลผลไม่สำเร็จ");
             }
@@ -125,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.getElementById("cancelBookingBtn").onclick = () => {
         carForm.reset();
+        fileError.style.display = "none";
         document.getElementById("formSection").style.display = "none";
         document.getElementById("showFormBtn").parentElement.style.display = "block";
         window.scrollTo({ top: 0, behavior: 'smooth' });
