@@ -123,7 +123,7 @@ form.addEventListener('submit', async (e) => {
     // ===== แสดงผล =====
     if (result.status === "success") {
       document.getElementById('modalText').innerHTML =
-        "✅ ระบบทำงานครบทุกขั้นตอนแล้ว";
+        "✅ ส่งข้อมูลเรียบร้อยแล้ว";
 
     } else if (result.status === "partial") {
       const errors = (result.result && result.result.errors)
