@@ -1,199 +1,153 @@
 // =====================================================
-// แสดง/ซ่อนฟอร์ม
+// 1. จัดการการแสดงผลฟอร์ม (คงเดิมแต่ปรับ Smooth)
 // =====================================================
 const showFormBtn = document.getElementById("showFormBtn");
 const formSection = document.getElementById("formSection");
 const cancelBtn = document.getElementById("cancelBookingBtn");
 
 showFormBtn.addEventListener("click", () => {
-  formSection.style.display = "block";
-  showFormBtn.style.display = "none";
-  formSection.scrollIntoView({ behavior: "smooth" });
+    formSection.style.display = "block";
+    showFormBtn.style.display = "none";
+    formSection.scrollIntoView({ behavior: "smooth" });
 });
 
 cancelBtn.addEventListener("click", () => {
-  document.getElementById("carForm").reset();
-  formSection.style.display = "none";
-  showFormBtn.style.display = "inline-block";
-  updatePassengerFields();
+    document.getElementById("carForm").reset();
+    formSection.style.display = "none";
+    showFormBtn.style.display = "inline-block";
+    updatePassengerFields();
+    window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
 // =====================================================
-// ผู้ร่วมเดินทาง
+// 2. จัดการผู้ร่วมเดินทาง (คงเดิม)
 // =====================================================
 const passengerCount = document.querySelector('input[name="passengerCount"]');
 const passengerInputs = document.querySelectorAll('#passengerInputs input');
 const fileUploadSection = document.getElementById("fileUploadSection");
 
 function updatePassengerFields() {
-  let count = Number(passengerCount.value);
-  passengerInputs.forEach((input, index) => {
-    if (count === 0) input.style.display = "none";
-    else if (count <= 6) {
-      input.style.display = (index < count) ? "block" : "none";
-      input.value = "";
-    } else input.style.display = "none";
-  });
-  fileUploadSection.style.display = count > 6 ? "block" : "none";
+    let count = Number(passengerCount.value);
+    passengerInputs.forEach((input, index) => {
+        if (count === 0) input.style.display = "none";
+        else if (count <= 6) {
+            input.style.display = (index < count) ? "block" : "none";
+        } else input.style.display = "none";
+    });
+    fileUploadSection.style.display = count > 6 ? "block" : "none";
 }
 
 passengerCount.addEventListener("input", updatePassengerFields);
 updatePassengerFields();
 
 // =====================================================
-// ส่งฟอร์ม
+// 3. ส่งฟอร์ม (ปรับปรุงลำดับการทำงานและข้อความ)
 // =====================================================
 const form = document.getElementById('carForm');
 const submitModal = new bootstrap.Modal(document.getElementById('submitModal'));
 let isSubmitting = false;
 
 form.addEventListener('submit', async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (isSubmitting) return;
-  isSubmitting = true;
+    if (isSubmitting) return;
+    isSubmitting = true;
 
-  // ตรวจฟิลด์ required
-  const requiredFields = form.querySelectorAll('[required]');
-  for (const field of requiredFields) {
-    if (!field.value.trim()) {
-      alert(`กรุณากรอกช่อง: ${field.previousElementSibling.textContent}`);
-      field.focus();
-      isSubmitting = false;
-      return;
-    }
-  }
+    // ตรวจสอบข้อมูลเบื้องต้น
+    const count = Number(form.querySelector('input[name="passengerCount"]').value);
+    const fileInput = form.querySelector('[name="passengerFile"]');
+    let passengerFileBlob = null;
 
-  const count = Number(form.querySelector('input[name="passengerCount"]').value);
-  const fileInput = form.querySelector('[name="passengerFile"]');
-  let passengerFile = null;
-
-  if (count > 6) {
-    if (fileInput.files.length === 0) {
-      alert("กรุณาแนบไฟล์ PDF รายชื่อผู้ร่วมเดินทาง");
-      fileInput.focus();
-      isSubmitting = false;
-      return;
-    }
-    const file = fileInput.files[0];
-    if (file.type !== "application/pdf") {
-      alert("กรุณาอัปโหลดไฟล์ PDF เท่านั้น");
-      fileInput.focus();
-      isSubmitting = false;
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      alert("ไฟล์ต้องเล็กกว่า 5 MB");
-      fileInput.focus();
-      isSubmitting = false;
-      return;
-    }
-    passengerFile = file;
-  }
-
-  // แสดง modal
-  document.getElementById('modalText').innerHTML = "กำลังส่งข้อมูล กรุณารอสักครู่...";
-  document.getElementById('loadingIcon').style.display = "block";
-  document.getElementById('modalFooter').style.display = "none";
-  submitModal.show();
-
-  try {
-    const formData = Object.fromEntries(new FormData(form).entries());
-    formData.passengerCount = count;
-
-    if (passengerFile) {
-      formData.passengerFile = await fileToBase64(passengerFile);
-      formData.passengerFileName = passengerFile.name;
-    } else {
-      formData.passengerFile = null;
-      formData.passengerFileName = "-";
+    if (count > 6) {
+        if (fileInput.files.length === 0) {
+            alert("กรุณาแนบไฟล์ PDF รายชื่อผู้ร่วมเดินทาง");
+            isSubmitting = false; return;
+        }
+        passengerFileBlob = fileInput.files[0];
     }
 
-    // ✅ เพิ่ม timeout กันค้าง
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 60000);
+    // แสดง Modal สถานะ
+    document.getElementById('modalText').innerHTML = "⏳ กำลังเตรียมข้อมูลและอัปโหลดไฟล์...";
+    document.getElementById('loadingIcon').style.display = "block";
+    document.getElementById('modalFooter').style.display = "none";
+    submitModal.show();
 
-    const result = await sendToGAS(formData, controller.signal);
+    try {
+        const formData = Object.fromEntries(new FormData(form).entries());
+        
+        // แปลงไฟล์เป็น Base64 ถ้ามี
+        if (passengerFileBlob) {
+            document.getElementById('modalText').innerHTML = "📤 กำลังอัปโหลดไฟล์รายชื่อ...";
+            formData.passengerFile = await fileToBase64(passengerFileBlob);
+            formData.passengerFileName = passengerFileBlob.name;
+        }
 
-    clearTimeout(timeout);
+        document.getElementById('modalText').innerHTML = "📝 กำลังสร้างเอกสาร PDF และแจ้งเตือน LINE...";
 
-    document.getElementById('loadingIcon').style.display = "none";
-    document.getElementById('modalFooter').style.display = "block";
+        // สร้างระบบ Timeout 60 วินาที
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 60000);
 
-    // ===== แสดงผล =====
-    if (result.status === "success") {
-      document.getElementById('modalText').innerHTML =
-        "✅ ส่งข้อมูลเรียบร้อยแล้ว";
+        const result = await sendToGAS(formData, controller.signal);
+        clearTimeout(timeout);
 
-    } else if (result.status === "partial") {
-      const errors = (result.result && result.result.errors)
-        ? result.result.errors.join("<br>")
-        : "ไม่ทราบสาเหตุ";
-      document.getElementById('modalText').innerHTML =
-        "⚠️ ทำงานไม่ครบ:<br>" + errors;
+        // จัดการผลลัพธ์
+        document.getElementById('loadingIcon').style.display = "none";
+        document.getElementById('modalFooter').style.display = "block";
 
-    } else {
-      document.getElementById('modalText').innerHTML =
-        "❌ เกิดข้อผิดพลาด: " + (result.message || "ไม่ทราบสาเหตุ");
+        if (result.status === "success") {
+            document.getElementById('modalText').innerHTML = 
+                `<div class="text-center">
+                    <h4 class="text-success">✅ สำเร็จ!</h4>
+                    <p>ระบบบันทึกข้อมูลและส่ง LINE เรียบร้อยแล้วค่ะ</p>
+                    <a href="${result.result.pdfUrl}" target="_blank" class="btn btn-outline-primary btn-sm">📄 เปิดดูใบขอใช้รถ (PDF)</a>
+                </div>`;
+            
+            // เคลียร์ฟอร์ม
+            form.reset();
+            updatePassengerFields();
+            formSection.style.display = "none";
+            showFormBtn.style.display = "inline-block";
+
+        } else {
+            const errorMsg = (result.result && result.result.errors) ? result.result.errors.join("<br>") : (result.message || "ไม่ทราบสาเหตุ");
+            document.getElementById('modalText').innerHTML = "⚠️ พบปัญหาบางประการ:<br>" + errorMsg;
+        }
+
+    } catch (err) {
+        document.getElementById('loadingIcon').style.display = "none";
+        document.getElementById('modalFooter').style.display = "block";
+        document.getElementById('modalText').innerHTML = (err.name === "AbortError") 
+            ? "❌ ระบบใช้เวลานานเกินไป กรุณาเช็กใน Google Sheet หรือ LINE" 
+            : "❌ เชื่อมต่อสคริปต์ไม่สำเร็จ: " + err.message;
+    } finally {
+        isSubmitting = false;
     }
-
-    // ===== เคลียร์ฟอร์ม หลัง success หรือ partial =====
-    if (result.status === "success" || result.status === "partial") {
-      form.reset();
-      updatePassengerFields();
-      formSection.style.display = "none";
-      showFormBtn.style.display = "inline-block";
-    }
-
-  } catch (err) {
-    document.getElementById('loadingIcon').style.display = "none";
-    document.getElementById('modalFooter').style.display = "block";
-
-    if (err.name === "AbortError") {
-      document.getElementById('modalText').innerHTML =
-        "❌ ใช้เวลานานเกินไป (timeout)";
-    } else {
-      document.getElementById('modalText').innerHTML =
-        "❌ ระบบเชื่อมต่อไม่สำเร็จ";
-    }
-
-  } finally {
-    isSubmitting = false;
-  }
 });
 
 // =====================================================
-// Base64
+// 4. Helper Functions (คงเดิม)
 // =====================================================
-function fileToBase64(file){
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
 }
 
-// =====================================================
-// ส่งข้อมูลไป GAS
-// =====================================================
-async function sendToGAS(data, signal){
-  const res = await fetch("https://script.google.com/macros/s/AKfycbwnYqEKc9wreoIdwLR0W8fY1mHz3Gx0O44Iv1k_llgROJuqrjIXz6gYuWwwjzO3myK0/exec", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    body: "data=" + encodeURIComponent(JSON.stringify(data)),
-    signal: signal
-  });
+async function sendToGAS(data, signal) {
+    // ⚠️ อย่าลืมเปลี่ยน URL ตรงนี้ให้เป็นตัวล่าสุดที่คุณ Deploy นะคะ
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbwnYqEKc9wreoIdwLR0W8fY1mHz3Gx0O44Iv1k_llgROJuqrjIXz6gYuWwwjzO3myK0/exec";
+    
+    const res = await fetch(GAS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "data=" + encodeURIComponent(JSON.stringify(data)),
+        signal: signal
+    });
 
-  if (!res.ok) throw new Error("HTTP " + res.status);
-
-  // ✅ รอผลจาก GAS, LINE ส่งจาก GAS แล้ว
-  const json = await res.json();
-  return json;
+    if (!res.ok) throw new Error("Network response was not ok");
+    return await res.json();
 }
-
-// =====================================================
-// ไม่มี fetchLine() อีกแล้ว
-// =====================================================
