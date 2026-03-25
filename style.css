@@ -122,6 +122,16 @@ body {
         font-size: 1.1rem !important; /* ขนาดไอคอนที่เล็กลงเพื่อให้พอดีกับบรรทัด */
         margin-right: 6px !important; /* เว้นระยะห่างจากตัวอักษรนิดหน่อย */
     }
+
+    /* วางไว้ท้ายไฟล์ style.css ได้เลยค่ะ */
+#fileError {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
     
     .calendar-container { padding-top: 150%; } /* Mobile Ratio */
     .calendar-card-wrapper, .card-form { padding: 20px; border-radius: 15px; }
