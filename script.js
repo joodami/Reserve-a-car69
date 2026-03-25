@@ -82,7 +82,7 @@ form.addEventListener('submit', async (e) => {
             formData.passengerFileName = passengerFileBlob.name;
         }
 
-        document.getElementById('modalText').innerHTML = "📝 กำลังสร้างเอกสาร PDF และแจ้งเตือน LINE...";
+        document.getElementById('modalText').innerHTML = "📝 กำลังสร้างเอกสาร PDF...";
 
         // สร้างระบบ Timeout 60 วินาที
         const controller = new AbortController();
@@ -99,7 +99,7 @@ form.addEventListener('submit', async (e) => {
             document.getElementById('modalText').innerHTML = 
                 `<div class="text-center">
                     <h4 class="text-success">✅ สำเร็จ!</h4>
-                    <p>ระบบบันทึกข้อมูลและส่ง LINE เรียบร้อยแล้วค่ะ</p>
+                    <p>ระบบบันทึกข้อมูลเรียบร้อยแล้วค่ะ</p>
                     <a href="${result.result.pdfUrl}" target="_blank" class="btn btn-outline-primary btn-sm">📄 เปิดดูใบขอใช้รถ (PDF)</a>
                 </div>`;
             
