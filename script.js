@@ -64,32 +64,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 formDataObj.passengerFileName = fileInput.files[0].name;
             }
 
+            // *** ส่วนที่แก้ไข: เปลี่ยนวิธีการส่งเพื่อให้ GAS อ่านข้อมูลได้ ***
             const GAS_URL = "https://script.google.com/macros/s/AKfycbwnYqEKc9wreoIdwLR0W8fY1mHz3Gx0O44Iv1k_llgROJuqrjIXz6gYuWwwjzO3myK0/exec";
             
+            // สร้าง URLSearchParams เพื่อส่งแบบ Form POST ธรรมดา (หลีกเลี่ยง CORS error)
+            const formBody = new URLSearchParams();
+            formBody.append("data", JSON.stringify(formDataObj));
+
             const response = await fetch(GAS_URL, {
                 method: "POST",
-                mode: "no-cors", // ใช้ no-cors เพื่อเลี่ยงปัญหาข้ามโดเมนในบาง Browser
-                body: new URLSearchParams({ "data": JSON.stringify(formDataObj) })
+                mode: "no-cors", // จำเป็นสำหรับ GAS แต่ต้องมั่นใจว่าส่งเป็น Parameter ชื่อ 'data'
+                body: formBody,
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                }
             });
 
-            // เนื่องด้วย no-cors เราจะไม่เห็น response body 
-            // จึงใช้วิธีหน่วงเวลารอระบบหลังบ้านทำงานแล้วแสดงสถานะสำเร็จ
-            setTimeout(() => {
-                document.getElementById('loadingIcon').style.display = "none";
-                document.getElementById('modalFooter').style.display = "block";
-                document.getElementById('modalText').innerHTML = `
-                    <h4 class="text-success">✅ ส่งข้อมูลเรียบร้อยแล้ว</h4>
-                    <p>ระบบกำลังดำเนินการสร้าง PDF และแจ้งเตือนทาง LINE<br>กรุณาตรวจสอบในกลุ่ม LINE ของท่านค่ะ</p>
-                `;
-                carForm.reset();
-                setTimeout(() => { submitModal.hide(); cancelBtn.click(); }, 3000);
-            }, 2500);
+            // ปรับการแสดงผล Modal: ให้ค้างไว้เพื่อให้คนกดปิดเอง
+            document.getElementById('loadingIcon').style.display = "none";
+            document.getElementById('modalFooter').style.display = "block"; // แสดงปุ่มปิด
+            document.getElementById('modalText').innerHTML = `
+                <div class="text-center">
+                    <h4 class="text-success fw-bold mb-3">✅ ส่งข้อมูลเรียบร้อยแล้ว</h4>
+                    <p class="text-muted">ระบบกำลังบันทึกข้อมูลและสร้างไฟล์ PDF... <br>กรุณารอตรวจสอบในกลุ่ม LINE และปฏิทินในสักครู่ค่ะ</p>
+                </div>
+            `;
+            
+            carForm.reset();
+            updatePassengerFields();
+            // ไม่ใช้ setTimeout สั่งปิด เพื่อให้ผู้ใช้กดปุ่ม "ปิดหน้าต่าง" เอง
 
         } catch (err) {
             console.error(err);
             document.getElementById('loadingIcon').style.display = "none";
             document.getElementById('modalFooter').style.display = "block";
-            document.getElementById('modalText').innerText = "❌ เกิดข้อผิดพลาด: " + err.message;
+            document.getElementById('modalText').innerHTML = `<span class="text-danger">❌ เกิดข้อผิดพลาด: ${err.message}</span>`;
         }
     });
 
