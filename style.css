@@ -105,10 +105,16 @@ body {
     
     /* --- จุดที่ปรับปรุง: ปรับขนาดหัวข้อปฏิทินให้เล็กลงในมือถือ --- */
     .calendar-header { 
-        font-size: 1.1rem; /* ลดขนาดตัวอักษรลง */
+        font-size: 0.95rem; /* ลดขนาดลงอีกนิดเพื่อให้พอดีบรรทัดเดียว */
+        letter-spacing: -0.5px; /* บีบระยะห่างตัวอักษรให้ชิดกันเล็กน้อย */
+        white-space: nowrap; /* บังคับไม่ให้ขึ้นบรรทัดใหม่ */
+        overflow: hidden;
+        text-overflow: ellipsis; /* ถ้าจองจิ๋วเกินไปจริงๆ ให้ใส่ ... ท้ายประโยค */
         margin-bottom: 15px;
-        line-height: 1.4;
-        padding: 0 10px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .calendar-container { padding-top: 150%; } /* Mobile Ratio */
