@@ -1,36 +1,27 @@
-/* --- การตั้งค่าพื้นฐาน --- */
 body {
     font-family: 'K2D', sans-serif !important;
     background: linear-gradient(135deg, #f0f6ff 0%, #e0e7ff 100%);
     color: #1e293b;
     padding-bottom: 5rem;
     min-height: 100vh;
+    margin: 0;
 }
 
-/* --- ส่วนหัวใหม่ (New Header) --- */
 .main-header {
-    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); /* น้ำเงิน-ฟ้า */
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
     border-radius: 0 0 50px 50px;
     box-shadow: 0 10px 30px rgba(30, 58, 138, 0.2);
     margin-bottom: 4rem;
 }
 
 #school-logo {
-    height: 120px; /* ขนาดโลโก้ */
+    height: 120px;
     width: auto;
     filter: drop-shadow(0 4px 10px rgba(0,0,0,0.1));
 }
 
-.school-name {
-    font-size: 2rem;
-    font-weight: 700;
-}
-
-.section-name {
-    font-size: 1.1rem;
-    font-weight: 500;
-    margin-bottom: 0;
-}
+.school-name { font-size: 2rem; color: white; }
+.section-name { font-size: 1.1rem; color: white; }
 
 .main-container {
     max-width: 900px;
@@ -38,13 +29,12 @@ body {
     padding: 0 20px;
 }
 
-/* --- ปฏิทิน --- */
 .calendar-card-wrapper {
     background: #ffffff;
     padding: 25px;
     border-radius: 25px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
 }
+
 .calendar-header {
     font-size: 1.4rem;
     font-weight: 700;
@@ -52,17 +42,18 @@ body {
     text-align: center;
     margin-bottom: 25px;
 }
+
 .calendar-container {
     width: 100%;
-    padding-top: 60%; /* ขนาดคอมพิวเตอร์ */
+    padding-top: 60%;
     position: relative;
     overflow: hidden;
 }
+
 .calendar-container iframe {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
 }
 
-/* --- พื้นที่ปุ่มจองรถ --- */
 .booking-action-area {
     margin: 4rem 0;
     padding: 2.5rem;
@@ -71,7 +62,6 @@ body {
     backdrop-filter: blur(10px);
 }
 
-/* --- ปุ่มหลัก (btn-booking-main) --- */
 .btn-booking-main {
     background: linear-gradient(135deg, #2563eb, #1e40af);
     color: #fff;
@@ -79,30 +69,17 @@ body {
     font-size: 1.4rem;
     font-weight: 700;
     border-radius: 100px;
-    box-shadow: 0 15px 35px rgba(37, 99, 235, 0.35);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: pointer;
     border: none;
-}
-.btn-booking-main:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 45px rgba(37, 99, 235, 0.45);
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
 }
 
-/* --- การ์ดฟอร์ม --- */
 .card-form {
     background: #ffffff;
     padding: 35px;
     border-radius: 30px;
-    margin-top: 2rem;
 }
-.form-section-card {
-    border: 1px solid #f1f5f9;
-    padding: 25px;
-    border-radius: 20px;
-    margin-bottom: 2rem;
-    background: #ffffff;
-}
+
 .sub-title {
     font-size: 1.3rem;
     font-weight: 700;
@@ -112,26 +89,17 @@ body {
     padding-left: 15px;
 }
 
-/* --- Responsive สำหรับมือถือ --- */
+.form-section-card {
+    border: 1px solid #f1f5f9;
+    padding: 25px;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+}
+
 @media (max-width: 768px) {
-    body { padding: 0.1rem; }
-    .main-container { padding: 0 10px; }
-    
-    /* หัวข้อใหม่มือถือ */
-    .main-header { padding: 2rem 1rem !important; margin-bottom: 2rem; border-radius: 0 0 30px 30px; }
-    #school-logo { height: 90px; margin-bottom: 0.5rem; }
+    .main-header { border-radius: 0 0 30px 30px; margin-bottom: 2rem; }
+    #school-logo { height: 90px; }
     .school-name { font-size: 1.4rem; }
-    .section-name { font-size: 0.9rem; }
-    
-    /* ปฏิทินมือถือให้เห็นทุกวัน */
-    .calendar-container { 
-        padding-top: 160%; 
-    } 
-    
-    .calendar-card-wrapper { padding: 15px; border-radius: 20px; }
-    .calendar-header { font-size: 1.1rem; margin-bottom: 15px; }
-    
-    .btn-booking-main { width: 100%; font-size: 1.25rem; padding: 1.2rem 1rem; }
-    .booking-action-area { margin: 2rem 0; padding: 1rem; }
-    .card-form { padding: 20px; border-radius: 20px; }
+    .calendar-container { padding-top: 160%; }
+    .btn-booking-main { width: 100%; padding: 1rem; font-size: 1.2rem; }
 }
