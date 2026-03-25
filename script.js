@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileUploadSection = document.getElementById("fileUploadSection");
     const submitModal = new bootstrap.Modal(document.getElementById('submitModal'));
 
-    // จัดการช่องผู้ร่วมเดินทาง
+    // 1. จัดการช่องกรอกผู้ร่วมเดินทาง
     passengerCountInput.addEventListener("input", function() {
         const count = Number(this.value) || 0;
         passengerInputsContainer.innerHTML = ""; 
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // ส่งฟอร์ม
+    // 2. ฟังก์ชันหลักในการส่งข้อมูล
     carForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const modalFooter = document.getElementById('modalFooter');
         const loadingIcon = document.getElementById('loadingIcon');
 
-        modalText.innerHTML = "⏳ กำลังดำเนินการ... <br>กรุณารอสักครู่ ระบบกำลังสร้างไฟล์ PDF และบันทึกข้อมูลค่ะ";
+        modalText.innerHTML = "⏳ ระบบกำลังบันทึกข้อมูลและสร้างไฟล์ PDF... <br>กรุณารอสักครู่ประมาณ 10-15 วินาทีนะคะ";
         loadingIcon.style.display = "block";
         modalFooter.style.display = "none";
         submitModal.show();
@@ -42,18 +42,24 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = new FormData(carForm);
             const formDataObj = Object.fromEntries(formData.entries());
             
+            // แปลงไฟล์ PDF (ถ้ามี)
             const fileInput = carForm.querySelector('[name="passengerFile"]');
             if (fileInput && fileInput.files.length > 0) {
                 formDataObj.passengerFile = await fileToBase64(fileInput.files[0]);
                 formDataObj.passengerFileName = fileInput.files[0].name;
             }
 
+            // *** สำคัญ: ตรวจสอบ URL ของคุณให้ถูกต้อง ***
             const GAS_URL = "https://script.google.com/macros/s/AKfycbwnYqEKc9wreoIdwLR0W8fY1mHz3Gx0O44Iv1k_llgROJuqrjIXz6gYuWwwjzO3myK0/exec";
             
-            // ส่งแบบรับข้อมูลกลับ (ไม่ใช้ no-cors เพื่อให้ได้ URL)
+            // ส่งข้อมูลด้วยวิธี Bypass CORS (ใช้ text/plain)
             const response = await fetch(GAS_URL, {
                 method: "POST",
-                body: new URLSearchParams({ "data": JSON.stringify(formDataObj) })
+                mode: "cors", // ต้องเปิดเป็น cors เพื่อให้อ่าน response ได้
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8",
+                },
+                body: JSON.stringify(formDataObj)
             });
 
             const resData = await response.json();
@@ -63,22 +69,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 modalFooter.style.display = "block";
                 modalText.innerHTML = `
                     <div class="text-center">
-                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
-                        <h4 class="text-success fw-bold mt-2">จองรถเรียบร้อยแล้วค่ะ</h4>
-                        <p class="text-muted">ระบบบันทึกข้อมูลและส่งแจ้งเตือนเรียบร้อยแล้ว</p>
-                        <a href="${resData.result.pdfUrl}" target="_blank" class="btn btn-primary rounded-pill w-100 mt-3 py-2 shadow-sm">
-                            <i class="bi bi-file-earmark-pdf"></i> เปิดดูไฟล์ PDF ที่นี่
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3.5rem;"></i>
+                        <h4 class="text-success fw-bold mt-3">จองรถสำเร็จเรียบร้อย!</h4>
+                        <p class="text-muted">ระบบแจ้งเตือนเข้า LINE และบันทึกปฏิทินแล้วค่ะ</p>
+                        <a href="${resData.result.pdfUrl}" target="_blank" class="btn btn-primary rounded-pill w-100 mt-4 py-2 shadow-sm">
+                            <i class="bi bi-file-earmark-pdf-fill me-2"></i> เปิดดูไฟล์คำขอจอง (PDF)
                         </a>
                     </div>
                 `;
                 carForm.reset();
+                passengerInputsContainer.innerHTML = "";
             } else {
-                throw new Error("ระบบขัดข้อง: " + (resData.result.error || "Unknown"));
+                throw new Error(resData.result?.error || "ระบบประมวลผลไม่สำเร็จ");
             }
+
         } catch (err) {
+            console.error("Submission Error:", err);
             loadingIcon.style.display = "none";
             modalFooter.style.display = "block";
-            modalText.innerHTML = `<span class="text-danger">❌ เกิดข้อผิดพลาด: ${err.message}</span>`;
+            modalText.innerHTML = `
+                <div class="text-center text-danger">
+                    <i class="bi bi-exclamation-triangle-fill" style="font-size: 3rem;"></i>
+                    <h5 class="mt-3">เกิดข้อผิดพลาด</h5>
+                    <p class="small">กรุณาลองใหม่อีกครั้ง หรือติดต่อผู้ดูแลระบบ <br> (${err.message})</p>
+                </div>
+            `;
         }
     });
 
@@ -91,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ปุ่มเปิด-ปิดฟอร์มหน้าเว็บ
+    // ปุ่ม UI เปิด-ปิดฟอร์ม
     document.getElementById("showFormBtn").onclick = () => {
         document.getElementById("formSection").style.display = "block";
         document.getElementById("showFormBtn").parentElement.style.display = "none";
@@ -100,5 +115,6 @@ document.addEventListener('DOMContentLoaded', function() {
         carForm.reset();
         document.getElementById("formSection").style.display = "none";
         document.getElementById("showFormBtn").parentElement.style.display = "block";
+        window.scrollTo({top: 0, behavior: 'smooth'});
     };
 });
