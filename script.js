@@ -3,12 +3,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const passengerCountInput = document.querySelector('input[name="passengerCount"]');
     const passengerInputsContainer = document.getElementById("passengerInputs");
     const fileUploadSection = document.getElementById("fileUploadSection");
+    const fileInput = carForm.querySelector('[name="passengerFile"]');
     const submitModal = new bootstrap.Modal(document.getElementById('submitModal'));
 
-    // --- 1. จัดการ Dynamic Fields (ชื่อผู้ร่วมเดินทาง) ---
+    // --- 1. จัดการ Dynamic Fields & File Section ---
     passengerCountInput.addEventListener("input", function() {
         const count = Number(this.value) || 0;
         passengerInputsContainer.innerHTML = ""; 
+        
+        // ถ้า 1-6 คน ให้กรอกชื่อรายคน
         if (count > 0 && count <= 6) {
             for (let i = 1; i <= count; i++) {
                 const input = document.createElement("input");
@@ -20,8 +23,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 passengerInputsContainer.appendChild(input);
             }
             fileUploadSection.style.display = "none";
+            fileInput.required = false; // ไม่ต้องแนบไฟล์
+        } 
+        // ถ้า 7 คนขึ้นไป ให้แนบไฟล์
+        else if (count >= 7) {
+            fileUploadSection.style.display = "block";
+            fileInput.required = true; // บังคับแนบไฟล์
         } else {
-            fileUploadSection.style.display = count > 6 ? "block" : "none";
+            fileUploadSection.style.display = "none";
+            fileInput.required = false;
         }
     });
 
@@ -33,8 +43,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const modalFooter = document.getElementById('modalFooter');
         const loadingIcon = document.getElementById('loadingIcon');
 
-        // แสดงสถานะเริ่มต้นใน Modal
-        modalText.innerHTML = "⏳ <b>กำลังดำเนินการ...</b><br>ระบบกำลังบันทึกข้อมูลและสร้างไฟล์ PDF<br><small class='text-muted'>กรุณารอประมาณ 10-15 วินาที อย่าเพิ่งปิดหน้านี้นะคะ</small>";
+        // ตรวจสอบขนาดไฟล์ (ไม่เกิน 5MB)
+        if (fileInput.files.length > 0) {
+            const fileSize = fileInput.files[0].size / 1024 / 1024; // MB
+            if (fileSize > 5) {
+                alert("❌ ขนาดไฟล์ใหญ่เกินไป! กรุณาแนบไฟล์ PDF ที่มีขนาดไม่เกิน 5MB ค่ะ");
+                return;
+            }
+        }
+
+        modalText.innerHTML = "⏳ <b>กำลังดำเนินการ...</b><br>ระบบกำลังบันทึกข้อมูลและสร้างไฟล์ PDF<br><small class='text-muted'>กรุณารอประมาณ 10-15 วินาทีนะคะ</small>";
         loadingIcon.style.display = "block";
         modalFooter.style.display = "none";
         submitModal.show();
@@ -43,29 +61,26 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = new FormData(carForm);
             const formDataObj = Object.fromEntries(formData.entries());
             
-            // จัดการไฟล์แนบ (ถ้ามี)
-            const fileInput = carForm.querySelector('[name="passengerFile"]');
-            if (fileInput && fileInput.files.length > 0) {
+            // ส่งไฟล์เฉพาะกรณีมีคน > 6 คน และมีการเลือกไฟล์
+            if (formDataObj.passengerCount >= 7 && fileInput.files.length > 0) {
                 formDataObj.passengerFile = await fileToBase64(fileInput.files[0]);
                 formDataObj.passengerFileName = fileInput.files[0].name;
+            } else {
+                delete formDataObj.passengerFile; // ลบออกเพื่อให้ JSON ไม่หนัก
             }
 
-            // URL ของ Web App (ตรวจสอบให้แน่ใจว่าเป็น Deployment ล่าสุด)
-            const GAS_URL = "https://script.google.com/macros/s/AKfycbwV9M1cr3ztAla0_mix5PA7GbZiIN91ixfMRzeDWLcuNMgkcqrql8mynZdH5fgc6qcp/exec";
+            // *** อัปเดต URL ของคุณตรงนี้ ***
+            const GAS_URL = "https://script.google.com/macros/s/AKfycbwlDYshdlJdNS_xwtKGs90EZ51N8wZsPRzoeOzi_YgdLAgRm-QIxlJX3wUnw-Danxr1/exec";
             
-            // ส่งข้อมูลด้วยเทคนิค Bypass CORS
             const response = await fetch(GAS_URL, {
                 method: "POST",
                 mode: "cors", 
-                headers: {
-                    "Content-Type": "text/plain;charset=utf-8",
-                },
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify(formDataObj)
             });
 
             const resData = await response.json();
 
-            // ตรวจสอบสถานะการตอบกลับ
             if (resData.status === "success" && resData.result && resData.result.pdfUrl) {
                 loadingIcon.style.display = "none";
                 modalFooter.style.display = "block";
@@ -73,39 +88,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="text-center">
                         <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
                         <h4 class="text-success fw-bold mt-3">จองรถสำเร็จเรียบร้อย!</h4>
-                        <p class="text-muted">บันทึกข้อมูลและส่งแจ้งเตือน LINE แล้วค่ะ</p>
-                        
                         <div class="d-grid gap-2 mt-4">
                             <a href="${resData.result.pdfUrl}" target="_blank" class="btn btn-primary btn-lg rounded-pill shadow">
                                 <i class="bi bi-file-earmark-pdf-fill me-2"></i> เปิดดูไฟล์ PDF คำขอ
                             </a>
                         </div>
-                    </div>
-                `;
-                // ล้างค่าฟอร์มหลังสำเร็จ
+                    </div>`;
                 carForm.reset();
                 passengerInputsContainer.innerHTML = "";
             } else {
-                const errorMsg = resData.message || resData.result?.error || "ประมวลผลไม่สำเร็จ";
-                throw new Error(errorMsg);
+                throw new Error(resData.message || "ประมวลผลไม่สำเร็จ");
             }
 
         } catch (err) {
-            console.error("Submission Error:", err);
             loadingIcon.style.display = "none";
             modalFooter.style.display = "block";
-            modalText.innerHTML = `
-                <div class="text-center text-danger">
-                    <i class="bi bi-exclamation-octagon-fill" style="font-size: 3.5rem;"></i>
-                    <h5 class="mt-3 fw-bold">เกิดข้อผิดพลาดในการส่งข้อมูล</h5>
-                    <p class="small text-muted">${err.message}</p>
-                    <p class="small">โปรดตรวจสอบ URL ของ Web App หรือลองใหม่อีกครั้งค่ะ</p>
-                </div>
-            `;
+            modalText.innerHTML = `<div class="text-center text-danger"><h5 class="fw-bold">เกิดข้อผิดพลาด</h5><p>${err.message}</p></div>`;
         }
     });
 
-    // ฟังก์ชันช่วยแปลงไฟล์เป็น Base64
     function fileToBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -115,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- 3. จัดการ UI ปุ่มเปิด-ปิดฟอร์ม ---
+    // --- 3. UI Control ---
     document.getElementById("showFormBtn").onclick = () => {
         document.getElementById("formSection").style.display = "block";
         document.getElementById("showFormBtn").parentElement.style.display = "none";
