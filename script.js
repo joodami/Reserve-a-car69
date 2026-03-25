@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileUploadSection = document.getElementById("fileUploadSection");
     const submitModal = new bootstrap.Modal(document.getElementById('submitModal'));
 
-    // 1. จัดการช่องกรอกผู้ร่วมเดินทาง
+    // --- 1. จัดการ Dynamic Fields (ชื่อผู้ร่วมเดินทาง) ---
     passengerCountInput.addEventListener("input", function() {
         const count = Number(this.value) || 0;
         passengerInputsContainer.innerHTML = ""; 
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 input.type = "text";
                 input.name = `passenger${i}`;
                 input.placeholder = `ชื่อผู้ร่วมเดินทางคนที่ ${i}`;
-                input.className = "form-control mb-2 rounded-3";
+                input.className = "form-control mb-2 rounded-3 shadow-sm";
                 input.required = true;
                 passengerInputsContainer.appendChild(input);
             }
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // 2. ฟังก์ชันหลักในการส่งข้อมูล
+    // --- 2. ฟังก์ชันหลักในการส่งข้อมูล ---
     carForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -33,7 +33,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const modalFooter = document.getElementById('modalFooter');
         const loadingIcon = document.getElementById('loadingIcon');
 
-        modalText.innerHTML = "⏳ ระบบกำลังบันทึกข้อมูลและสร้างไฟล์ PDF... <br>กรุณารอสักครู่ประมาณ 10-15 วินาทีนะคะ";
+        // แสดงสถานะเริ่มต้นใน Modal
+        modalText.innerHTML = "⏳ <b>กำลังดำเนินการ...</b><br>ระบบกำลังบันทึกข้อมูลและสร้างไฟล์ PDF<br><small class='text-muted'>กรุณารอประมาณ 10-15 วินาที อย่าเพิ่งปิดหน้านี้นะคะ</small>";
         loadingIcon.style.display = "block";
         modalFooter.style.display = "none";
         submitModal.show();
@@ -42,20 +43,20 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = new FormData(carForm);
             const formDataObj = Object.fromEntries(formData.entries());
             
-            // แปลงไฟล์ PDF (ถ้ามี)
+            // จัดการไฟล์แนบ (ถ้ามี)
             const fileInput = carForm.querySelector('[name="passengerFile"]');
             if (fileInput && fileInput.files.length > 0) {
                 formDataObj.passengerFile = await fileToBase64(fileInput.files[0]);
                 formDataObj.passengerFileName = fileInput.files[0].name;
             }
 
-            // *** สำคัญ: ตรวจสอบ URL ของคุณให้ถูกต้อง ***
+            // URL ของ Web App (ตรวจสอบให้แน่ใจว่าเป็น Deployment ล่าสุด)
             const GAS_URL = "https://script.google.com/macros/s/AKfycbwnYqEKc9wreoIdwLR0W8fY1mHz3Gx0O44Iv1k_llgROJuqrjIXz6gYuWwwjzO3myK0/exec";
             
-            // ส่งข้อมูลด้วยวิธี Bypass CORS (ใช้ text/plain)
+            // ส่งข้อมูลด้วยเทคนิค Bypass CORS
             const response = await fetch(GAS_URL, {
                 method: "POST",
-                mode: "cors", // ต้องเปิดเป็น cors เพื่อให้อ่าน response ได้
+                mode: "cors", 
                 headers: {
                     "Content-Type": "text/plain;charset=utf-8",
                 },
@@ -64,23 +65,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const resData = await response.json();
 
-            if (resData.status === "success" && resData.result.isComplete) {
+            // ตรวจสอบสถานะการตอบกลับ
+            if (resData.status === "success" && resData.result && resData.result.pdfUrl) {
                 loadingIcon.style.display = "none";
                 modalFooter.style.display = "block";
                 modalText.innerHTML = `
                     <div class="text-center">
-                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3.5rem;"></i>
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
                         <h4 class="text-success fw-bold mt-3">จองรถสำเร็จเรียบร้อย!</h4>
-                        <p class="text-muted">ระบบแจ้งเตือนเข้า LINE และบันทึกปฏิทินแล้วค่ะ</p>
-                        <a href="${resData.result.pdfUrl}" target="_blank" class="btn btn-primary rounded-pill w-100 mt-4 py-2 shadow-sm">
-                            <i class="bi bi-file-earmark-pdf-fill me-2"></i> เปิดดูไฟล์คำขอจอง (PDF)
-                        </a>
+                        <p class="text-muted">บันทึกข้อมูลและส่งแจ้งเตือน LINE แล้วค่ะ</p>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <a href="${resData.result.pdfUrl}" target="_blank" class="btn btn-primary btn-lg rounded-pill shadow">
+                                <i class="bi bi-file-earmark-pdf-fill me-2"></i> เปิดดูไฟล์ PDF คำขอ
+                            </a>
+                        </div>
                     </div>
                 `;
+                // ล้างค่าฟอร์มหลังสำเร็จ
                 carForm.reset();
                 passengerInputsContainer.innerHTML = "";
             } else {
-                throw new Error(resData.result?.error || "ระบบประมวลผลไม่สำเร็จ");
+                const errorMsg = resData.message || resData.result?.error || "ประมวลผลไม่สำเร็จ";
+                throw new Error(errorMsg);
             }
 
         } catch (err) {
@@ -89,14 +96,16 @@ document.addEventListener('DOMContentLoaded', function() {
             modalFooter.style.display = "block";
             modalText.innerHTML = `
                 <div class="text-center text-danger">
-                    <i class="bi bi-exclamation-triangle-fill" style="font-size: 3rem;"></i>
-                    <h5 class="mt-3">เกิดข้อผิดพลาด</h5>
-                    <p class="small">กรุณาลองใหม่อีกครั้ง หรือติดต่อผู้ดูแลระบบ <br> (${err.message})</p>
+                    <i class="bi bi-exclamation-octagon-fill" style="font-size: 3.5rem;"></i>
+                    <h5 class="mt-3 fw-bold">เกิดข้อผิดพลาดในการส่งข้อมูล</h5>
+                    <p class="small text-muted">${err.message}</p>
+                    <p class="small">โปรดตรวจสอบ URL ของ Web App หรือลองใหม่อีกครั้งค่ะ</p>
                 </div>
             `;
         }
     });
 
+    // ฟังก์ชันช่วยแปลงไฟล์เป็น Base64
     function fileToBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -106,15 +115,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ปุ่ม UI เปิด-ปิดฟอร์ม
+    // --- 3. จัดการ UI ปุ่มเปิด-ปิดฟอร์ม ---
     document.getElementById("showFormBtn").onclick = () => {
         document.getElementById("formSection").style.display = "block";
         document.getElementById("showFormBtn").parentElement.style.display = "none";
+        document.getElementById("formSection").scrollIntoView({ behavior: 'smooth' });
     };
+    
     document.getElementById("cancelBookingBtn").onclick = () => {
         carForm.reset();
         document.getElementById("formSection").style.display = "none";
         document.getElementById("showFormBtn").parentElement.style.display = "block";
-        window.scrollTo({top: 0, behavior: 'smooth'});
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 });
