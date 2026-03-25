@@ -97,11 +97,21 @@ body {
     margin-bottom: 1.5rem;
 }
 
+/* --- ส่วนเดิมที่มีอยู่แล้ว ให้หาบรรทัด @media --- */
 @media (max-width: 768px) {
     .main-container { padding: 0 15px; margin-top: -40px; }
     .main-header { padding: 40px 0 70px 0; }
     #school-logo { height: 90px; }
+    
+    /* --- จุดที่ปรับปรุง: ปรับขนาดหัวข้อปฏิทินให้เล็กลงในมือถือ --- */
+    .calendar-header { 
+        font-size: 1.1rem; /* ลดขนาดตัวอักษรลง */
+        margin-bottom: 15px;
+        line-height: 1.4;
+        padding: 0 10px;
+    }
+    
     .calendar-container { padding-top: 150%; } /* Mobile Ratio */
-    .calendar-card-wrapper, .card-form { padding: 20px; }
-    .btn-booking-main { width: 100%; padding: 1rem; }
+    .calendar-card-wrapper, .card-form { padding: 20px; border-radius: 15px; }
+    .btn-booking-main { width: 100%; padding: 1rem; font-size: 1.1rem; }
 }
