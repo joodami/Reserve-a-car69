@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // URL ของ Web App (ตรวจสอบให้แน่ใจว่าเป็น Deployment ล่าสุด)
-            const GAS_URL = "https://script.google.com/macros/s/AKfycbwnYqEKc9wreoIdwLR0W8fY1mHz3Gx0O44Iv1k_llgROJuqrjIXz6gYuWwwjzO3myK0/exec";
+            const GAS_URL = "https://script.google.com/macros/s/AKfycbwV9M1cr3ztAla0_mix5PA7GbZiIN91ixfMRzeDWLcuNMgkcqrql8mynZdH5fgc6qcp/exec";
             
             // ส่งข้อมูลด้วยเทคนิค Bypass CORS
             const response = await fetch(GAS_URL, {
