@@ -20,25 +20,24 @@
 <h2 class="form-header">🚗 งานยานพาหนะ สำนักงานอำนวยการ</h2>
 <div class="main-container">
 
-  <!-- ปฏิทิน -->
-  <div class="calendar-card">
-    <h3 class="calendar-header text-center mb-3">
-      📅 ปฏิทินการใช้รถยนต์ส่วนราชการ
+  <div class="calendar-card-wrapper mb-5">
+    <h3 class="calendar-header">
+      <i class="bi bi-calendar-check-fill me-2"></i> ปฏิทินการใช้รถยนต์ส่วนราชการ
     </h3>
-    <div class="calendar-container">
-     <iframe src="https://calendar.google.com/calendar/embed?src=c_ea546f07317ff6dcdbf73cee14ab645a8e154664a02554eef13e6e08423e39c1%40group.calendar.google.com&ctz=Asia/Bangkok&mode=MONTH" frameborder="0" scrolling="no"></iframe>
+    <div class="calendar-container shadow-sm border">
+      <iframe src="https://calendar.google.com/calendar/embed?src=c_ea546f07317ff6dcdbf73cee14ab645a8e154664a02554eef13e6e08423e39c1%40group.calendar.google.com&ctz=Asia/Bangkok&mode=MONTH" frameborder="0" scrolling="no"></iframe>
     </div>
   </div>
 
-  <!-- ปุ่มจองรถ -->
-<div class="text-center booking-btn-wrapper">
-  <button id="showFormBtn" class="btn btn-lg btn-primary px-5 py-3 shadow">
-    🚗 กดเพื่อจองคิวรถ
-  </button>
-</div>
-
-  <!-- ฟอร์มจองรถ -->
-  <div class="card-form" id="formSection" style="display:none;">
+  <div class="booking-action-area text-center">
+    <p class="text-muted small mb-3">ตรวจสอบวันว่างจากปฏิทินด้านบน แล้วกดปุ่มเพื่อลงทะเบียน</p>
+    <button id="showFormBtn" class="btn-booking-main">
+      <i class="bi bi-plus-circle-fill me-2"></i> กดเพื่อจองคิวรถยนต์
+    </button>
+  </div>
+<!-- ฟอร์มจองรถ -->
+  <div class="card-form shadow-lg" id="formSection" style="display:none;">
+      </div>
     <form id="carForm">
       <div class="text-end mb-3">
         <button type="button" id="cancelBookingBtn" class="btn btn-outline-danger">❌ ยกเลิกการจอง</button>
