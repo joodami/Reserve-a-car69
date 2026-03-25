@@ -1,235 +1,116 @@
-/* ฟอนต์ K2D */
-body, h1, h2, h3, h4, h5, h6,
-p, span, label, input, select, textarea, button,
-div, a, li, ul, ol, td, th {
-  font-family: 'K2D', sans-serif !important;
-}
-
+/* การตั้งค่าพื้นฐาน */
 body {
-  padding: 2rem;
-  background: linear-gradient(135deg, #e9f2ff, #ffffff);
+    font-family: 'K2D', sans-serif !important;
+    background: #f0f4f8;
+    color: #334155;
+    padding-bottom: 5rem;
 }
 
-/* แบนเนอร์ responsive */
+/* แบนเนอร์ */
 .banner-wrapper {
-  width: 100%;
-  margin-bottom: 2rem;
+    width: 100%;
+    margin-bottom: 2rem;
 }
 #banner-img {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 12px;
+    width: 100%;
+    height: auto;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-/* การ์ดปฏิทิน */
-.calendar-container {
-  width: 100%;
-  padding-top: 56.25%; /* คงเดิม สำหรับคอม */
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-}
-
-.calendar-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-/* Responsive สำหรับมือถือ */
-@media (max-width: 768px) {
-  .calendar-container {
-    padding-top: 140%; /* สูงขึ้นเพื่อให้เห็นทั้งเดือน */
-  }
-  .calendar-header { font-size: 20px; }
-}
-
-
-/* Form header */
+/* หัวข้อหน้าเว็บ */
 h2.form-header {
-  background: linear-gradient(90deg, #0d6efd, #0dcaf0);
-  color: #fff;
-  text-align: center;
-  padding: 1rem 1.2rem;
-  border-radius: 14px;
-  margin-bottom: 2.5rem;
-  font-weight: 700;
-  font-size: 28px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    background: linear-gradient(90deg, #1e40af, #3b82f6);
+    color: #fff;
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin: 0 auto 3rem auto;
+    max-width: 900px;
+    font-weight: 700;
+    box-shadow: 0 10px 25px rgba(30, 64, 175, 0.2);
 }
 
-/* Section ฟอร์ม */
+.main-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* ปฏิทิน */
+.calendar-card-wrapper {
+    background: #fff;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+.calendar-container {
+    width: 100%;
+    padding-top: 56.25%;
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+}
+.calendar-container iframe {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+}
+
+/* พื้นที่ปุ่มจองรถ */
+.booking-action-area {
+    margin: 5rem 0;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 30px;
+}
+
+/* ปุ่มหลักสไตล์ Modern */
+.btn-booking-main {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #fff;
+    padding: 1.2rem 3.5rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    border-radius: 50px;
+    box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+}
+.btn-booking-main:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(37, 99, 235, 0.4);
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+/* การ์ดฟอร์ม */
+.card-form {
+    background: #fff;
+    padding: 30px;
+    border-radius: 25px;
+    margin-top: 2rem;
+}
 .form-section-card {
-  border-left: 6px solid #0d6efd;
-  padding: 1.8rem;
-  border-radius: 12px;
-  background: #f8fbff;
-  margin-bottom: 2rem;
+    border: 1px solid #e2e8f0;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    background: #fff;
 }
 .sub-title {
-  font-size: 22px;
-  font-weight: 700;
-  color: #0d6efd;
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.form-label { font-weight: 600; }
-.form-control, .form-select {
-  padding: 0.65rem 0.8rem;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
-}
-.form-control:focus, .form-select:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.2rem rgba(13,110,253,0.25);
-}
-
-/* ผู้ร่วมเดินทาง */
-.passenger-group {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-
-/* ปุ่มส่งฟอร์ม */
-#carForm button[type="submit"] {
-  background: linear-gradient(90deg, #0d6efd, #0dcaf0);
-  border: none;
-  color: #fff;
-  padding: 1rem;
-  font-size: 20px;
-  font-weight: 600;
-  border-radius: 12px;
-  width: 100%;
-  transition: 0.2s;
-}
-#carForm button[type="submit"]:hover { transform: translateY(-2px); }
-
-/* Modal */
-.modal-content { font-family: 'K2D', sans-serif; }
-
-/* Responsive สำหรับมือถือ */
-@media (max-width: 768px) {
-  /* หัวข้อฟอร์มใหญ่ */
-  h2.form-header {
-    font-size: 22px;   /* จาก 28px ลดลงให้เหมาะกับมือถือ */
-    padding: 0.8rem 1rem; /* ปรับ padding ให้พอดีหน้าจอ */
-  }
-
-  /* หัวข้อปฏิทิน */
-@media (max-width: 768px) {
-  .calendar-header {
-    font-size: 16px; /* ลดจาก 18px เป็น 16px */
-    white-space: nowrap; /* ป้องกันขึ้นบรรทัดใหม่ */
-    overflow: hidden; 
-    text-overflow: ellipsis; /* ถ้ายาวเกินก็แสดง ... */
-  }
-}
-
-/* ระยะห่างระหว่างปฏิทินกับปุ่มบนคอม */
-@media (min-width: 769px) {
-  .main-container > .text-center.mb-5 {
-    margin-top: 2rem; /* เพิ่มช่องว่างระหว่างปฏิทินกับปุ่ม */
-  }
-}
-
-/* ระยะห่างปุ่มจองรถกับปฏิทิน */
-.booking-btn-wrapper {
-  margin-top: 3rem;   /* เว้นจากปฏิทิน */
-  margin-bottom: 3rem;
-}
-
-/* ปรับมือถือ */
-@media (max-width: 768px) {
-  .booking-btn-wrapper {
-    margin-top: 2rem;
-    margin-bottom: 2.5rem;
-  }
-}
-
-/* --- การจัดวางหลัก --- */
-.main-container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
-
-/* --- ปรับแต่งปฏิทิน --- */
-.calendar-card-wrapper {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-}
-
-.calendar-header {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #1e293b;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-/* --- ปรับแต่งส่วนปุ่มจอง (จุดสำคัญที่ทำให้ไม่ชิดกัน) --- */
-.booking-action-area {
-  margin-top: 5rem;    /* เว้นระยะห่างจากปฏิทิน 5 เท่าของตัวอักษรปกติ */
-  margin-bottom: 5rem; /* เว้นระยะห่างก่อนถึงฟอร์ม */
-  padding: 2rem 0;
-}
-
-.btn-booking-main {
-  background: linear-gradient(135deg, #0d6efd, #0052cc);
-  color: white;
-  border: none;
-  padding: 1.2rem 3rem;
-  font-size: 1.4rem;
-  font-weight: 700;
-  border-radius: 50px; /* ทรงแคปซูล */
-  box-shadow: 0 10px 25px rgba(13, 110, 253, 0.3);
-  transition: all 0.3s ease;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-}
-
-.btn-booking-main:hover {
-  transform: translateY(-5px); /* ยกตัวขึ้นเมื่อเอาเมาส์วาง */
-  box-shadow: 0 15px 35px rgba(13, 110, 253, 0.4);
-  background: linear-gradient(135deg, #0dcaf0, #0d6efd);
-}
-
-/* --- รองรับหน้าจอมือถือ (Responsive) --- */
-@media (max-width: 768px) {
-  body {
-    padding: 1rem 0.5rem; /* ลด padding รอบตัวเครื่อง */
-  }
-  
-  .calendar-card-wrapper {
-    padding: 10px;
-    border-radius: 12px;
-  }
-
-  .booking-action-area {
-    margin-top: 3rem;   /* บนมือถือลดระยะห่างลงหน่อยให้พอดีหน้าจอ */
-    margin-bottom: 3rem;
-  }
-
-  .btn-booking-main {
-    width: 100%;       /* ปุ่มกว้างเต็มจอในมือถือ กดง่าย */
-    font-size: 1.2rem;
-    padding: 1rem;
-    justify-content: center;
-  }
-
-  h2.form-header {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1e40af;
     margin-bottom: 1.5rem;
-  }
+    border-bottom: 2px solid #eff6ff;
+    padding-bottom: 0.5rem;
 }
 
+/* Responsive */
+@media (max-width: 768px) {
+    body { padding: 0.5rem; }
+    h2.form-header { font-size: 1.3rem; padding: 1rem; }
+    .calendar-container { padding-top: 130%; } /* มือถือปฏิทินสูงขึ้น */
+    .btn-booking-main { width: 100%; font-size: 1.2rem; padding: 1.2rem 1rem; }
+    .booking-action-area { margin: 3rem 0; padding: 1rem; }
+    .card-form { padding: 15px; }
+}
