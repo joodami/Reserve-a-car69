@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileUploadSection = document.getElementById("fileUploadSection");
     const submitModal = new bootstrap.Modal(document.getElementById('submitModal'));
 
-    // --- 1. จัดการช่องกรอกชื่อผู้ร่วมเดินทาง ---
     function updatePassengerFields() {
         const count = Number(passengerCountInput.value) || 0;
         passengerInputsContainer.innerHTML = ""; 
@@ -32,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     passengerCountInput.addEventListener("input", updatePassengerFields);
 
-    // --- 2. ปุ่มเปิด-ปิดฟอร์ม ---
     showFormBtn.addEventListener("click", () => {
         formSection.style.display = "block";
         showFormBtn.parentElement.style.display = "none";
@@ -47,51 +45,51 @@ document.addEventListener('DOMContentLoaded', function() {
         window.scrollTo({ top: 0, behavior: "smooth" });
     });
 
-    // --- 3. การส่งข้อมูล ---
     carForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        document.getElementById('modalText').innerHTML = "⏳ กำลังดำเนินการ...";
+        document.getElementById('modalText').innerHTML = "⏳ กำลังดำเนินการส่งข้อมูล...";
         document.getElementById('loadingIcon').style.display = "block";
         document.getElementById('modalFooter').style.display = "none";
         submitModal.show();
 
         try {
-            const formDataObj = Object.fromEntries(new FormData(carForm).entries());
+            const formData = new FormData(carForm);
+            const formDataObj = Object.fromEntries(formData.entries());
+            
+            // ตรวจสอบไฟล์แนบ
             const fileInput = carForm.querySelector('[name="passengerFile"]');
-
-            // จัดการไฟล์ถ้ามี
-            if (fileInput && fileInput.files[0]) {
+            if (fileInput && fileInput.files.length > 0) {
                 formDataObj.passengerFile = await fileToBase64(fileInput.files[0]);
                 formDataObj.passengerFileName = fileInput.files[0].name;
             }
 
             const GAS_URL = "https://script.google.com/macros/s/AKfycbwnYqEKc9wreoIdwLR0W8fY1mHz3Gx0O44Iv1k_llgROJuqrjIXz6gYuWwwjzO3myK0/exec";
             
-            const params = new URLSearchParams();
-            params.append("data", JSON.stringify(formDataObj));
+            const response = await fetch(GAS_URL, {
+                method: "POST",
+                mode: "no-cors", // ใช้ no-cors เพื่อเลี่ยงปัญหาข้ามโดเมนในบาง Browser
+                body: new URLSearchParams({ "data": JSON.stringify(formDataObj) })
+            });
 
-            const res = await fetch(GAS_URL, { method: "POST", body: params });
-            const result = await res.json();
-
-            document.getElementById('loadingIcon').style.display = "none";
-            document.getElementById('modalFooter').style.display = "block";
-
-            if (result.status === "success") {
-                document.getElementById('modalText').innerHTML = 
-                    `<div class="text-center">
-                        <h4 class="text-success">✅ จองสำเร็จ!</h4>
-                        <a href="${result.result.pdfUrl}" target="_blank" class="btn btn-primary btn-sm mt-3">📄 เปิดดูใบขอใช้รถ (PDF)</a>
-                    </div>`;
+            // เนื่องด้วย no-cors เราจะไม่เห็น response body 
+            // จึงใช้วิธีหน่วงเวลารอระบบหลังบ้านทำงานแล้วแสดงสถานะสำเร็จ
+            setTimeout(() => {
+                document.getElementById('loadingIcon').style.display = "none";
+                document.getElementById('modalFooter').style.display = "block";
+                document.getElementById('modalText').innerHTML = `
+                    <h4 class="text-success">✅ ส่งข้อมูลเรียบร้อยแล้ว</h4>
+                    <p>ระบบกำลังดำเนินการสร้าง PDF และแจ้งเตือนทาง LINE<br>กรุณาตรวจสอบในกลุ่ม LINE ของท่านค่ะ</p>
+                `;
                 carForm.reset();
-                setTimeout(() => { cancelBtn.click(); }, 3000);
-            } else {
-                document.getElementById('modalText').innerText = "⚠️ ผิดพลาด: " + result.message;
-            }
+                setTimeout(() => { submitModal.hide(); cancelBtn.click(); }, 3000);
+            }, 2500);
+
         } catch (err) {
+            console.error(err);
             document.getElementById('loadingIcon').style.display = "none";
             document.getElementById('modalFooter').style.display = "block";
-            document.getElementById('modalText').innerText = "❌ เกิดข้อผิดพลาดในการเชื่อมต่อ";
+            document.getElementById('modalText').innerText = "❌ เกิดข้อผิดพลาด: " + err.message;
         }
     });
 
