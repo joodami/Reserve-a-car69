@@ -168,12 +168,25 @@ body {
 /* (ถ้าคุณมี @media (max-width: 768px) อยู่แล้ว ให้เอาโค้ดด้านล่างนี้ไปใส่รวมไว้ข้างในนั้นได้ค่ะ) */
 @media (max-width: 768px) {
     .main-footer {
-        padding: 30px 15px;
-        margin-top: 30px;
-        font-size: 0.85rem;
+        padding: 20px 10px; /* ลดพื้นที่ว่างบน-ล่างลงเพื่อให้ดูไม่หนาเกินไป */
+        margin-top: 25px;
     }
+
+    /* ปรับชื่อโรงเรียนใน Footer ให้เล็กลงเพื่อให้อยู่บรรทัดเดียว */
+    .main-footer p {
+        font-size: 0.75rem !important; /* ขนาดเล็กลงแต่ยังอ่านออก */
+        white-space: nowrap; /* บังคับไม่ให้ขึ้นบรรทัดใหม่ */
+        letter-spacing: -0.2px; /* บีบระยะห่างตัวอักษรเล็กน้อย */
+    }
+
+    /* ปรับส่วนติดต่อสอบถาม */
+    .footer-contact {
+        font-size: 0.72rem !important; /* ย่อขนาดลงอีกนิดเพื่อให้พอดีกับเบอร์โทร */
+        white-space: nowrap; /* บังคับให้อยู่บรรทัดเดียว */
+    }
+
     .footer-contact span {
-        display: block; /* ในมือถือให้เบอร์โทรขึ้นบรรทัดใหม่จะดูง่ายกว่าค่ะ */
-        margin-top: 5px;
+        display: inline-block; /* เปลี่ยนจาก block เป็น inline-block เพื่อให้อยู่บรรทัดเดียว */
+        margin-top: 2px;
     }
 }
