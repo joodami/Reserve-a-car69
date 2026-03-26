@@ -166,24 +166,57 @@ body {
 
 /* --- 2. ส่วนปรับแต่ง Footer เฉพาะในมือถือ --- */
 @media (max-width: 768px) {
+    /* --- ส่วนจัดการ Container และ Header เดิม --- */
+    .main-container { padding: 0 15px; margin-top: -40px; }
+    .main-header { padding: 30px 0 60px 0; }
+    .main-header h1 { font-size: 1.25rem !important; margin-bottom: 5px; }
+    .main-header p { font-size: 0.9rem !important; }
+    #school-logo { height: 70px; }
+
+    /* --- ส่วนจัดการปฏิทินเดิม --- */
+    .calendar-header { 
+        font-size: 0.95rem; 
+        letter-spacing: -0.5px; 
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis; 
+        margin-bottom: 15px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .calendar-header i { font-size: 1.1rem !important; margin-right: 6px !important; }
+    .calendar-container { padding-top: 150%; } 
+    .calendar-card-wrapper, .card-form { padding: 20px; border-radius: 15px; }
+    .btn-booking-main { width: 100%; padding: 1rem; font-size: 1.1rem; }
+
+    /* --- ส่วนจัดการ Error File เดิม --- */
+    #fileError { animation: fadeIn 0.3s ease-in-out; }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- ส่วนจัดการ Footer ใหม่ (ชิดกัน + ไม่ล้น) --- */
     .main-footer {
-        padding: 15px 10px; /* ลดพื้นที่ว่าง บน-ล่าง ของแถบ Footer */
-        margin-top: 20px;
+        padding: 15px 10px !important;
+        margin-top: 20px !important;
     }
 
-    /* บรรทัดแรก: ชื่อโรงเรียน */
     .main-footer p {
-        font-size: 0.75rem !important;
-        margin-bottom: 2px !important; /* <<< ปรับตรงนี้ให้เหลือ 2px เพื่อให้ชิดกับบรรทัดล่าง */
+        font-size: 0.72rem !important; /* ปรับขนาดให้จิ๋วแต่สวย */
+        margin-bottom: 0px !important; /* ชิดสนิทบรรทัดล่าง */
         white-space: nowrap;
-        letter-spacing: -0.2px;
+        letter-spacing: -0.3px; /* บีบตัวอักษรนิดเดียวเพื่อให้พอดีจอ */
+        line-height: 1.2;
     }
 
-    /* บรรทัดที่สอง: เบอร์โทรศัพท์ */
     .footer-contact {
-        font-size: 0.72rem !important;
-        margin-top: 0 !important; /* <<< ลบระยะห่างด้านบนของบรรทัดที่สองออก */
+        font-size: 0.70rem !important;
+        margin-top: 0px !important; /* ลบช่องว่างด้านบน */
         white-space: nowrap;
+        line-height: 1.2;
     }
 
     .footer-contact span {
