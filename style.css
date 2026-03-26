@@ -144,3 +144,36 @@ body {
     .calendar-card-wrapper, .card-form { padding: 20px; border-radius: 15px; }
     .btn-booking-main { width: 100%; padding: 1rem; font-size: 1.1rem; }
 }
+
+/* --- 1. ส่วน Footer สำหรับทุกหน้าจอ (วางท้ายไฟล์) --- */
+.main-footer {
+    background-color: #ffffff; /* พื้นหลังสีขาวสะอาด */
+    padding: 40px 0; /* เพิ่มพื้นที่ว่างบน-ล่างให้ดูโปร่ง */
+    margin-top: 50px; /* ระยะห่างจากปฏิทิน */
+    border-top: 1px solid #eeeeee; /* เส้นแบ่งบางๆ */
+    color: #555555;
+    font-family: 'K2D', sans-serif; /* ใช้ฟอนต์เดียวกับระบบ */
+}
+
+.main-footer p {
+    margin-bottom: 8px;
+}
+
+.footer-contact {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* --- 2. ส่วนปรับแต่ง Footer เฉพาะในมือถือ --- */
+/* (ถ้าคุณมี @media (max-width: 768px) อยู่แล้ว ให้เอาโค้ดด้านล่างนี้ไปใส่รวมไว้ข้างในนั้นได้ค่ะ) */
+@media (max-width: 768px) {
+    .main-footer {
+        padding: 30px 15px;
+        margin-top: 30px;
+        font-size: 0.85rem;
+    }
+    .footer-contact span {
+        display: block; /* ในมือถือให้เบอร์โทรขึ้นบรรทัดใหม่จะดูง่ายกว่าค่ะ */
+        margin-top: 5px;
+    }
+}
