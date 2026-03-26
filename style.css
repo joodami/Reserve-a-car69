@@ -97,19 +97,28 @@ body {
     margin-bottom: 1.5rem;
 }
 
-/* --- ส่วนเดิมที่มีอยู่แล้ว ให้หาบรรทัด @media --- */
 @media (max-width: 768px) {
     .main-container { padding: 0 15px; margin-top: -40px; }
-    .main-header { padding: 40px 0 70px 0; }
-    #school-logo { height: 90px; }
     
-    /* --- จุดที่ปรับปรุง: ปรับขนาดหัวข้อปฏิทินให้เล็กลงในมือถือ --- */
+    /* --- แก้ไขจุดนี้: ปรับขนาดชื่อโรงเรียนให้เล็กลง --- */
+    .main-header { padding: 30px 0 60px 0; } /* ลด Padding บน-ล่างลงหน่อย */
+    .main-header h1 { 
+        font-size: 1.25rem !important; /* ปรับขนาดชื่อโรงเรียน (ลองปรับเลขนี้ได้ค่ะ) */
+        margin-bottom: 5px;
+    }
+    .main-header p { 
+        font-size: 0.9rem !important; /* ปรับขนาดชื่อระบบด้านล่างชื่อโรงเรียน */
+    }
+    
+    #school-logo { height: 70px; } /* ลดขนาดโลโก้ให้สมดุลกับตัวอักษร */
+    
+    /* --- ส่วนอื่นๆ คงเดิมตามที่คุณส่งมา --- */
     .calendar-header { 
-        font-size: 0.95rem; /* ลดขนาดลงอีกนิดเพื่อให้พอดีบรรทัดเดียว */
-        letter-spacing: -0.5px; /* บีบระยะห่างตัวอักษรให้ชิดกันเล็กน้อย */
-        white-space: nowrap; /* บังคับไม่ให้ขึ้นบรรทัดใหม่ */
+        font-size: 0.95rem; 
+        letter-spacing: -0.5px; 
+        white-space: nowrap; 
         overflow: hidden;
-        text-overflow: ellipsis; /* ถ้าจองจิ๋วเกินไปจริงๆ ให้ใส่ ... ท้ายประโยค */
+        text-overflow: ellipsis; 
         margin-bottom: 15px;
         font-weight: 700;
         display: flex;
@@ -117,23 +126,21 @@ body {
         justify-content: center;
     }
 
-    /* --- เพิ่มโค้ดส่วนนี้เพื่อลดขนาดไอคอนเฉพาะในมือถือ --- */
     .calendar-header i {
-        font-size: 1.1rem !important; /* ขนาดไอคอนที่เล็กลงเพื่อให้พอดีกับบรรทัด */
-        margin-right: 6px !important; /* เว้นระยะห่างจากตัวอักษรนิดหน่อย */
+        font-size: 1.1rem !important;
+        margin-right: 6px !important;
     }
 
-    /* วางไว้ท้ายไฟล์ style.css ได้เลยค่ะ */
-#fileError {
-    animation: fadeIn 0.3s ease-in-out;
-}
+    #fileError {
+        animation: fadeIn 0.3s ease-in-out;
+    }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
     
-    .calendar-container { padding-top: 150%; } /* Mobile Ratio */
+    .calendar-container { padding-top: 150%; } 
     .calendar-card-wrapper, .card-form { padding: 20px; border-radius: 15px; }
     .btn-booking-main { width: 100%; padding: 1rem; font-size: 1.1rem; }
 }
