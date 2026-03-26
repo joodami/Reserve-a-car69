@@ -165,28 +165,29 @@ body {
 }
 
 /* --- 2. ส่วนปรับแต่ง Footer เฉพาะในมือถือ --- */
-/* (ถ้าคุณมี @media (max-width: 768px) อยู่แล้ว ให้เอาโค้ดด้านล่างนี้ไปใส่รวมไว้ข้างในนั้นได้ค่ะ) */
 @media (max-width: 768px) {
     .main-footer {
-        padding: 20px 10px; /* ลดพื้นที่ว่างบน-ล่างลงเพื่อให้ดูไม่หนาเกินไป */
-        margin-top: 25px;
+        padding: 15px 10px; /* ลดพื้นที่ว่าง บน-ล่าง ของแถบ Footer */
+        margin-top: 20px;
     }
 
-    /* ปรับชื่อโรงเรียนใน Footer ให้เล็กลงเพื่อให้อยู่บรรทัดเดียว */
+    /* บรรทัดแรก: ชื่อโรงเรียน */
     .main-footer p {
-        font-size: 0.75rem !important; /* ขนาดเล็กลงแต่ยังอ่านออก */
-        white-space: nowrap; /* บังคับไม่ให้ขึ้นบรรทัดใหม่ */
-        letter-spacing: -0.2px; /* บีบระยะห่างตัวอักษรเล็กน้อย */
+        font-size: 0.75rem !important;
+        margin-bottom: 2px !important; /* <<< ปรับตรงนี้ให้เหลือ 2px เพื่อให้ชิดกับบรรทัดล่าง */
+        white-space: nowrap;
+        letter-spacing: -0.2px;
     }
 
-    /* ปรับส่วนติดต่อสอบถาม */
+    /* บรรทัดที่สอง: เบอร์โทรศัพท์ */
     .footer-contact {
-        font-size: 0.72rem !important; /* ย่อขนาดลงอีกนิดเพื่อให้พอดีกับเบอร์โทร */
-        white-space: nowrap; /* บังคับให้อยู่บรรทัดเดียว */
+        font-size: 0.72rem !important;
+        margin-top: 0 !important; /* <<< ลบระยะห่างด้านบนของบรรทัดที่สองออก */
+        white-space: nowrap;
     }
 
     .footer-contact span {
-        display: inline-block; /* เปลี่ยนจาก block เป็น inline-block เพื่อให้อยู่บรรทัดเดียว */
-        margin-top: 2px;
+        display: inline-block;
+        padding: 0;
     }
 }
