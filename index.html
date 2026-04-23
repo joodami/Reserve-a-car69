@@ -30,8 +30,21 @@
 
         .school-logo { height: 40px; }
         .app-title { font-size: 1.3rem; font-weight: 600; color: var(--primary); margin: 0; }
-        .app-subtitle { font-size: 0.75rem; color: #64748b; margin-bottom: 5px; }
+        /* ค้นหา .app-subtitle ของเดิมแล้ววางทับด้วยอันนี้ค่ะ */
+.app-subtitle { 
+    color: #64748b; 
+    margin-bottom: 5px; 
+    font-size: 0.85rem; /* ขนาดเริ่มต้นสำหรับมือถือ */
+    font-weight: 600;    /* ปรับให้เป็นตัวหนา (สำหรับมือถือ) */
+}
 
+/* เพิ่มส่วนนี้เพื่อปรับขนาดให้ใหญ่ขึ้นเมื่อดูในคอมพิวเตอร์ (หน้าจอที่กว้างกว่า 768px) */
+@media (min-width: 768px) {
+    .app-subtitle {
+        font-size: 1.1rem; /* ปรับขนาดให้ใหญ่ขึ้นสำหรับคอม */
+        font-weight: 500;   /* ในคอมอาจจะลดความหนาลงนิดนึงเพื่อให้ดูสะอาดตา หรือจะใช้ 600 เท่ากันก็ได้ค่ะ */
+    }
+}
         .container-main { 
             max-width: 1100px; 
             margin: 10px auto; 
