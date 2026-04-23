@@ -11,134 +11,103 @@
     
     <style>
         :root { 
-            --school-blue: #1a5276; 
-            --school-gold: #f1c40f;
-            --accent-blue: #2980b9; 
-            --bg-body: #f4f7f6;
+            --primary: #1a5276; 
+            --accent: #2980b9; 
+            --gold: #f1c40f;
+            --bg: #f8fafc; 
         }
 
         body { 
             font-family: 'Prompt', 'K2D', sans-serif; 
-            background-color: var(--bg-body); 
-            color: #2c3e50; 
+            background-color: #f1f5f9; 
+            color: #334155; 
             margin: 0; 
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
         }
 
-        /* --- Header Banner: ธีมเดียวกับระบบสืบค้นและขอเลข --- */
+        /* --- Header Banner: ธีมมาตรฐานเดียวกับทุกระบบ --- */
         .header-banner {
             background: #ffffff;
             padding: 20px;
             text-align: center;
-            border-bottom: 5px solid var(--school-blue);
+            border-bottom: 5px solid var(--primary);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        .header-banner img { height: 70px; margin-bottom: 10px; }
-        .header-banner h1 { 
-            font-size: 1.8rem; 
-            font-weight: 700; 
-            color: var(--school-blue); 
-            margin: 0;
-            letter-spacing: 0.5px;
-        }
-        .header-banner p { 
-            font-size: 1rem; 
-            color: #555; 
-            margin: 5px 0 0 0; 
-            font-weight: 500;
-        }
+        .header-banner img { height: 65px; margin-bottom: 10px; }
+        .header-banner h1 { font-size: 1.6rem; font-weight: 700; color: var(--primary); margin: 0; }
+        .header-banner p { font-size: 0.95rem; color: #64748b; margin-top: 5px; font-weight: 600; }
 
         @media (max-width: 768px) {
-            .header-banner h1 { font-size: 1.3rem; }
+            .header-banner h1 { font-size: 1.25rem; }
             .header-banner p { font-size: 0.8rem; }
             .header-banner img { height: 50px; }
         }
 
-        /* --- Container Layout --- */
-        .main-container { max-width: 900px; margin: 30px auto; padding: 0 15px; flex: 1; }
+        .container-main { max-width: 850px; margin: 30px auto; padding: 0 15px; flex: 1; }
 
-        /* --- Action Card (Form & Calendar) --- */
+        /* --- ปุ่มกดเปิดฟอร์ม (ยึดตามต้นฉบับ) --- */
+        .action-area { text-align: center; margin-bottom: 30px; }
+        .btn-open-booking {
+            background: linear-gradient(135deg, #1a5276 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            box-shadow: 0 10px 20px rgba(26, 82, 118, 0.2);
+            transition: 0.3s;
+        }
+        .btn-open-booking:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(26, 82, 118, 0.3); color: white; }
+
+        /* --- Card Styling --- */
         .system-card {
             background: #ffffff;
-            border-radius: 15px;
+            border-radius: 20px;
             border: none;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
             overflow: hidden;
+            margin-bottom: 30px;
         }
-        .system-card-header {
-            background: linear-gradient(135deg, var(--school-blue) 0%, var(--accent-blue) 100%);
-            color: #ffffff;
+        .card-header-custom {
+            background: linear-gradient(135deg, #1a5276 0%, #2980b9 100%);
+            color: white;
             padding: 15px 20px;
             font-weight: 600;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
+            text-align: center;
         }
 
-        /* --- Form Styling --- */
-        .section-label {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--school-blue);
-            border-left: 4px solid var(--school-gold);
-            padding-left: 10px;
+        .section-title {
+            color: var(--primary);
+            border-left: 5px solid var(--gold);
+            padding-left: 12px;
             margin: 25px 0 15px 0;
-        }
-        .form-label { font-weight: 600; color: #444; font-size: 0.95rem; }
-        .form-control, .form-select {
-            border-radius: 8px;
-            padding: 10px 15px;
-            border: 1px solid #ced4da;
-            transition: all 0.2s;
-        }
-        .form-control:focus {
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 0.25rem rgba(41, 128, 185, 0.1);
-        }
-
-        /* --- Submit Button --- */
-        .btn-submit-system {
-            background-color: var(--school-blue);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1.1rem;
-            width: 100%;
-            transition: 0.3s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .btn-submit-system:hover {
-            background-color: var(--accent-blue);
-            transform: translateY(-2px);
-            color: white;
         }
 
-        /* --- Calendar Responsive --- */
-        .calendar-container {
-            position: relative;
-            padding-bottom: 75%; /* Aspect Ratio 4:3 */
-            height: 0;
-            overflow: hidden;
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 12px;
+            border: 2px solid #f1f5f9;
+            background: #f8fafc;
         }
-        .calendar-container iframe {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            border: 0;
-        }
+        .form-control:focus { border-color: var(--accent); background: white; box-shadow: none; }
 
-        /* --- Footer --- */
+        /* --- Calendar --- */
+        .calendar-box { position: relative; padding-bottom: 75%; height: 0; overflow: hidden; border-radius: 15px; }
+        .calendar-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
         footer {
             background: #ffffff;
             padding: 25px;
             text-align: center;
-            font-size: 0.9rem;
-            border-top: 1px solid #dee2e6;
-            color: #6c757d;
+            font-size: 0.85rem;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+            margin-top: auto;
         }
     </style>
 </head>
@@ -147,34 +116,33 @@
 <header class="header-banner">
     <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" alt="โลโก้โรงเรียน">
     <h1>ระบบจองรถยนต์ส่วนราชการ</h1>
-    <p>โรงเรียนพิมานพิทยาสรรค์ จังหวัดสตูล</p>
+    <p>งานยานพาหนะ โรงเรียนพิมานพิทยาสรรค์</p>
 </header>
 
-<div class="main-container">
+<div class="container-main">
     
-    <div class="system-card">
-        <div class="system-card-header">
-            <i class="bi bi-file-earmark-text-fill me-2"></i> กรอกข้อมูลเพื่อขอใช้รถยนต์
-        </div>
+    <div id="openBtnArea" class="action-area">
+        <p class="text-muted small mb-3 fw-bold">✨ ตรวจสอบปฏิทินวันว่างด้านล่างก่อนจอง ✨</p>
+        <button id="showFormBtn" class="btn-open-booking">
+            <i class="bi bi-plus-circle-fill me-2"></i> กดเพื่อจองคิวรถยนต์
+        </button>
+    </div>
+
+    <div id="formSection" class="system-card" style="display:none;">
+        <div class="card-header-custom">แบบฟอร์มขอใช้รถยนต์</div>
         <div class="card-body p-4">
-            <form id="bookingForm">
-                
-                <div class="section-label">ข้อมูลส่วนตัวผู้ขอ</div>
+            <form id="carForm">
+                <div class="text-end mb-3">
+                    <button type="button" id="hideFormBtn" class="btn btn-sm btn-outline-danger rounded-pill px-3">❌ ปิดฟอร์ม</button>
+                </div>
+
+                <div class="section-title">ข้อมูลผู้ขอใช้รถ</div>
                 <div class="row g-3">
+                    <div class="col-md-6"><label class="fw-bold mb-1">วันที่ทำการจอง</label><input type="date" name="bookDate" class="form-control" required></div>
+                    <div class="col-md-6"><label class="fw-bold mb-1">ชื่อ-นามสกุล</label><input type="text" name="name" class="form-control" required></div>
+                    <div class="col-md-6"><label class="fw-bold mb-1">โทรศัพท์</label><input type="tel" name="tel" class="form-control" required></div>
                     <div class="col-md-6">
-                        <label class="form-label">วันที่ทำรายการ</label>
-                        <input type="date" name="bookDate" class="form-control" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">ชื่อ-นามสกุล</label>
-                        <input type="text" name="name" class="form-control" placeholder="ระบุชื่อผู้จอง" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">เบอร์โทรศัพท์</label>
-                        <input type="tel" name="tel" class="form-control" placeholder="ระบุเบอร์โทร" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">ตำแหน่ง</label>
+                        <label class="fw-bold mb-1">ตำแหน่ง</label>
                         <select name="position" class="form-select" required>
                             <option value="">-- เลือกตำแหน่ง --</option>
                             <option value="ผู้บริหาร">ผู้บริหาร</option>
@@ -184,75 +152,50 @@
                     </div>
                 </div>
 
-                <div class="section-label">รายละเอียดการเดินทาง</div>
+                <div class="section-title">รายละเอียดการเดินทาง</div>
                 <div class="row g-3">
                     <div class="col-12">
-                        <label class="form-label">เลือกรถที่ต้องการ</label>
-                        <select name="car" class="form-select" required>
-                            <option value="">-- ระบุรถที่ต้องการใช้ --</option>
+                        <label class="fw-bold mb-1">เลือกรถยนต์</label>
+                        <select name="car" class="form-select border-primary" required>
+                            <option value="">-- เลือกรถที่ต้องการใช้ --</option>
                             <option value="รถ 4 ประตู">รถ 4 ประตู</option>
                             <option value="รถตู้">รถตู้</option>
                             <option value="รถ 6 ล้อ">รถ 6 ล้อ</option>
                         </select>
                     </div>
-                    <div class="col-12">
-                        <label class="form-label">จุดหมายปลายทาง</label>
-                        <input type="text" name="location" class="form-control" placeholder="ระบุสถานที่เดินทางไป" required>
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label">วัตถุประสงค์ในการเดินทาง</label>
-                        <textarea name="purpose" class="form-control" rows="2" placeholder="ระบุเหตุผลความจำเป็น" required></textarea>
-                    </div>
+                    <div class="col-12"><label class="fw-bold mb-1">สถานที่เดินทาง</label><input type="text" name="location" class="form-control" required></div>
+                    <div class="col-12"><label class="fw-bold mb-1">วัตถุประสงค์</label><textarea name="purpose" class="form-control" rows="2" required></textarea></div>
                     
-                    <div class="col-md-3 col-6">
-                        <label class="form-label">วันที่เริ่ม</label>
-                        <input type="date" name="startDate" class="form-control" required>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <label class="form-label">เวลาเริ่ม</label>
-                        <input type="time" name="startTime" class="form-control" required>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <label class="form-label">วันที่สิ้นสุด</label>
-                        <input type="date" name="endDate" class="form-control" required>
-                    </div>
-                    <div class="col-md-3 col-6">
-                        <label class="form-label">เวลาสิ้นสุด</label>
-                        <input type="time" name="endTime" class="form-control" required>
-                    </div>
+                    <div class="col-6 col-md-3"><label class="text-primary fw-bold">วันเริ่ม</label><input type="date" name="startDate" class="form-control border-primary" required></div>
+                    <div class="col-6 col-md-3"><label class="text-primary fw-bold">เวลาเริ่ม</label><input type="time" name="startTime" class="form-control border-primary" required></div>
+                    <div class="col-6 col-md-3"><label class="text-danger fw-bold">วันสิ้นสุด</label><input type="date" name="endDate" class="form-control border-danger" required></div>
+                    <div class="col-6 col-md-3"><label class="text-danger fw-bold">เวลากลับ</label><input type="time" name="endTime" class="form-control border-danger" required></div>
                 </div>
 
-                <div class="section-label">ผู้ร่วมเดินทาง</div>
+                <div class="section-title">ผู้ร่วมเดินทาง</div>
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label">จำนวนผู้ร่วมเดินทาง (คน)</label>
+                        <label class="fw-bold mb-1">จำนวนผู้ร่วมเดินทาง (คน)</label>
                         <input type="number" name="passengerCount" id="pCount" class="form-control" min="0" value="0" required>
                     </div>
                     <div class="col-12" id="pList"></div>
-                    
-                    <div id="fileBox" class="col-12 mt-2" style="display: none;">
-                        <div class="p-3 border rounded bg-light">
-                            <label class="form-label text-danger fw-bold">แนบไฟล์รายชื่อ (PDF เท่านั้น)</label>
-                            <input type="file" id="pUpdateFile" class="form-control" accept=".pdf">
+                    <div id="fileUpload" class="col-12 mt-2" style="display:none;">
+                        <div class="p-3 border border-danger rounded bg-light">
+                            <label class="fw-bold text-danger">แนบไฟล์รายชื่อ (PDF)</label>
+                            <input type="file" id="pPdf" class="form-control" accept=".pdf">
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-5 mb-3 text-center">
-                    <button type="submit" class="btn-submit-system">
-                        <i class="bi bi-send-check-fill me-2"></i> ยืนยันการส่งคำขอจองรถยนต์
-                    </button>
-                </div>
+                <button type="submit" class="btn-open-booking w-100 mt-4">ยืนยันการจอง 🚗</button>
             </form>
         </div>
     </div>
 
     <div class="system-card">
-        <div class="system-card-header">
-            <i class="bi bi-calendar3 me-2"></i> ตรวจสอบตารางการใช้รถยนต์
-        </div>
+        <div class="card-header-custom"><i class="bi bi-calendar3 me-2"></i> ปฏิทินการใช้รถยนต์</div>
         <div class="card-body p-2">
-            <div class="calendar-container">
+            <div class="calendar-box">
                 <iframe src="https://calendar.google.com/calendar/embed?src=c_ea546f07317ff6dcdbf73cee14ab645a8e154664a02554eef13e6e08423e39c1%40group.calendar.google.com&ctz=Asia/Bangkok&mode=MONTH"></iframe>
             </div>
         </div>
@@ -260,85 +203,97 @@
 
 </div>
 
-<div id="loadingOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); z-index:9999; justify-content:center; align-items:center; flex-direction:column;">
-    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
-    <h5 class="mt-3 fw-bold">กำลังบันทึกข้อมูลและส่งแจ้งเตือน...</h5>
+<div id="loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.9); z-index:9999; justify-content:center; align-items:center; flex-direction:column;">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;"></div>
+    <h5 class="mt-3 fw-bold">ระบบกำลังบันทึกข้อมูล...</h5>
 </div>
 
 <footer>
     © 2026 งานยานพาหนะ โรงเรียนพิมานพิทยาสรรค์<br>
-    <span class="small">ติดต่อสอบถาม: นางพิชามญชุ์ ทองกรด โทร.093-5783797</span>
+    <span class="fw-bold text-dark">ติดต่อสอบถาม: นางพิชามญชุ์ ทองกรด โทร.093-5783797</span>
 </footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     // --- ตั้งค่า URL GAS เดิมของคุณครู ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwlDYshdlJdNS_xwtKGs90EZ51N8wZsPRzoeOzi_YgdLAgRm-QIxlJX3wUnw-Danxr1/exec";
 
-    const pCountInput = document.getElementById('pCount');
-    const pListContainer = document.getElementById('pList');
-    const fileBox = document.getElementById('fileBox');
-    const bookingForm = document.getElementById('bookingForm');
-    const loadingOverlay = document.getElementById('loadingOverlay');
+    const showFormBtn = document.getElementById('showFormBtn');
+    const hideFormBtn = document.getElementById('hideFormBtn');
+    const formSection = document.getElementById('formSection');
+    const openBtnArea = document.getElementById('openBtnArea');
 
-    // จัดการช่องกรอกรายชื่อผู้ร่วมเดินทาง
-    pCountInput.addEventListener('input', function() {
-        const count = parseInt(this.value) || 0;
-        pListContainer.innerHTML = '';
-        if (count > 0 && count <= 6) {
-            fileBox.style.display = 'none';
-            for (let i = 1; i <= count; i++) {
-                pListContainer.innerHTML += `<input type="text" name="passenger${i}" class="form-control mb-2" placeholder="ชื่อผู้ร่วมเดินทางคนที่ ${i}" required>`;
+    // 1. Logic การซ่อน/แสดงฟอร์ม (เหมือนต้นฉบับ)
+    showFormBtn.onclick = () => {
+        formSection.style.display = 'block';
+        openBtnArea.style.display = 'none';
+        formSection.scrollIntoView({ behavior: 'smooth' });
+    };
+    hideFormBtn.onclick = () => {
+        formSection.style.display = 'none';
+        openBtnArea.style.display = 'block';
+    };
+
+    // 2. Logic จัดการรายชื่อผู้ร่วมเดินทาง (เหมือนต้นฉบับ)
+    const pCount = document.getElementById('pCount');
+    const pList = document.getElementById('pList');
+    const fileUpload = document.getElementById('fileUpload');
+
+    pCount.oninput = function() {
+        const val = parseInt(this.value) || 0;
+        pList.innerHTML = '';
+        if (val > 0 && val <= 6) {
+            fileUpload.style.display = 'none';
+            for (let i = 1; i <= val; i++) {
+                pList.innerHTML += `<input type="text" name="passenger${i}" class="form-control mb-2" placeholder="ระบุชื่อผู้เดินทางคนที่ ${i}" required>`;
             }
-        } else if (count > 6) {
-            fileBox.style.display = 'block';
+        } else if (val > 6) {
+            fileUpload.style.display = 'block';
         } else {
-            fileBox.style.display = 'none';
+            fileUpload.style.display = 'none';
         }
-    });
+    };
 
-    // ส่งข้อมูลแบบเดิม 100%
-    bookingForm.onsubmit = async (e) => {
+    // 3. Logic ส่งข้อมูลไป GAS (เหมือนต้นฉบับ)
+    const carForm = document.getElementById('carForm');
+    carForm.onsubmit = async (e) => {
         e.preventDefault();
-        loadingOverlay.style.display = 'flex';
+        document.getElementById('loader').style.display = 'flex';
 
-        const formData = new FormData(bookingForm);
+        const formData = new FormData(carForm);
         const data = Object.fromEntries(formData.entries());
 
-        // ตรวจสอบและอ่านไฟล์ PDF
-        const fileInput = document.getElementById('pUpdateFile');
-        if (parseInt(data.passengerCount) > 6 && fileInput.files.length > 0) {
-            const file = fileInput.files[0];
+        const pdfFile = document.getElementById('pPdf');
+        if (parseInt(data.passengerCount) > 6 && pdfFile.files.length > 0) {
+            const file = pdfFile.files[0];
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = async () => {
                 data.passengerFile = reader.result.split(',')[1];
                 data.passengerFileName = file.name;
-                await sendToGAS(data);
+                await postData(data);
             };
         } else {
-            await sendToGAS(data);
+            await postData(data);
         }
     };
 
-    async function sendToGAS(payload) {
+    async function postData(payload) {
         try {
             const response = await fetch(SCRIPT_URL, {
                 method: 'POST',
                 body: JSON.stringify(payload)
             });
-            const result = await response.json();
-            if (result.status === "success") {
-                alert("จองรถยนต์สำเร็จแล้วค่ะ!");
+            const res = await response.json();
+            if (res.status === "success") {
+                alert("บันทึกการจองสำเร็จแล้วค่ะ");
                 location.reload();
             } else {
-                alert("พบข้อผิดพลาด: " + result.message);
-                loadingOverlay.style.display = 'none';
+                alert("ผิดพลาด: " + res.message);
+                document.getElementById('loader').style.display = 'none';
             }
         } catch (err) {
-            alert("ไม่สามารถติดต่อเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง");
-            loadingOverlay.style.display = 'none';
+            alert("ไม่สามารถติดต่อระบบได้");
+            document.getElementById('loader').style.display = 'none';
         }
     }
 </script>
