@@ -10,156 +10,142 @@
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* ================= PS-SARABUN CENTERED THEME ================= */
+        /* ================= HUB STANDARD UI (COMPACT) ================= */
         :root {
             --ps-navy: #1a5276;
             --ps-gold: #d4ac0d;
-            --ps-bg: #f4f7f9;
+            --ps-bg: #f2f5f8;
         }
 
         * { font-family: 'Prompt', sans-serif !important; }
 
         body { background-color: var(--ps-bg); color: #2c3e50; margin: 0; }
 
-        /* --- Header: จัดวางกึ่งกลางเหมือนระบบสืบค้น --- */
-        .ps-header-centered {
+        /* --- Banner มาตรฐานเดียวกับหน้าแรกที่รวมเมนู --- */
+        .ps-standard-header {
             background-color: white;
-            padding: 35px 20px;
-            text-align: center; /* จัดกึ่งกลาง */
-            border-bottom: 5px solid var(--ps-navy);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 15px 10px; /* ปรับความสูงให้กะทัดรัด */
+            text-align: center;
+            border-bottom: 4px solid var(--ps-navy);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
-        .ps-logo-center {
-            height: 90px;
-            margin-bottom: 15px;
+        .ps-logo-standard {
+            height: 70px; /* ขนาดมาตรฐานหน้าแรก */
+            margin-bottom: 8px;
             display: block;
             margin-left: auto;
             margin-right: auto;
         }
 
-        .ps-brand-name {
-            font-size: 2.4rem;
+        .ps-brand-standard {
+            font-size: 1.8rem; /* ขนาดฟอนต์มาตรฐานหน้า Hub */
             font-weight: 700;
             color: var(--ps-navy);
             margin: 0;
             line-height: 1.2;
-            letter-spacing: 1px;
         }
 
-        .ps-system-title {
-            font-size: 1.25rem;
-            color: #555;
-            margin: 8px 0;
+        .ps-subtitle-standard {
+            font-size: 1.1rem; /* ขนาดฟอนต์รอง */
+            color: #666;
+            margin: 3px 0;
             font-weight: 400;
         }
 
-        .ps-badge-department {
-            display: inline-block;
-            background-color: var(--ps-navy);
-            color: white;
-            padding: 4px 20px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            margin-top: 10px;
-            font-weight: 300;
-        }
-
-        /* --- Layout & Cards --- */
-        .main-content { max-width: 850px; margin: 40px auto; padding: 0 15px; }
+        /* --- ส่วนเนื้อหา --- */
+        .main-container { max-width: 800px; margin: 25px auto; padding: 0 15px; }
 
         .card-ps {
             background: white;
-            border-radius: 15px;
+            border-radius: 12px;
             border: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-            padding: 35px;
-            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 25px;
+            margin-bottom: 20px;
         }
 
         .btn-ps-action {
             background-color: var(--ps-navy);
             color: white;
-            border: none;
-            padding: 12px 40px;
-            border-radius: 10px;
+            padding: 10px 35px;
+            border-radius: 8px;
             font-weight: 500;
-            transition: all 0.3s ease;
+            border: none;
+            transition: 0.3s;
         }
 
         .btn-ps-action:hover {
             background-color: #154360;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(26, 82, 118, 0.3);
-            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(26, 82, 118, 0.2);
         }
 
-        .ps-label-border {
+        .ps-section-label {
             color: var(--ps-navy);
             font-weight: 600;
-            font-size: 1.1rem;
-            border-left: 5px solid var(--ps-gold);
-            padding-left: 15px;
-            margin: 30px 0 20px;
+            font-size: 1rem;
+            border-left: 4px solid var(--ps-gold);
+            padding-left: 12px;
+            margin: 20px 0 12px;
         }
 
-        .calendar-frame {
+        .calendar-box {
             position: relative;
             padding-top: 60%;
-            border-radius: 15px;
+            border-radius: 10px;
             overflow: hidden;
-            border: 1px solid #dee2e6;
+            border: 1px solid #eee;
         }
-        .calendar-frame iframe { position: absolute; top:0; left:0; width:100%; height:100%; }
+        .calendar-box iframe { position: absolute; top:0; left:0; width:100%; height:100%; }
 
         .ps-footer {
             text-align: center;
-            padding: 40px 20px;
+            padding: 20px;
+            font-size: 0.85rem;
+            color: #888;
             background: white;
             border-top: 1px solid #eee;
-            color: #7f8c8d;
         }
 
-        /* Mobile */
         @media (max-width: 768px) {
-            .ps-brand-name { font-size: 1.9rem; }
-            .ps-system-title { font-size: 1.1rem; }
-            .ps-logo-center { height: 75px; }
-            .calendar-frame { padding-top: 150%; }
+            .ps-brand-standard { font-size: 1.5rem; }
+            .ps-subtitle-standard { font-size: 1rem; }
+            .ps-logo-standard { height: 60px; }
+            .calendar-box { padding-top: 150%; }
         }
     </style>
 </head>
 <body>
 
-    <header class="ps-header-centered">
-        <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" alt="Logo" class="ps-logo-center">
-        <h1 class="ps-brand-name">PS-Sarabun</h1>
-        <p class="ps-system-title">ระบบจองรถยนต์ โรงเรียนพิมานพิทยาสรรค์</p>
-        <div class="ps-badge-department">งานยานพาหนะ สำนักงานอำนวยการ</div>
+    <header class="ps-standard-header">
+        <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" alt="Logo" class="ps-logo-standard">
+        <h1 class="ps-brand-standard">PS-Sarabun</h1>
+        <p class="ps-subtitle-standard">ระบบจองรถยนต์ โรงเรียนพิมานพิทยาสรรค์</p>
     </header>
 
-    <div class="main-content">
-        <div class="text-center mb-5">
+    <div class="main-container">
+        <div class="text-center mb-4">
             <button id="showFormBtn" class="btn btn-ps-action shadow-sm">
-                <i class="bi bi-pencil-square me-2"></i> คลิกเพื่อเริ่มบันทึกข้อมูลการจองรถ
+                <i class="bi bi-pencil-square me-2"></i> บันทึกข้อมูลการจองรถ
             </button>
         </div>
 
         <div class="card-ps" id="formSection" style="display:none;">
             <form id="carForm">
-                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
-                    <h5 class="fw-bold m-0" style="color: var(--ps-navy);">แบบฟอร์มบันทึกการขอใช้รถยนต์</h5>
+                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                    <h6 class="fw-bold m-0" style="color: var(--ps-navy);">แบบฟอร์มขอใช้รถยนต์</h6>
                     <button type="button" id="cancelBookingBtn" class="btn-close"></button>
                 </div>
 
-                <div class="ps-label-border">1. ข้อมูลพื้นฐานผู้ขอใช้</div>
-                <div class="row g-3">
-                    <div class="col-md-6"><label class="form-label small">วันที่ขอรับบริการ</label><input type="date" class="form-control" name="bookDate" required></div>
-                    <div class="col-md-6"><label class="form-label small">ชื่อ-นามสกุล</label><input type="text" class="form-control" name="name" required placeholder="ระบุชื่อ-สกุล"></div>
-                    <div class="col-md-6"><label class="form-label small">เบอร์โทรศัพท์ติดต่อ</label><input type="tel" class="form-control" name="tel" required placeholder="0x-xxxx-xxxx"></div>
+                <div class="ps-section-label">ข้อมูลผู้ขอใช้</div>
+                <div class="row g-2 mb-3">
+                    <div class="col-md-6"><label class="small">วันที่จอง</label><input type="date" class="form-control form-control-sm" name="bookDate" required></div>
+                    <div class="col-md-6"><label class="small">ชื่อ-นามสกุล</label><input type="text" class="form-control form-control-sm" name="name" required></div>
+                    <div class="col-md-6"><label class="small">เบอร์โทร</label><input type="tel" class="form-control form-control-sm" name="tel" required></div>
                     <div class="col-md-6">
-                        <label class="form-label small">ตำแหน่ง</label>
-                        <select class="form-select" name="position" required>
+                        <label class="small">ตำแหน่ง</label>
+                        <select class="form-select form-select-sm" name="position" required>
                             <option value="">-- เลือก --</option>
                             <option value="ผู้บริหาร">ผู้บริหาร</option>
                             <option value="ครู">ครู</option>
@@ -168,77 +154,60 @@
                     </div>
                 </div>
 
-                <div class="ps-label-border">2. รายละเอียดการใช้บริการ</div>
-                <div class="row g-3">
-                    <div class="col-12"><label class="form-label small">ประเภทรถยนต์</label><select class="form-select" name="car" required style="border-color: var(--ps-navy);"><option value="">-- เลือกประเภทรถ --</option><option value="รถ 4 ประตู">รถ 4 ประตู</option><option value="รถตู้">รถตู้</option><option value="รถ 6 ล้อ">รถ 6 ล้อ</option></select></div>
-                    <div class="col-12"><label class="form-label small">สถานที่ปลายทาง</label><input type="text" class="form-control" name="location" required></div>
-                    <div class="col-12"><label class="form-label small">วัตถุประสงค์ (ระบุรายละเอียด)</label><textarea class="form-control" name="purpose" rows="2" required></textarea></div>
+                <div class="ps-section-label">รายละเอียดการใช้รถ</div>
+                <div class="row g-2">
+                    <div class="col-12"><label class="small">ประเภทรถ</label><select class="form-select form-select-sm" name="car" required><option value="">-- เลือกรถ --</option><option value="รถ 4 ประตู">รถ 4 ประตู</option><option value="รถตู้">รถตู้</option><option value="รถ 6 ล้อ">รถ 6 ล้อ</option></select></div>
+                    <div class="col-12"><label class="small">สถานที่ปลายทาง</label><input type="text" class="form-control form-control-sm" name="location" required></div>
+                    <div class="col-12"><label class="small">วัตถุประสงค์</label><textarea class="form-control form-control-sm" name="purpose" rows="2" required></textarea></div>
                 </div>
 
-                <div class="p-3 bg-light rounded border mt-4">
-                    <div class="row g-2 text-center">
-                        <div class="col-6 col-md-3"><label class="small fw-bold">วันเริ่มต้น</label><input type="date" class="form-control" name="startDate" required></div>
-                        <div class="col-6 col-md-3"><label class="small fw-bold">เวลา</label><input type="time" class="form-control" name="startTime" required></div>
-                        <div class="col-6 col-md-3"><label class="small fw-bold text-danger">วันสิ้นสุด</label><input type="date" class="form-control" name="endDate" required></div>
-                        <div class="col-6 col-md-3"><label class="small fw-bold text-danger">เวลา</label><input type="time" class="form-control" name="endTime" required></div>
+                <div class="p-2 bg-light rounded border mt-3">
+                    <div class="row g-1 text-center">
+                        <div class="col-3"><label class="x-small fw-bold">วันเริ่ม</label><input type="date" class="form-control form-control-sm px-1" name="startDate" required></div>
+                        <div class="col-3"><label class="x-small fw-bold">เวลา</label><input type="time" class="form-control form-control-sm px-1" name="startTime" required></div>
+                        <div class="col-3"><label class="x-small fw-bold text-danger">วันสิ้นสุด</label><input type="date" class="form-control form-control-sm px-1" name="endDate" required></div>
+                        <div class="col-3"><label class="x-small fw-bold text-danger">เวลา</label><input type="time" class="form-control form-control-sm px-1" name="endTime" required></div>
                     </div>
                 </div>
 
-                <div class="mt-4">
-                    <div class="ps-label-border">3. รายชื่อผู้ร่วมเดินทาง</div>
-                    <div class="d-flex align-items-center mb-3 px-3">
-                        <span class="me-3">จำนวนทั้งหมด:</span>
-                        <input type="number" class="form-control w-25 shadow-sm" name="passengerCount" min="0" value="0" required>
-                        <span class="ms-2">ท่าน</span>
+                <div class="mt-3">
+                    <div class="ps-section-label">ผู้ร่วมเดินทาง</div>
+                    <div class="d-flex align-items-center mb-2">
+                        <input type="number" class="form-control form-control-sm w-25" name="passengerCount" min="0" value="0" required>
+                        <span class="ms-2 small">คน</span>
                     </div>
                     <div id="passengerInputs"></div>
-                    <div id="fileUploadSection" style="display:none;" class="p-4 border border-dashed rounded mt-2 text-center bg-white">
-                        <label class="form-label text-danger fw-bold"><i class="bi bi-file-earmark-pdf me-2"></i>แนบไฟล์รายชื่อผู้เดินทาง (PDF)</label>
-                        <input type="file" class="form-control mt-2" name="passengerFile" accept=".pdf" id="passengerFileInput">
+                    <div id="fileUploadSection" style="display:none;" class="p-2 border border-dashed rounded mt-2 bg-white text-center">
+                        <label class="text-danger x-small fw-bold">แนบรายชื่อผู้เดินทาง (PDF)</label>
+                        <input type="file" class="form-control form-control-sm mt-1" name="passengerFile" accept=".pdf" id="passengerFileInput">
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-ps-action w-100 mt-5 py-3 shadow">ส่งข้อมูลยืนยันการจอง</button>
+                <button type="submit" class="btn btn-ps-action w-100 mt-4 py-2 shadow-sm">ยืนยันข้อมูลการจอง</button>
             </form>
         </div>
 
         <div class="card-ps">
-            <h5 class="text-center mb-4 fw-bold" style="color: var(--ps-navy)"><i class="bi bi-calendar3-range me-2"></i>ปฏิทินตรวจสอบคิวรถยนต์</h5>
-            <div class="calendar-frame">
+            <h6 class="text-center mb-3 fw-bold" style="color: var(--ps-navy)"><i class="bi bi-calendar3 me-2"></i>ปฏิทินคิวรถยนต์</h6>
+            <div class="calendar-box">
                 <iframe src="https://calendar.google.com/calendar/embed?src=c_ea546f07317ff6dcdbf73cee14ab645a8e154664a02554eef13e6e08423e39c1%40group.calendar.google.com&ctz=Asia/Bangkok&mode=MONTH" frameborder="0" scrolling="no"></iframe>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="submitModal" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0">
-                <div class="modal-body text-center p-5">
-                    <div id="loadingIcon" class="spinner-border text-primary mb-3"></div>
-                    <div id="modalText" class="fw-bold">ระบบกำลังบันทึกข้อมูล...</div>
-                    <div id="modalFooter" class="mt-4" style="display:none;">
-                        <button type="button" class="btn btn-ps-action px-5" data-bs-dismiss="modal" onclick="document.getElementById('cancelBookingBtn').click()">ตกลง</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <footer class="ps-footer">
-        <p class="mb-1 fw-bold">© 2026 งานยานพาหนะ โรงเรียนพิมานพิทยาสรรค์</p>
-        <div class="small">ผู้รับผิดชอบ: นางพิชามญชุ์ ทองกรด | โทรศัพท์ 093-5783797</div>
+        <p class="mb-0">© 2026 งานยานพาหนะ โรงเรียนพิมานพิทยาสรรค์</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // --- ฟังก์ชันควบคุมทั้งหมด (คงเดิม 100%) ---
+        // --- ฟังก์ชันควบคุมเดิม 100% ---
         document.addEventListener('DOMContentLoaded', function() {
             const carForm = document.getElementById("carForm");
             const passengerCountInput = document.querySelector('input[name="passengerCount"]');
             const passengerInputsContainer = document.getElementById("passengerInputs");
             const fileUploadSection = document.getElementById("fileUploadSection");
             const fileInput = document.getElementById("passengerFileInput");
-            const submitModal = new bootstrap.Modal(document.getElementById('submitModal'));
 
             passengerCountInput.addEventListener("input", function() {
                 const count = Number(this.value) || 0;
@@ -248,8 +217,8 @@
                         const input = document.createElement("input");
                         input.type = "text";
                         input.name = `passenger${i}`;
-                        input.placeholder = `ระบุชื่อผู้ร่วมเดินทางคนที่ ${i}`;
-                        input.className = "form-control mb-2 shadow-sm";
+                        input.placeholder = `ชื่อคนที่ ${i}`;
+                        input.className = "form-control form-control-sm mb-1";
                         input.required = true;
                         passengerInputsContainer.appendChild(input);
                     }
@@ -263,11 +232,7 @@
 
             carForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                document.getElementById('loadingIcon').style.display = "block";
-                document.getElementById('modalFooter').style.display = "none";
-                document.getElementById('modalText').innerText = "กำลังประมวลผลคำขอจอง...";
-                submitModal.show();
-
+                alert("กำลังส่งข้อมูล...");
                 try {
                     const formData = new FormData(carForm);
                     const formDataObj = Object.fromEntries(formData.entries());
@@ -275,23 +240,15 @@
                         formDataObj.passengerFile = await fileToBase64(fileInput.files[0]);
                         formDataObj.passengerFileName = fileInput.files[0].name;
                     }
-
                     const GAS_URL = "https://script.google.com/macros/s/AKfycbwlDYshdlJdNS_xwtKGs90EZ51N8wZsPRzoeOzi_YgdLAgRm-QIxlJX3wUnw-Danxr1/exec";
                     const response = await fetch(GAS_URL, { method: "POST", body: JSON.stringify(formDataObj) });
                     const resData = await response.json();
-
                     if (resData.status === "success") {
-                        document.getElementById('loadingIcon').style.display = "none";
-                        document.getElementById('modalFooter').style.display = "block";
-                        document.getElementById('modalText').innerHTML = `
-                            <i class="bi bi-check-circle-fill text-success fs-1"></i><br>
-                            ส่งข้อมูลการจองสำเร็จ!<br>
-                            <a href="${resData.result.pdfUrl}" target="_blank" class="btn btn-sm btn-outline-primary mt-3">คลิกดูใบขอใช้รถ PDF</a>`;
+                        alert("จองสำเร็จ!");
+                        window.open(resData.result.pdfUrl, '_blank');
                         carForm.reset();
                     }
-                } catch (err) {
-                    document.getElementById('modalText').innerText = "เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง";
-                }
+                } catch (err) { alert("เกิดข้อผิดพลาด"); }
             });
 
             function fileToBase64(file) {
@@ -305,7 +262,6 @@
             document.getElementById("showFormBtn").onclick = () => {
                 document.getElementById("formSection").style.display = "block";
                 document.getElementById("showFormBtn").parentElement.style.display = "none";
-                document.getElementById("formSection").scrollIntoView({ behavior: 'smooth' });
             };
             document.getElementById("cancelBookingBtn").onclick = () => {
                 document.getElementById("formSection").style.display = "none";
