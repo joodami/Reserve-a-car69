@@ -10,7 +10,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     
     <style>
-        :root { --primary: #1a5276; --accent: #2980b9; --gold: #f1c40f; }
+        :root { 
+            --primary: #1a5276; 
+            --accent: #2980b9; 
+            --gold: #f1c40f; 
+        }
 
         body { 
             font-family: 'Prompt', 'K2D', sans-serif; 
@@ -19,29 +23,27 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            color: #334155;
         }
 
-        /* --- App Header: ล็อกมาตรฐาน Hub --- */
+        /* --- App Header: คงข้อความเดิม --- */
         .app-header {
             background: #ffffff;
             text-align: center;
             border-bottom: 4px solid var(--primary);
             box-shadow: 0 4px 8px rgba(0,0,0,0.05);
             flex-shrink: 0;
+            padding: 15px 10px;
         }
 
-        @media (max-width: 1023px) {
-            .app-header { padding: 8px 10px 0 10px; }
-            .school-logo { height: 40px; margin-bottom: 2px; }
-            .app-title { font-size: 1.2rem; line-height: 1.1; color: var(--primary); font-weight: 700; margin: 0; }
-            .app-subtitle { font-size: 0.75rem; margin-top: 2px; margin-bottom: 5px; font-weight: 600; color: #475569; }
-        }
+        .school-logo { height: 55px; margin-bottom: 5px; }
+        .app-title { font-size: 1.8rem; font-weight: 700; color: var(--primary); margin: 0; }
+        .app-subtitle { font-size: 0.95rem; margin-top: 2px; margin-bottom: 5px; color: #475569; font-weight: 600; }
 
-        @media (min-width: 1024px) {
-            .app-header { padding: 10px 20px 5px 20px; } 
-            .school-logo { height: 55px; margin-bottom: 5px; }
-            .app-title { font-size: 1.8rem; font-weight: 700; color: var(--primary); margin: 0; }
-            .app-subtitle { font-size: 0.95rem; margin-top: 2px; margin-bottom: 5px; color: #475569; }
+        @media (max-width: 768px) {
+            .app-title { font-size: 1.2rem; }
+            .app-subtitle { font-size: 0.75rem; }
+            .school-logo { height: 40px; }
         }
 
         .container-main { max-width: 1100px; margin: 30px auto; padding: 0 15px; flex: 1; width: 100%; }
@@ -56,8 +58,9 @@
             font-size: 1.2rem;
             font-weight: 700;
             box-shadow: 0 8px 20px rgba(26, 82, 118, 0.2);
-            transition: 0.3s;
+            transition: 0.3s ease;
         }
+        .btn-open-booking:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(26, 82, 118, 0.3); color: white; }
 
         .system-card {
             background: #ffffff;
@@ -67,6 +70,7 @@
             margin-bottom: 30px;
             border: none;
         }
+
         .card-header-custom {
             background: var(--primary);
             color: white;
@@ -75,18 +79,13 @@
             text-align: center;
         }
 
-        /* --- ปฏิทิน --- */
         .calendar-wrapper {
             position: relative;
             width: 100%;
             height: 600px;
             overflow: hidden;
-            border-radius: 0 0 20px 20px;
         }
-        @media (max-width: 768px) {
-            .calendar-wrapper { height: 500px; }
-            .header-banner h1 { font-size: 1.3rem; }
-        }
+        @media (max-width: 768px) { .calendar-wrapper { height: 500px; } }
         .calendar-wrapper iframe { width: 100%; height: 100%; border: 0; }
 
         .section-title {
@@ -97,14 +96,26 @@
             font-weight: 700;
         }
 
-        .form-control, .form-select { border-radius: 10px; padding: 12px; background: #f8fafc; }
+        .form-control, .form-select { 
+            border-radius: 10px; 
+            padding: 12px; 
+            background: #f8fafc; 
+            border: 1px solid #e2e8f0;
+            transition: 0.2s;
+        }
+        .form-control:focus, .form-select:focus {
+            background: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
+            outline: none;
+        }
 
         /* --- Modal สำเร็จ --- */
         .modal-content-success {
             border-radius: 25px;
             border: none;
             text-align: center;
-            padding: 30px;
+            padding: 35px;
         }
         .icon-box {
             width: 80px;
@@ -119,7 +130,14 @@
             margin: 0 auto 20px;
         }
 
-        footer { background: #fff; padding: 25px; text-align: center; border-top: 1px solid #eee; font-size: 0.9rem; }
+        footer { 
+            background: #fff; 
+            padding: 25px; 
+            text-align: center; 
+            border-top: 1px solid #eee; 
+            font-size: 0.9rem; 
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
@@ -140,19 +158,19 @@
 
     <div id="formSection" class="system-card" style="display:none;">
         <div class="card-header-custom">แบบฟอร์มขอใช้รถยนต์</div>
-        <div class="card-body p-4">
+        <div class="card-body p-4 p-md-5">
             <form id="carForm">
                 <div class="text-end mb-3">
-                    <button type="button" id="hideFormBtn" class="btn btn-sm btn-outline-secondary rounded-pill">ปิดฟอร์ม</button>
+                    <button type="button" id="hideFormBtn" class="btn btn-sm btn-outline-secondary rounded-pill px-3">ปิดฟอร์ม</button>
                 </div>
 
                 <div class="section-title">ข้อมูลผู้ขอ</div>
                 <div class="row g-3">
-                    <div class="col-md-6"><label class="fw-bold">วันที่จอง</label><input type="date" name="bookDate" class="form-control" required></div>
-                    <div class="col-md-6"><label class="fw-bold">ชื่อ-นามสกุล</label><input type="text" name="name" class="form-control" required></div>
-                    <div class="col-md-6"><label class="fw-bold">โทรศัพท์</label><input type="tel" name="tel" class="form-control" required></div>
+                    <div class="col-md-6"><label class="fw-bold mb-1">วันที่จอง</label><input type="date" name="bookDate" class="form-control" required></div>
+                    <div class="col-md-6"><label class="fw-bold mb-1">ชื่อ-นามสกุล</label><input type="text" name="name" class="form-control" required></div>
+                    <div class="col-md-6"><label class="fw-bold mb-1">โทรศัพท์</label><input type="tel" name="tel" class="form-control" required></div>
                     <div class="col-md-6">
-                        <label class="fw-bold">ตำแหน่ง</label>
+                        <label class="fw-bold mb-1">ตำแหน่ง</label>
                         <select name="position" class="form-select" required>
                             <option value="">-- เลือก --</option>
                             <option value="ผู้บริหาร">ผู้บริหาร</option>
@@ -164,18 +182,18 @@
 
                 <div class="section-title">รายละเอียด</div>
                 <div class="row g-3">
-                    <div class="col-md-6"><label class="fw-bold">รถยนต์</label><select name="car" class="form-select" required><option value="">-- เลือก --</option><option value="รถ 4 ประตู">รถ 4 ประตู</option><option value="รถตู้">รถตู้</option><option value="รถ 6 ล้อ">รถ 6 ล้อ</option></select></div>
-                    <div class="col-md-6"><label class="fw-bold">สถานที่</label><input type="text" name="location" class="form-control" required></div>
-                    <div class="col-12"><label class="fw-bold">วัตถุประสงค์</label><textarea name="purpose" class="form-control" rows="2" required></textarea></div>
-                    <div class="col-6 col-md-3"><label class="text-primary fw-bold">วันเริ่ม</label><input type="date" name="startDate" class="form-control" required></div>
-                    <div class="col-6 col-md-3"><label class="text-primary fw-bold">เวลาเริ่ม</label><input type="time" name="startTime" class="form-control" required></div>
-                    <div class="col-6 col-md-3"><label class="text-danger fw-bold">วันกลับ</label><input type="date" name="endDate" class="form-control" required></div>
-                    <div class="col-6 col-md-3"><label class="text-danger fw-bold">เวลากลับ</label><input type="time" name="endTime" class="form-control" required></div>
+                    <div class="col-md-6"><label class="fw-bold mb-1">รถยนต์</label><select name="car" class="form-select" required><option value="">-- เลือก --</option><option value="รถ 4 ประตู">รถ 4 ประตู</option><option value="รถตู้">รถตู้</option><option value="รถ 6 ล้อ">รถ 6 ล้อ</option></select></div>
+                    <div class="col-md-6"><label class="fw-bold mb-1">สถานที่</label><input type="text" name="location" class="form-control" required></div>
+                    <div class="col-12"><label class="fw-bold mb-1">วัตถุประสงค์</label><textarea name="purpose" class="form-control" rows="2" required></textarea></div>
+                    <div class="col-6 col-md-3"><label class="text-primary fw-bold mb-1">วันเริ่ม</label><input type="date" name="startDate" class="form-control" required></div>
+                    <div class="col-6 col-md-3"><label class="text-primary fw-bold mb-1">เวลาเริ่ม</label><input type="time" name="startTime" class="form-control" required></div>
+                    <div class="col-6 col-md-3"><label class="text-danger fw-bold mb-1">วันกลับ</label><input type="date" name="endDate" class="form-control" required></div>
+                    <div class="col-6 col-md-3"><label class="text-danger fw-bold mb-1">เวลากลับ</label><input type="time" name="endTime" class="form-control" required></div>
                 </div>
 
                 <div class="section-title">ผู้ร่วมเดินทาง</div>
                 <div class="row g-3">
-                    <div class="col-md-6"><label class="fw-bold">จำนวนคน</label><input type="number" name="passengerCount" id="pCount" class="form-control" min="0" value="0"></div>
+                    <div class="col-md-6"><label class="fw-bold mb-1">จำนวนคน</label><input type="number" name="passengerCount" id="pCount" class="form-control" min="0" value="0"></div>
                     <div class="col-12"><div class="row g-2" id="pList"></div></div>
                     <div id="fileUpload" class="col-12" style="display:none;"><input type="file" id="pPdf" class="form-control" accept=".pdf"></div>
                 </div>
@@ -195,9 +213,7 @@
 <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-success shadow-lg">
-            <div class="icon-box">
-                <i class="bi bi-check-lg"></i>
-            </div>
+            <div class="icon-box"><i class="bi bi-check-lg"></i></div>
             <h3 class="fw-bold text-success">จองรถยนต์สำเร็จ!</h3>
             <p class="text-muted">ระบบได้ส่งคำขอไปยังงานยานพาหนะเรียบร้อยแล้วค่ะ</p>
             <button type="button" class="btn btn-success rounded-pill px-5 py-2 mt-3" onclick="location.reload()">ตกลง</button>
@@ -282,7 +298,7 @@
             const res = await response.json();
             if (res.status === "success") {
                 document.getElementById('loader').style.display = 'none';
-                successModal.show(); // แสดง Modal สวยงามแทน Alert
+                successModal.show();
             } else {
                 alert("ผิดพลาด: " + res.message);
                 document.getElementById('loader').style.display = 'none';
