@@ -19,64 +19,76 @@
             background-color: #f8fafc; 
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
         }
 
-        /* --- App Header: ปรับให้กระชับแบบระบบสืบค้น --- */
+        /* --- ปรับ Header ให้กระชับเป็นพิเศษ --- */
         .app-header {
             background: #ffffff;
             text-align: center;
             border-bottom: 3px solid var(--primary);
-            padding: 15px 10px 5px 10px; /* ลด Padding ด้านล่าง */
+            padding: 10px 5px 0px 5px; /* ลดช่องว่างบนและล่าง */
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
-        .school-logo { height: 45px; margin-bottom: 5px; }
-        .app-title { font-size: 1.5rem; font-weight: 600; color: var(--primary); margin: 0; }
+        .school-logo { height: 42px; margin-bottom: 2px; }
+        .app-title { font-size: 1.4rem; font-weight: 600; color: var(--primary); margin: 0; line-height: 1.2; }
         .app-subtitle { 
-            font-size: 0.85rem; 
+            font-size: 0.8rem; 
             color: #64748b; 
             font-weight: 400; 
-            margin-bottom: 5px; /* ลดช่องว่างใต้ข้อความ */
+            margin: 2px 0 8px 0; /* บีบระยะห่างใต้ข้อความ */
+            line-height: 1.3;
         }
 
         .container-main { 
             max-width: 1100px; 
-            margin: 15px auto; /* ลด Margin บน-ล่าง */
-            padding: 0 15px; 
-            flex: 1 0 auto; /* ให้เนื้อหายืดหยุ่นแต่ไม่เบียด Footer */
+            margin: 10px auto; /* ลดระยะห่างด้านบนให้ติด Header มากขึ้น */
+            padding: 0 12px; 
+            flex: 1 0 auto;
             width: 100%; 
         }
 
-        /* --- ปุ่มจองรถ: สไตล์เรียบๆ บางๆ --- */
+        @media (max-width: 768px) {
+            .app-header { padding: 8px 5px 2px 5px; }
+            .school-logo { height: 38px; }
+            .app-title { font-size: 1.15rem; }
+            .app-subtitle { font-size: 0.72rem; margin-bottom: 5px; }
+            .container-main { margin: 8px auto; }
+        }
+
+        /* --- ปุ่มจองรถ: เรียบๆ บางๆ ไม่หนา --- */
         .btn-open-booking {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 12px 35px;
+            padding: 10px 30px;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 400;
             transition: 0.2s;
             display: inline-block;
+            box-shadow: none;
         }
         .btn-open-booking:hover { background-color: var(--accent); }
 
         .system-card {
             background: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.03);
+            box-shadow: 0 1px 10px rgba(0,0,0,0.03);
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 1px solid #e2e8f0;
         }
 
         .card-header-custom {
             background: #f8fafc;
             color: var(--primary);
-            padding: 10px;
+            padding: 8px;
             font-weight: 500;
             text-align: center;
             border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
         }
 
         .calendar-wrapper {
@@ -84,39 +96,35 @@
             width: 100%;
             height: 600px;
         }
-        @media (max-width: 768px) { 
-            .calendar-wrapper { height: 450px; }
-            .app-title { font-size: 1.2rem; }
-            .app-subtitle { font-size: 0.75rem; }
-        }
+        @media (max-width: 768px) { .calendar-wrapper { height: 420px; } }
         .calendar-wrapper iframe { width: 100%; height: 100%; border: 0; }
 
         .section-title {
             color: var(--primary);
             border-left: 4px solid var(--gold);
             padding-left: 10px;
-            margin: 15px 0 10px 0;
+            margin: 12px 0 8px 0;
             font-weight: 500;
-            font-size: 1.05rem;
+            font-size: 1rem;
         }
 
         .form-control, .form-select { 
             border-radius: 6px; 
-            padding: 8px 12px; 
+            padding: 7px 10px; 
             border: 1px solid #cbd5e1;
             font-weight: 300;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
-        /* --- Footer: ปรับให้แสดงผลแน่นอน --- */
         footer { 
             background: #ffffff; 
-            padding: 15px; 
+            padding: 12px; 
             text-align: center; 
             border-top: 1px solid #e2e8f0; 
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: #64748b;
-            flex-shrink: 0; /* ป้องกัน footer โดนบีบ */
+            flex-shrink: 0;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -141,7 +149,7 @@
         <div class="card-body p-3 p-md-4">
             <form id="carForm">
                 <div class="text-end mb-2">
-                    <button type="button" id="hideFormBtn" class="btn btn-sm btn-link text-secondary text-decoration-none">ปิดฟอร์ม</button>
+                    <button type="button" id="hideFormBtn" class="btn btn-sm btn-link text-secondary text-decoration-none py-0">ปิดฟอร์ม</button>
                 </div>
 
                 <div class="section-title">ข้อมูลผู้ขอ</div>
@@ -197,12 +205,12 @@
 
 <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow" style="border-radius: 15px;">
+        <div class="modal-content border-0 shadow" style="border-radius: 12px;">
             <div class="modal-body text-center p-4">
-                <div class="text-success mb-2"><i class="bi bi-check-circle-fill" style="font-size: 2.5rem;"></i></div>
-                <h5 class="fw-bold">จองรถยนต์สำเร็จ!</h5>
+                <div class="text-success mb-2"><i class="bi bi-check-circle-fill" style="font-size: 2rem;"></i></div>
+                <h6 class="fw-bold">จองรถยนต์สำเร็จ!</h6>
                 <p class="text-muted small">ระบบได้ส่งคำขอไปยังงานยานพาหนะเรียบร้อยแล้วค่ะ</p>
-                <button type="button" class="btn btn-primary px-4 py-2 mt-2" style="border-radius: 8px;" onclick="location.reload()">ตกลง</button>
+                <button type="button" class="btn btn-primary btn-sm px-4 py-2 mt-2" style="border-radius: 6px;" onclick="location.reload()">ตกลง</button>
             </div>
         </div>
     </div>
