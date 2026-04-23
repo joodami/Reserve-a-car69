@@ -12,65 +12,51 @@
     <style>
         :root { --primary: #1a5276; --accent: #2980b9; --gold: #f1c40f; }
 
-        html, body { height: 100%; margin: 0; }
+        /* ปรับโครงสร้างหน้าเว็บให้ยืดหยุ่นตามความสูง */
+        html, body { 
+            height: 100%; 
+            margin: 0; 
+        }
 
         body { 
             font-family: 'Prompt', sans-serif; 
             background-color: #f8fafc; 
             display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
+            flex-direction: column; /* จัดวางแนวตั้ง */
         }
 
-        /* --- ปรับ Header ให้กระชับเป็นพิเศษ --- */
         .app-header {
             background: #ffffff;
             text-align: center;
             border-bottom: 3px solid var(--primary);
-            padding: 10px 5px 0px 5px; /* ลดช่องว่างบนและล่าง */
+            padding: 10px 5px 2px 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            flex-shrink: 0; /* หัวเว็บไม่หดตัว */
         }
 
-        .school-logo { height: 42px; margin-bottom: 2px; }
-        .app-title { font-size: 1.4rem; font-weight: 600; color: var(--primary); margin: 0; line-height: 1.2; }
-        .app-subtitle { 
-            font-size: 0.8rem; 
-            color: #64748b; 
-            font-weight: 400; 
-            margin: 2px 0 8px 0; /* บีบระยะห่างใต้ข้อความ */
-            line-height: 1.3;
-        }
+        .school-logo { height: 40px; margin-bottom: 2px; }
+        .app-title { font-size: 1.3rem; font-weight: 600; color: var(--primary); margin: 0; }
+        .app-subtitle { font-size: 0.75rem; color: #64748b; margin: 0 0 8px 0; }
 
         .container-main { 
             max-width: 1100px; 
-            margin: 10px auto; /* ลดระยะห่างด้านบนให้ติด Header มากขึ้น */
-            padding: 0 12px; 
-            flex: 1 0 auto;
+            margin: 10px auto; 
+            padding: 0 15px; 
+            flex: 1 0 auto; /* ให้เนื้อหาตรงกลางขยายพื้นที่เท่าที่จำเป็น */
             width: 100%; 
         }
 
-        @media (max-width: 768px) {
-            .app-header { padding: 8px 5px 2px 5px; }
-            .school-logo { height: 38px; }
-            .app-title { font-size: 1.15rem; }
-            .app-subtitle { font-size: 0.72rem; margin-bottom: 5px; }
-            .container-main { margin: 8px auto; }
-        }
-
-        /* --- ปุ่มจองรถ: เรียบๆ บางๆ ไม่หนา --- */
         .btn-open-booking {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 10px 30px;
+            padding: 10px 25px;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: 400;
             transition: 0.2s;
             display: inline-block;
-            box-shadow: none;
         }
-        .btn-open-booking:hover { background-color: var(--accent); }
 
         .system-card {
             background: #ffffff;
@@ -88,43 +74,36 @@
             font-weight: 500;
             text-align: center;
             border-bottom: 1px solid #e2e8f0;
-            font-size: 0.95rem;
         }
 
+        /* ปรับปฏิทินให้แสดงผลดีขึ้น */
         .calendar-wrapper {
             position: relative;
             width: 100%;
-            height: 600px;
+            height: 600px; /* ความสูงในคอม */
         }
-        @media (max-width: 768px) { .calendar-wrapper { height: 420px; } }
+
+        @media (max-width: 768px) { 
+            .calendar-wrapper { height: 450px; } /* ลดความสูงในมือถือเพื่อไม่ให้ดัน Footer มากเกินไป */
+            .app-title { font-size: 1.1rem; }
+            .app-subtitle { font-size: 0.7rem; }
+        }
+
         .calendar-wrapper iframe { width: 100%; height: 100%; border: 0; }
 
-        .section-title {
-            color: var(--primary);
-            border-left: 4px solid var(--gold);
-            padding-left: 10px;
-            margin: 12px 0 8px 0;
-            font-weight: 500;
-            font-size: 1rem;
-        }
+        /* ฟอร์ม */
+        .section-title { color: var(--primary); border-left: 4px solid var(--gold); padding-left: 10px; margin: 12px 0 8px 0; font-weight: 500; }
+        .form-control, .form-select { border-radius: 6px; padding: 7px 10px; border: 1px solid #cbd5e1; font-weight: 300; font-size: 0.9rem; }
 
-        .form-control, .form-select { 
-            border-radius: 6px; 
-            padding: 7px 10px; 
-            border: 1px solid #cbd5e1;
-            font-weight: 300;
-            font-size: 0.9rem;
-        }
-
+        /* Footer ติดท้ายหน้าแน่นอน */
         footer { 
             background: #ffffff; 
-            padding: 12px; 
+            padding: 15px; 
             text-align: center; 
             border-top: 1px solid #e2e8f0; 
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             color: #64748b;
-            flex-shrink: 0;
-            line-height: 1.5;
+            flex-shrink: 0; /* บังคับให้ Footer คงรูปไม่หายไปไหน */
         }
     </style>
 </head>
@@ -151,7 +130,6 @@
                 <div class="text-end mb-2">
                     <button type="button" id="hideFormBtn" class="btn btn-sm btn-link text-secondary text-decoration-none py-0">ปิดฟอร์ม</button>
                 </div>
-
                 <div class="section-title">ข้อมูลผู้ขอ</div>
                 <div class="row g-2">
                     <div class="col-md-6"><label class="mb-1 small">วันที่จอง</label><input type="date" name="bookDate" class="form-control" required></div>
@@ -167,7 +145,6 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="section-title">รายละเอียด</div>
                 <div class="row g-2">
                     <div class="col-md-6"><label class="mb-1 small">รถยนต์</label><select name="car" class="form-select" required><option value="">-- เลือก --</option><option value="รถ 4 ประตู">รถ 4 ประตู</option><option value="รถตู้">รถตู้</option><option value="รถ 6 ล้อ">รถ 6 ล้อ</option></select></div>
@@ -178,14 +155,12 @@
                     <div class="col-6 col-md-3"><label class="text-danger mb-1 small">วันกลับ</label><input type="date" name="endDate" class="form-control" required></div>
                     <div class="col-6 col-md-3"><label class="text-danger mb-1 small">เวลากลับ</label><input type="time" name="endTime" class="form-control" required></div>
                 </div>
-
                 <div class="section-title">ผู้ร่วมเดินทาง</div>
                 <div class="row g-2">
                     <div class="col-md-6"><label class="mb-1 small">จำนวนคน</label><input type="number" name="passengerCount" id="pCount" class="form-control" min="0" value="0"></div>
                     <div class="col-12"><div class="row g-1" id="pList"></div></div>
                     <div id="fileUpload" class="col-12" style="display:none;"><input type="file" id="pPdf" class="form-control" accept=".pdf"></div>
                 </div>
-
                 <button type="submit" class="btn-open-booking w-100 mt-4">ยืนยันการจอง 🚕</button>
             </form>
         </div>
@@ -210,7 +185,7 @@
                 <div class="text-success mb-2"><i class="bi bi-check-circle-fill" style="font-size: 2rem;"></i></div>
                 <h6 class="fw-bold">จองรถยนต์สำเร็จ!</h6>
                 <p class="text-muted small">ระบบได้ส่งคำขอไปยังงานยานพาหนะเรียบร้อยแล้วค่ะ</p>
-                <button type="button" class="btn btn-primary btn-sm px-4 py-2 mt-2" style="border-radius: 6px;" onclick="location.reload()">ตกลง</button>
+                <button type="button" class="btn btn-primary btn-sm px-4 py-2 mt-2" onclick="location.reload()">ตกลง</button>
             </div>
         </div>
     </div>
