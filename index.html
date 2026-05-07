@@ -2,335 +2,260 @@
 <html lang="th">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ระบบจองรถยนต์ - โรงเรียนพิมานพิทยาสรรค์</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS-Sarabun | โรงเรียนพิมานพิทยาสรรค์</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     
     <style>
-        :root { --primary: #1a5276; --accent: #2980b9; --gold: #f1c40f; }
+        :root { 
+            --primary: #1a5276; 
+            --accent: #2980b9; 
+            --gold: #f1c40f; 
+            --sidebar-width: 280px;
+        }
 
-        html, body { height: 100%; margin: 0; }
         body { 
-            display: flex; 
-            flex-direction: column; 
             font-family: 'Prompt', sans-serif; 
-            background-color: #f1f5f9; /* ปรับพื้นหลังเข้มขึ้นนิดนึงเพื่อให้ตัวฟอร์มสีขาวดูเด้งออกมา */
+            background-color: #f1f5f9; 
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        .app-header {
-            background: #ffffff;
+        /* --- Sidebar Style --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--primary);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 20px;
             text-align: center;
-            border-bottom: 3px solid var(--primary);
-            padding: 10px 5px 5px 5px;
-            flex-shrink: 0;
+            background: rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .school-logo { height: 40px; }
-        .app-title { font-size: 1.3rem; font-weight: 600; color: var(--primary); margin: 0; }
-        /* ค้นหา .app-subtitle ของเดิมแล้ววางทับด้วยอันนี้ค่ะ */
-.app-subtitle { 
-    color: #64748b; 
-    margin-bottom: 5px; 
-    font-size: 0.85rem; /* ขนาดเริ่มต้นสำหรับมือถือ */
-    font-weight: 600;    /* ปรับให้เป็นตัวหนา (สำหรับมือถือ) */
-}
+        .school-logo { height: 60px; margin-bottom: 10px; }
+        .brand-name { font-size: 1.2rem; font-weight: 600; margin: 0; color: var(--gold); }
 
-/* เพิ่มส่วนนี้เพื่อปรับขนาดให้ใหญ่ขึ้นเมื่อดูในคอมพิวเตอร์ (หน้าจอที่กว้างกว่า 768px) */
-@media (min-width: 768px) {
-    .app-subtitle {
-        font-size: 1.1rem; /* ปรับขนาดให้ใหญ่ขึ้นสำหรับคอม */
-        font-weight: 500;   /* ในคอมอาจจะลดความหนาลงนิดนึงเพื่อให้ดูสะอาดตา หรือจะใช้ 600 เท่ากันก็ได้ค่ะ */
-    }
-}
-        .container-main { 
-            max-width: 1100px; 
-            margin: 10px auto; 
-            padding: 0 15px 80px 15px; 
-            flex: 1 0 auto; 
-            width: 100%; 
+        .nav-menu {
+            flex: 1;
+            padding: 20px 0;
+            overflow-y: auto;
         }
 
-        /* --- ปรับปรุงความเด่นชัดของฟอร์ม (Card) --- */
+        .nav-item {
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: 0.2s;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+
+        .nav-item i { font-size: 1.2rem; margin-right: 15px; }
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: rgba(255,255,255,0.15);
+            color: var(--gold);
+            border-left: 4px solid var(--gold);
+            font-weight: 500;
+        }
+
+        /* --- Main Content --- */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .top-bar {
+            background: white;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            justify-content: space-between;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+        }
+
         .system-card {
             background: #ffffff;
             border-radius: 14px;
-            /* เพิ่มเงาให้ดูหนาและนุ่มนวลขึ้นเพื่อให้ฟอร์มดูเด่น */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
-            overflow: hidden;
-            margin-bottom: 20px;
-            /* เพิ่มเส้นขอบให้ชัดเจน */
-            border: 1px solid #cbd5e1; 
-        }
-
-        .card-header-custom {
-            background: var(--primary); /* หัวฟอร์มสีเข้ม */
-            color: #ffffff;
-            padding: 10px;
-            font-weight: 500;
-            text-align: center;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .section-title { 
-            color: var(--primary); 
-            border-left: 5px solid var(--gold); /* แถบสีทองหนาขึ้น */
-            padding-left: 12px; 
-            margin: 20px 0 10px 0; 
-            font-weight: 600; 
-            background-color: #f8fafc; /* พื้นหลังจางๆ ใต้หัวข้อให้ดูเด่น */
-            padding-top: 4px;
-            padding-bottom: 4px;
-        }
-
-        .form-control, .form-select { 
-            border-radius: 8px; 
-            padding: 9px 12px; 
-            border: 1.5px solid #cbd5e1; /* เส้นขอบช่องกรอกหนาขึ้นเล็กน้อย */
-            font-weight: 400; 
-            font-size: 0.9rem; 
-        }
-
-        /* --- ปุ่มปิดฟอร์ม --- */
-        .btn-close-custom {
-            background-color: #f1f5f9;
-            color: #64748b;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
             border: 1px solid #cbd5e1;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 400;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-        }
-        .btn-close-custom:hover {
-            background-color: #fee2e2;
-            color: #dc2626;
-            border-color: #fecaca;
+            min-height: 400px;
+            padding: 25px;
         }
 
-        .btn-open-booking {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .calendar-wrapper { position: relative; width: 100%; height: 500px; }
-        @media (max-width: 768px) { .calendar-wrapper { height: 400px; } }
-        .calendar-wrapper iframe { width: 100%; height: 100%; border: 0; }
-
-        footer { 
-            background: #ffffff; 
-            padding: 25px 15px 40px 15px; 
-            text-align: center; 
-            border-top: 1px solid #e2e8f0; 
-            font-size: 0.8rem;
-            color: #64748b;
-            flex-shrink: 0;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* --- Loader มีข้อความ --- */
-        #loader {
-            display: none; 
-            position: fixed; 
-            top: 0; left: 0; 
-            width: 100%; height: 100%; 
-            background: rgba(255, 255, 255, 0.9); 
-            z-index: 9999; 
-            flex-direction: column;
-            justify-content: center; 
-            align-items: center;
-        }
-        .loader-text {
-            margin-top: 15px;
+        .view-title {
             color: var(--primary);
-            font-weight: 500;
-            font-size: 1rem;
-            animation: blink 1.5s infinite;
+            border-left: 5px solid var(--gold);
+            padding-left: 12px;
+            margin-bottom: 25px;
+            font-weight: 600;
         }
-        @keyframes blink { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+
+        /* --- Mobile Toggle --- */
+        #mobile-toggle { display: none; }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                height: 100%;
+            }
+            .sidebar.active { left: 0; }
+            #mobile-toggle { display: block; }
+        }
+
+        footer {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            text-align: center;
+            padding: 15px;
+            background: white;
+        }
     </style>
 </head>
 <body>
 
-<header class="app-header">
-    <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" alt="Logo" class="school-logo">
-    <h1 class="app-title">PS-Sarabun</h1>
-    <p class="app-subtitle">ระบบจองรถยนต์ส่วนราชการ โรงเรียนพิมานพิทยาสรรค์</p>
-</header>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="https://raw.githubusercontent.com/joodami/school-assets/main/logo.png" alt="Logo" class="school-logo">
+            <h1 class="brand-name">PS-Sarabun</h1>
+            <small>ระบบลงทะเบียนหนังสือรับ</small>
+        </div>
+        
+        <nav class="nav-menu">
+            <div class="nav-item active" onclick="switchView('view1', this)">
+                <i class="bi bi-file-earmark-plus"></i>
+                <span>ลงทะเบียนหนังสือใหม่</span>
+            </div>
+            <div class="nav-item" onclick="switchView('view2', this)">
+                <i class="bi bi-journal-text"></i>
+                <span>หนังสือรับทั้งหมด</span>
+            </div>
+            <div class="nav-item" onclick="switchView('view3', this)">
+                <i class="bi bi-reply-all"></i>
+                <span>หนังสือส่งกลับจากบริหาร</span>
+            </div>
+            <div class="nav-item" onclick="switchView('view4', this)">
+                <i class="bi bi-printer"></i>
+                <span>พิมพ์ทะเบียนหนังสือรับ</span>
+            </div>
+        </nav>
 
-<main class="container-main">
-    <div id="openBtnArea" class="text-center mb-3">
-        <button id="showFormBtn" class="btn-open-booking">
-            <i class="bi bi-calendar-plus me-1"></i> กดเพื่อเริ่มการจอง
-        </button>
-    </div>
+        <div class="p-3 text-center border-top border-secondary">
+             <small class="text-white-50">งานยานพาหนะ & สารบรรณ</small>
+        </div>
+    </aside>
 
-    <div id="formSection" class="system-card" style="display:none;">
-        <div class="card-header-custom">แบบฟอร์มขอใช้รถยนต์</div>
-        <div class="card-body p-3">
-            <form id="carForm">
-                <div class="text-end mb-3">
-                    <button type="button" id="hideFormBtn" class="btn-close-custom">
-                        <i class="bi bi-x-circle"></i> ปิดหน้าต่างจองรถ
-                    </button>
-                </div>
-                <div class="section-title">ข้อมูลผู้ขอ</div>
-                <div class="row g-2">
-                    <div class="col-md-6"><label class="mb-1 small">วันที่จอง</label><input type="date" name="bookDate" class="form-control" required></div>
-                    <div class="col-md-6"><label class="mb-1 small">ชื่อ-นามสกุล</label><input type="text" name="name" class="form-control" required></div>
-                    <div class="col-md-6"><label class="mb-1 small">โทรศัพท์</label><input type="tel" name="tel" class="form-control" required></div>
-                    <div class="col-md-6">
-                        <label class="mb-1 small">ตำแหน่ง</label>
-                        <select name="position" class="form-select" required>
-                            <option value="">-- เลือก --</option>
-                            <option value="ผู้บริหาร">ผู้บริหาร</option>
-                            <option value="ครู">ครู</option>
-                            <option value="บุคลากร">บุคลากร</option>
-                        </select>
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+        <header class="top-bar">
+            <button class="btn btn-light" id="mobile-toggle" onclick="toggleSidebar()">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="d-none d-md-block text-muted">
+                <i class="bi bi-calendar3 me-2"></i> วันที่: <span id="currentDate"></span>
+            </div>
+            <div class="user-profile">
+                <span class="badge bg-light text-dark p-2">
+                    <i class="bi bi-person-circle me-1"></i> เจ้าหน้าที่สารบรรณ
+                </span>
+            </div>
+        </header>
+
+        <main class="content-area">
+            <div class="system-card">
+                <!-- เนื้อหาจะเปลี่ยนไปตามเมนูที่เลือก -->
+                <div id="content-display">
+                    <h4 class="view-title" id="page-title">นำหนังสือรับเข้าแฟ้ม</h4>
+                    <div id="view-body">
+                        <!-- ส่วนนี้จะโหลดฟอร์มหรือตารางจากระบบย่อย -->
+                        <p class="text-muted">กำลังเตรียมเนื้อหาระบบ...</p>
                     </div>
                 </div>
-                <div class="section-title">รายละเอียด</div>
-                <div class="row g-2">
-                    <div class="col-md-6"><label class="mb-1 small">รถยนต์</label><select name="car" class="form-select" required><option value="">-- เลือก --</option><option value="รถ 4 ประตู">รถ 4 ประตู</option><option value="รถตู้">รถตู้</option><option value="รถ 6 ล้อ">รถ 6 ล้อ</option></select></div>
-                    <div class="col-md-6"><label class="mb-1 small">สถานที่</label><input type="text" name="location" class="form-control" required></div>
-                    <div class="col-12"><label class="mb-1 small">วัตถุประสงค์</label><textarea name="purpose" class="form-control" rows="2" required></textarea></div>
-                    <div class="col-6 col-md-3"><label class="text-primary mb-1 small">วันเริ่ม</label><input type="date" name="startDate" class="form-control" required></div>
-                    <div class="col-6 col-md-3"><label class="text-primary mb-1 small">เวลาเริ่ม</label><input type="time" name="startTime" class="form-control" required></div>
-                    <div class="col-6 col-md-3"><label class="text-danger mb-1 small">วันกลับ</label><input type="date" name="endDate" class="form-control" required></div>
-                    <div class="col-6 col-md-3"><label class="text-danger mb-1 small">เวลากลับ</label><input type="time" name="endTime" class="form-control" required></div>
-                </div>
-                <div class="section-title">ผู้ร่วมเดินทาง</div>
-                <div class="row g-2">
-                    <div class="col-md-6"><label class="mb-1 small">จำนวนคน</label><input type="number" name="passengerCount" id="pCount" class="form-control" min="0" value="0"></div>
-                    <div class="col-12"><div class="row g-1" id="pList"></div></div>
-                    <div id="fileUpload" class="col-12" style="display:none;"><input type="file" id="pPdf" class="form-control" accept=".pdf"></div>
-                </div>
-                <button type="submit" class="btn-open-booking w-100 mt-4">ยืนยันการจอง 🚕</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="system-card">
-        <div class="card-header-custom">ตรวจสอบคิวรถยนต์</div>
-        <div class="calendar-wrapper" id="calendarBox"></div>
-    </div>
-</main>
-
-<footer>
-    © 2026 งานยานพาหนะ โรงเรียนพิมานพิทยาสรรค์<br>
-    <b>นางพิชามญชุ์ ทองกรด โทร.093-5783797</b>
-</footer>
-
-<div id="loader">
-    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
-    <div class="loader-text">
-        <i class="bi bi-cloud-upload me-2"></i>กำลังบันทึกข้อมูล กรุณารอครู่เดียวค่ะ...
-    </div>
-</div>
-
-<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow" style="border-radius: 12px;">
-            <div class="modal-body text-center p-4">
-                <div class="text-success mb-2"><i class="bi bi-check-circle-fill" style="font-size: 2rem;"></i></div>
-                <h6 class="fw-bold">จองรถยนต์สำเร็จ!</h6>
-                <p class="text-muted small">ระบบได้ส่งคำขอเรียบร้อยแล้วค่ะ</p>
-                <button type="button" class="btn btn-primary btn-sm px-4 py-2 mt-2" onclick="location.reload()">ตกลง</button>
             </div>
-        </div>
+        </main>
+
+        <footer>
+            © 2026 งานยานพาหนะ โรงเรียนพิมานพิทยาสรรค์ | ติดต่อสอบถาม: นางพิชามญชุ์ ทองกรด
+        </footer>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwlDYshdlJdNS_xwtKGs90EZ51N8wZsPRzoeOzi_YgdLAgRm-QIxlJX3wUnw-Danxr1/exec";
-    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    <script>
+        // ฟังก์ชันเปลี่ยนหน้า (View)
+        function switchView(viewId, element) {
+            // ลบ class active จากทุกเมนู
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            // เพิ่ม class active ให้เมนูที่เลือก
+            element.classList.add('active');
 
-    window.onload = function() {
-        const calendarBox = document.getElementById('calendarBox');
-        calendarBox.innerHTML = `<iframe src="https://calendar.google.com/calendar/embed?src=c_ea546f07317ff6dcdbf73cee14ab645a8e154664a02554eef13e6e08423e39c1%40group.calendar.google.com&ctz=Asia/Bangkok&mode=MONTH"></iframe>`;
-    };
+            const title = document.getElementById('page-title');
+            const body = document.getElementById('view-body');
 
-    const showFormBtn = document.getElementById('showFormBtn');
-    const hideFormBtn = document.getElementById('hideFormBtn');
-    const formSection = document.getElementById('formSection');
-    const openBtnArea = document.getElementById('openBtnArea');
-
-    showFormBtn.onclick = () => { formSection.style.display = 'block'; openBtnArea.style.display = 'none'; };
-    hideFormBtn.onclick = () => { formSection.style.display = 'none'; openBtnArea.style.display = 'block'; };
-
-    const pCount = document.getElementById('pCount');
-    const pList = document.getElementById('pList');
-    const fileUpload = document.getElementById('fileUpload');
-
-    pCount.oninput = function() {
-        const val = parseInt(this.value) || 0;
-        pList.innerHTML = '';
-        if (val > 0 && val <= 6) {
-            fileUpload.style.display = 'none';
-            for (let i = 1; i <= val; i++) {
-                pList.innerHTML += `<div class="col-md-4 col-12"><input type="text" name="passenger${i}" class="form-control mb-1" placeholder="ชื่อคนที่ ${i}" required></div>`;
+            // อัปเดตเนื้อหาเบื้องต้น (เดี๋ยวเราจะเอาโค้ดระบบมาใส่ใน switch นี้ค่ะ)
+            switch(viewId) {
+                case 'view1':
+                    title.innerText = "นำหนังสือรับเข้าแฟ้ม (ลงทะเบียนใหม่)";
+                    body.innerHTML = "โหลดแบบฟอร์มลงทะเบียน...";
+                    break;
+                case 'view2':
+                    title.innerText = "หนังสือรับที่ลงทะเบียนแล้ว";
+                    body.innerHTML = "โหลดรายการหนังสือทั้งหมด...";
+                    break;
+                case 'view3':
+                    title.innerText = "หนังสือส่งกลับจากฝ่ายบริหาร";
+                    body.innerHTML = "โหลดหนังสือที่รอสารบรรณจัดการต่อ...";
+                    break;
+                case 'view4':
+                    title.innerText = "พิมพ์ทะเบียนหนังสือรับ (PDF)";
+                    body.innerHTML = "ระบบพิมพ์รายงาน...";
+                    break;
             }
-        } else if (val > 6) {
-            fileUpload.style.display = 'block';
-        } else {
-            fileUpload.style.display = 'none';
-        }
-    };
 
-    const carForm = document.getElementById('carForm');
-    carForm.onsubmit = async (e) => {
-        e.preventDefault();
-        document.getElementById('loader').style.display = 'flex';
-        const formData = new FormData(carForm);
-        const data = Object.fromEntries(formData.entries());
-        const pdfFile = document.getElementById('pPdf');
-
-        if (parseInt(data.passengerCount) > 6 && pdfFile.files.length > 0) {
-            const file = pdfFile.files[0];
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = async () => {
-                data.passengerFile = reader.result.split(',')[1];
-                data.passengerFileName = file.name;
-                await postData(data);
-            };
-        } else {
-            await postData(data);
-        }
-    };
-
-    async function postData(payload) {
-        try {
-            const response = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-            const res = await response.json();
-            if (res.status === "success") {
-                document.getElementById('loader').style.display = 'none';
-                successModal.show();
-            } else {
-                alert("ผิดพลาด: " + res.message);
-                document.getElementById('loader').style.display = 'none';
+            // ปิด Sidebar อัตโนมัติในมือถือหลังจากกดเลือก
+            if (window.innerWidth <= 992) {
+                toggleSidebar();
             }
-        } catch (err) {
-            alert("ระบบขัดข้อง");
-            document.getElementById('loader').style.display = 'none';
         }
-    }
-</script>
+
+        // Toggle Sidebar สำหรับมือถือ
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        // แสดงวันที่ปัจจุบัน
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('th-TH', options);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
